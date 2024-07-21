@@ -1,5 +1,5 @@
 import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
-import { OrderEntity, IOrderSlot } from './orders/orders.types';
+import { IOrderSlot, OrderEntity } from './orders/orders.types';
 import { IInvoicingMethod } from './integrations.types';
 import {
   AppDate,
@@ -16,7 +16,7 @@ import {
 import { IDelivery } from './deliveries.types';
 import { IPayment } from './payments.types';
 import { CurrencyCode } from './finances/transactions.types';
-import { AppQueryParams } from '../api';
+import { ApiQueryParams } from '../api';
 
 export interface InvoiceAmount {
   amountStart?: MaybeNull<number>;
@@ -125,11 +125,11 @@ export interface InvoiceBaseDto {
 export interface CreateInvoiceReqData {
   _id?: string;
   data?: InvoiceBaseDto;
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }
 
 export interface FinalizeInvoiceReqData {
   _id: string;
   data: { amount: number };
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }

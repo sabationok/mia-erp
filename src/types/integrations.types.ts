@@ -1,7 +1,7 @@
 import { IBase, IBaseKeys, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
 import { LangPack } from '../lang';
 import { CompanyEntity } from './companies.types';
-import { AppQueryParams } from '../api';
+import { ApiQueryParams } from '../api';
 import { HasBaseCmsConfigs } from './cms.types';
 import { HasCompany, HasDisabledAttributes, HasEmbeddedType, HasLabel, HasType, MaybeNull, UUID } from './utils.types';
 import { IBankAccount } from './finances/bank-accounts.types';
@@ -212,7 +212,7 @@ export interface ServiceMethodBase<
 export interface IMethodReqData<DtoLike = any> {
   _id?: string;
   data?: Partial<OnlyUUID> & Omit<DtoLike, IBaseKeys | 'isDefault' | 'service' | 'extService'>;
-  params?: Pick<AppQueryParams, 'disabled' | 'withDeleted' | 'withDefault'>;
+  params?: Pick<ApiQueryParams, 'disabled' | 'withDeleted' | 'withDefault'>;
 }
 export enum PaymentInternalTypeEnum {
   postTransfer = 'postTransfer',

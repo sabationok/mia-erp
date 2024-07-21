@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from '../redux/app-redux.types';
-import { AppQueryParams } from '../api';
+import { ApiQueryParams } from '../api';
 import {
-  WarehouseItemEntity,
   IProductInventoryReqData,
-  WarehouseEntity,
   IWarehouseReqData,
+  WarehouseEntity,
+  WarehouseItemEntity,
 } from '../types/warehousing/warehouses.types';
 import {
   createWarehouseThunk,
@@ -16,7 +16,7 @@ import { defaultThunkPayload } from '../utils/fabrics';
 import { useAppDispatch } from '../redux/store.store';
 
 export interface WarehousesService {
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, WarehouseEntity[]>;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: ApiQueryParams }, WarehouseEntity[]>;
   getById: ServiceDispatcherAsync<OnlyUUID, WarehouseEntity>;
   create: ServiceDispatcherAsync<IWarehouseReqData, WarehouseEntity>;
 

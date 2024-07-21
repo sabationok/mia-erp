@@ -16,7 +16,7 @@ import {
 } from '../redux/products/offers.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload } from 'utils/fabrics';
-import { apiCall, AppQueryParams, createApiCall } from 'api';
+import { apiCall, ApiQueryParams, createApiCall } from 'api';
 import OffersApi from '../api/offers.api';
 import PropertiesApi from '../api/properties.api';
 import { IPropertyReqData, PropertyEntity } from '../types/offers/properties.types';
@@ -47,7 +47,7 @@ export interface OffersService {
 
   getPropertyById: ServiceApiCaller<IPropertyReqData, PropertyEntity>;
   changeDisabledStatus: ServiceApiCaller<
-    OnlyUUID & { data?: { isSelectable?: boolean }; params?: AppQueryParams },
+    OnlyUUID & { data?: { isSelectable?: boolean }; params?: ApiQueryParams },
     PropertyEntity
   >;
 

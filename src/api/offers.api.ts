@@ -1,5 +1,5 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { ApiQuerySearchParams, ApiQuerySortParams, AppQueryParams, DatePeriodQuery } from './index';
+import { ApiQueryParams, ApiQuerySearchParams, ApiQuerySortParams, DatePeriodQuery } from './index';
 import { OfferEntity, OfferReqData, OfferStatusEnum, OfferTypeEnum } from '../types/offers/offers.types';
 import { ApiResponse } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
@@ -14,7 +14,7 @@ export interface GetOneOfferQuery {
 }
 export interface GetAllOffersQuery
   extends Pick<
-      AppQueryParams,
+      ApiQueryParams,
       'sku' | 'label' | 'barCode' | 'limit' | 'offset' | 'tagsIds' | 'categoriesIds' | 'brandsIds' | 'propertiesIds'
     >,
     ApiQuerySortParams<OfferSortParam['dataPath']>,
@@ -50,7 +50,7 @@ export default class OffersApi {
     return this.api.patch(this.endpoints.updateById(data?._id), data?.data);
   };
 
-  public static getById = (id?: string, params?: AppQueryParams): Promise<ApiResponse<OfferEntity>> => {
+  public static getById = (id?: string, params?: ApiQueryParams): Promise<ApiResponse<OfferEntity>> => {
     return this.api.get(this.endpoints.getById(id), { params });
   };
 
@@ -58,7 +58,7 @@ export default class OffersApi {
     return this.api.get(this.endpoints.getOne(), { params });
   };
 
-  public static getFullInfoById = (id?: string, params?: AppQueryParams): Promise<ApiResponse<OfferEntity>> => {
+  public static getFullInfoById = (id?: string, params?: ApiQueryParams): Promise<ApiResponse<OfferEntity>> => {
     return this.api.get(this.endpoints.getFullInfoById(id), { params });
   };
 

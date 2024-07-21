@@ -120,7 +120,7 @@ export interface DatePeriodQuery {
   dateTo?: AppDate;
 }
 
-export interface AppQueryParams<Type = any> extends AppQueries<Type>, PaginationQuery, TimePeriodQuery {
+export interface ApiQueryParams<Type = any> extends AppQueries<Type>, PaginationQuery, TimePeriodQuery {
   ids?: string;
   dirType?: ApiDirType;
   isArchived?: boolean;

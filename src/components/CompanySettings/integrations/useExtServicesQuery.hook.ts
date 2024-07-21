@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../types/integrations.types';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { AppQueryParams } from '../../../api';
+import { ApiQueryParams } from '../../../api';
 
 export function useExtServicesQuery() {
   const [extServProviders, setExtServProviders] = useState<ExtServiceBase[]>([]);
@@ -10,7 +10,7 @@ export function useExtServicesQuery() {
     integrations: { getAllExtServices },
   } = useAppServiceProvider();
 
-  const loadExtServices = ({ params }: { params?: AppQueryParams<ExternalServiceTypeEnum> } = {}) => {
+  const loadExtServices = ({ params }: { params?: ApiQueryParams<ExternalServiceTypeEnum> } = {}) => {
     return getAllExtServices({
       data: { params },
       onSuccess: setExtServProviders,
@@ -31,7 +31,7 @@ export function useInputIntegrationsQuery() {
     integrations: { getAllExtServices },
   } = useAppServiceProvider();
 
-  const loadExtServices = ({ params }: { params?: AppQueryParams } = {}) => {
+  const loadExtServices = ({ params }: { params?: ApiQueryParams } = {}) => {
     return getAllExtServices({
       data: { params },
       onSuccess: setExtServProviders,

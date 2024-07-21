@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { axiosErrorCheck } from 'utils';
 import { ThunkArgs } from '../store.store';
-import { AppQueryParams, DirectoriesApi } from '../../api';
+import { ApiQueryParams, DirectoriesApi } from '../../api';
 import { ApiDirType } from '../APP_CONFIGS';
 import { GetAllByDirTypeOptions } from '../../api/directories.api';
 import { IDirItemBase } from '../../types/dir.types';
@@ -15,7 +15,7 @@ enum DirThunkTypePrefix {
 }
 export interface DirThunkBaseSubmitData {
   dirType?: ApiDirType;
-  params?: Partial<AppQueryParams>;
+  params?: Partial<ApiQueryParams>;
   refresh?: boolean;
 }
 
@@ -28,7 +28,7 @@ export interface UpdateDirItemThunkSubmitData<DTO = any> extends GetAllByDirType
   _id: string;
   data: DTO;
   refresh?: boolean;
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }
 
 export interface DirThunkBaseReturnData<Data = any, Meta = any> {

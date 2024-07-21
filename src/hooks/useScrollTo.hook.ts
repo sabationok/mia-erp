@@ -46,11 +46,11 @@ export const useScrollTo = <E extends HTMLElement = any>(
 
     if (!isUndefined(id)) {
       setTimeout(() => {
-        scrollTo(id);
+        scrollTo(id).catch();
       }, options?.delay ?? 500);
     }
   }, [id, options?.delay, preventDefault, scrollTo]);
 
-  return { listRef, scrollTo };
+  return { listRef, scrollTo, id };
 };
 export default useScrollTo;

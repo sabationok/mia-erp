@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkArgs } from '../store.store';
-import { AppQueryParams, createApiCall, WarehousesApi } from '../../api';
+import { ApiQueryParams, createApiCall, WarehousesApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { IWarehouseReqData, WarehouseEntity } from '../../types/warehousing/warehouses.types';
 import { OnlyUUID } from '../app-redux.types';
@@ -14,14 +14,14 @@ enum WarehousingThunkType {
 export const getAllWarehousesThunk = createAsyncThunk<
   | {
       refresh?: boolean;
-      query?: AppQueryParams;
+      query?: ApiQueryParams;
       data: WarehouseEntity[];
     }
   | undefined,
   ThunkArgs<
     {
       refresh?: boolean;
-      query?: AppQueryParams;
+      query?: ApiQueryParams;
     },
     WarehouseEntity[]
   >

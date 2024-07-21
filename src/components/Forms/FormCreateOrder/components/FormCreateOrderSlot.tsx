@@ -4,7 +4,7 @@ import { OfferEntity } from '../../../../types/offers/offers.types';
 import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../../TableList/tableTypes.types';
 import TableList from '../../../TableList/TableList';
-import { AppQueryParams, createApiCall, OffersApi, WarehousesApi } from '../../../../api';
+import { ApiQueryParams, createApiCall, OffersApi, WarehousesApi } from '../../../../api';
 import { t } from '../../../../lang';
 import { createTableTitlesFromProperties, enumToFilterOptions, getIdRef, useStepsHandler } from '../../../../utils';
 import TabSelector from '../../../atoms/TabSelector';
@@ -27,7 +27,7 @@ import { IOrderTempSlot } from '../../../../types/orders/order-slot.types';
 export interface FormCreateOrderSlotProps
   extends Omit<ModalFormProps<FormCreateOrderSlotSteps, any, FormCreateOrderSlotFormData>, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderTempSlot>;
-  params?: Pick<AppQueryParams, 'warehouse' | 'offer' | 'variation' | 'price' | 'inventory'>;
+  params?: Pick<ApiQueryParams, 'warehouse' | 'offer' | 'variation' | 'price' | 'inventory'>;
 }
 
 enum FormCreateOrderSlotSteps {

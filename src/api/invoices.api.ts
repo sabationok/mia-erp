@@ -1,5 +1,5 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppQueryParams } from './index';
+import { ApiQueryParams } from './index';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IInvoicingMethod, IInvoicingMethodReqData } from '../types/integrations.types';
 import { CreateInvoiceReqData, IInvoice } from '../types/invoices.types';
@@ -19,7 +19,7 @@ export default class InvoicesApi {
 
   public static getAll = (
     _?: undefined,
-    params?: Partial<Pick<AppQueryParams, 'orderId' | 'deliveryId' | 'groupId' | 'customerId' | 'withDeleted'>>
+    params?: Partial<Pick<ApiQueryParams, 'orderId' | 'deliveryId' | 'groupId' | 'customerId' | 'withDeleted'>>
   ): Promise<ApiResponse<IInvoice[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
   };

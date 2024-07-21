@@ -4,21 +4,21 @@ import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/app-redux.types'
 import { createTransactionThunk, getAllTransactionsThunk } from '../redux/finances/transactions.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
-import { AppQueryParams, createApiCall, TransactionsApi } from 'api';
+import { ApiQueryParams, createApiCall, TransactionsApi } from 'api';
 import { BankAccountReqData, IBankAccount } from '../types/finances/bank-accounts.types';
 import { createBankAccountThunk, getBankAccountsListThunk } from '../redux/finances/bank-accounts/bank-accounts.thunks';
 
 export interface UseBankAccountsService {
   create: ServiceDispatcherAsync<BankAccountReqData, IBankAccount>;
   // update: ServiceApiCaller<BankAccountReqData, IBankAccount>; // !!!!! ===>>> ServiceDispatcher
-  getList: ServiceDispatcherAsync<{ update?: boolean; query?: AppQueryParams }, IBankAccount[]>;
+  getList: ServiceDispatcherAsync<{ update?: boolean; query?: ApiQueryParams }, IBankAccount[]>;
 }
 export interface UseFinancesService {
   create: ServiceDispatcherAsync<ITransactionReqData, ITransaction>;
   deleteById: ServiceApiCaller<string, ITransaction>; // !!!!! ===>>> ServiceDispatcher
   updateById: ServiceApiCaller<ITransactionReqData, ITransaction>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, ITransaction>;
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, ITransaction[]>;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: ApiQueryParams }, ITransaction[]>;
 
   bankAccounts: UseBankAccountsService;
 }

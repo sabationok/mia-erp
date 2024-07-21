@@ -1,6 +1,6 @@
 import { AmountAndPercentage } from '../price-management/price-management.types';
 import { ICustomerBase } from '../customers.types';
-import { AppQueryParams } from '../../api';
+import { ApiQueryParams } from '../../api';
 import { ICommunicationMethod } from '../integrations.types';
 import {
   HasCurrencyCode,
@@ -108,7 +108,7 @@ export interface ICreateOrdersGroupFormState {
 export interface IOrderReqData {
   _id?: string;
   data: ICreateOrderInfoDto;
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }
 
 export interface SaleOrdersGroupDto {

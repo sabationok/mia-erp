@@ -13,7 +13,7 @@ import {
   OnlyUUID,
 } from './utils.types';
 import { HasOffers } from './offers/offers.types';
-import { AppQueryParams } from '../api';
+import { ApiQueryParams } from '../api';
 import { HasBaseCmsConfigs } from './cms.types';
 import { TagTypeEnum } from './directories.types';
 
@@ -48,5 +48,5 @@ export interface HasTags {
   tags?: TagEntity[];
 }
 
-export type TagDtoIdsKey = Keys<Pick<AppQueryParams, 'offersIds' | 'ordersIds' | 'customerIds'>>;
+export type TagDtoIdsKey = Keys<Pick<ApiQueryParams, 'offersIds' | 'ordersIds' | 'customerIds'>>;
 export interface TagItemDto extends Partial<OnlyUUID>, TagBaseEntity {}

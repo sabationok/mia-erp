@@ -3,7 +3,7 @@ import { OfferEntity } from '../offers/offers.types';
 import { CompanyEntity } from '../companies.types';
 import { PriceEntity } from '../price-management/price-management.types';
 import { VariationEntity } from '../offers/variations.types';
-import { AppQueryParams } from '../../api';
+import { ApiQueryParams } from '../../api';
 import {
   HasAuthor,
   HasOwnerAsCompany,
@@ -68,7 +68,7 @@ export interface IWarehouseDto {
 export interface IWarehouseReqData {
   _id?: string;
   data: IWarehouseDto;
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }
 
 // * INVENTORIES
@@ -111,7 +111,7 @@ export interface IProductInventoryDto extends WithPeriod, HasStatusRef {
 export interface IProductInventoryReqData {
   _id?: OnlyUUID;
   data: IProductInventoryDto;
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }
 export interface HasWarehouse {
   warehouse?: MaybeNull<WarehouseEntity>;
@@ -170,5 +170,5 @@ export interface IWarehouseDocDto {
 export interface IWarehouseDocReqData {
   _id?: string;
   data?: IWarehouseDocDto;
-  params?: Omit<AppQueryParams, 'warehouse' | 'variation' | 'offer' | 'price'>;
+  params?: Omit<ApiQueryParams, 'warehouse' | 'variation' | 'offer' | 'price'>;
 }

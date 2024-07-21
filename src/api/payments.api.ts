@@ -1,5 +1,5 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppQueryParams } from './index';
+import { ApiQueryParams } from './index';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IPayment } from '../types/payments.types';
 import { ClientApi } from './client.api';
@@ -10,7 +10,7 @@ export class PaymentMethodsApi {
   private static endpoints = APP_CONFIGS.endpoints.payments.methods;
 
   public static getAll = (
-    params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>
+    params?: Pick<ApiQueryParams, 'disabled' | 'isDefault'>
   ): Promise<ApiResponse<IPaymentMethod[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
   };
@@ -30,7 +30,7 @@ export class PaymentsApi {
     _?: undefined,
     params?: Partial<
       Pick<
-        AppQueryParams,
+        ApiQueryParams,
         'customer' | 'manager' | 'group' | 'status' | 'order' | 'orderId' | 'invoiceId' | 'withDeleted'
       >
     >

@@ -1,5 +1,5 @@
 import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
-import { AppQueryParams } from '../../api';
+import { ApiQueryParams } from '../../api';
 import { OfferTypeEnum } from './offers.types';
 import { ICmsBaseConfigs } from '../cms.types';
 import { MaybeNull, PartialRecord, UUID, Values } from '../utils.types';
@@ -96,5 +96,5 @@ export interface IPropertyDto {
 export interface IPropertyReqData {
   _id?: string;
   data?: IPropertyDto;
-  params?: Pick<AppQueryParams, 'dataView' | 'getAll' | 'depth' | 'parentId' | 'withDeleted'>;
+  params?: Pick<ApiQueryParams, 'dataView' | 'getAll' | 'depth' | 'parentId' | 'withDeleted'>;
 }

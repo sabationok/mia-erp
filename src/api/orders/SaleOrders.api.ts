@@ -1,14 +1,14 @@
 import APP_CONFIGS from '../../redux/APP_CONFIGS';
 import { ICreateOrderInfoDto, OrderEntity, SaleOrdersGroupDto } from '../../types/orders/orders.types';
 import { ApiResponse } from '../../redux/app-redux.types';
-import { ApiQuerySearchParams, ApiQuerySortParams, AppQueryParams } from '../index';
+import { ApiQueryParams, ApiQuerySearchParams, ApiQuerySortParams } from '../index';
 import { ClientApi } from '../client.api';
 import { OrderSlotEntity, SaleOrderSlotDto, UpdateSaleOrderSlotDto } from '../../types/orders/order-slot.types';
 import { SaleOrdersSearchParam, SaleOrdersSortParam } from '../../data';
 import { PartialRecord, UUID } from '../../types/utils.types';
 
 export interface GetOrderSlotsApiQuery
-  extends Partial<Pick<AppQueryParams, 'groupId' | 'orderId' | 'order' | 'group' | 'offerId'>> {}
+  extends Partial<Pick<ApiQueryParams, 'groupId' | 'orderId' | 'order' | 'group' | 'offerId'>> {}
 
 export class SaleOrderSlotsApi {
   private static api = ClientApi.clientRef;

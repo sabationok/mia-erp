@@ -1,7 +1,7 @@
 import { AsyncThunkPayloadCreator, createAsyncThunk } from '@reduxjs/toolkit';
 import { CustomerEntity, ICustomerReqDta } from '../../types/customers.types';
 import { ThunkArgs } from '../store.store';
-import { AppQueryParams, CommunicationApi, CustomersApi } from '../../api';
+import { ApiQueryParams, CommunicationApi, CustomersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { ICommunicationMethod, ICommunicationMethodReqData } from '../../types/integrations.types';
 import { AxiosResponse } from 'axios';
@@ -71,7 +71,7 @@ export const updateCustomerThunk = createAsyncThunk<
 });
 export const getAllCustomersThunk = createAsyncThunk<
   { refresh?: boolean; data: CustomerEntity[] },
-  ThunkArgs<{ refresh?: boolean; params: AppQueryParams }, CustomerEntity[]>
+  ThunkArgs<{ refresh?: boolean; params: ApiQueryParams }, CustomerEntity[]>
 >(CustomersThunkTypeEnum.getAll, async (arg, thunkAPI) => {
   try {
     const res = await CustomersApi.getAllByQueries(arg.data?.params);

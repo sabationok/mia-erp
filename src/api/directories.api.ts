@@ -1,11 +1,11 @@
 import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IBaseDirItem } from '../types/dir.types';
-import { AppQueryParams } from './index';
+import { ApiQueryParams } from './index';
 import { ClientApi } from './client.api';
 
-export type GetAllByDirTypeOptions = Required<Pick<AppQueryParams, 'dirType'>> & {
-  params?: Pick<AppQueryParams, 'isArchived' | 'createTreeData'>;
+export type GetAllByDirTypeOptions = Required<Pick<ApiQueryParams, 'dirType'>> & {
+  params?: Pick<ApiQueryParams, 'isArchived' | 'createTreeData'>;
 };
 
 export interface IDirRes<RD = any> extends ApiResponse<RD> {}

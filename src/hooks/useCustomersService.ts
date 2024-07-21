@@ -10,13 +10,13 @@ import {
   updateCustomerThunk,
 } from '../redux/customers/customers.thunks';
 import { defaultThunkPayload } from '../utils/fabrics';
-import { AppQueryParams } from '../api';
+import { ApiQueryParams } from '../api';
 import { ICommunicationMethod, ICommunicationMethodReqData } from '../types/integrations.types';
 
 export interface CustomersService {
   create: ServiceDispatcherAsync<ICustomerReqDta, CustomerEntity>;
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; params: AppQueryParams }, CustomerEntity[]>;
-  update: ServiceDispatcherAsync<{ refresh?: boolean; data: ICustomerReqDta; params?: AppQueryParams }, CustomerEntity>;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; params: ApiQueryParams }, CustomerEntity[]>;
+  update: ServiceDispatcherAsync<{ refresh?: boolean; data: ICustomerReqDta; params?: ApiQueryParams }, CustomerEntity>;
 
   getAllMethods: ServiceDispatcherAsync<ICommunicationMethodReqData, ICommunicationMethod[]>;
   updateMethod: ServiceDispatcherAsync<ICommunicationMethodReqData, ICommunicationMethod>;

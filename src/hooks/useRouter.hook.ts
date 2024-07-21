@@ -1,12 +1,12 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppParams, useAppQuery } from './index';
-import { AppQueryParams } from '../api';
+import { ApiQueryParams } from '../api';
 
 export const useAppRouter = <Query = any, Hash extends string = any>() => {
   const navTo = useNavigate();
   const location = useLocation();
   const params = useAppParams();
-  const { query, params: sp } = useAppQuery<Query & AppQueryParams>();
+  const { query, params: sp } = useAppQuery<Query & ApiQueryParams>();
 
   const goBack = () => window.history.back();
 
@@ -19,7 +19,7 @@ export const useAppRouter = <Query = any, Hash extends string = any>() => {
     },
     query,
     queryToString: () => sp.toString(),
-    push: async ({ pathname, query, hash }: { pathname?: string; query?: Query & AppQueryParams; hash?: string }) => {
+    push: async ({ pathname, query, hash }: { pathname?: string; query?: Query & ApiQueryParams; hash?: string }) => {
       try {
         navTo({
           pathname,
@@ -37,7 +37,7 @@ export const useAppRouter = <Query = any, Hash extends string = any>() => {
       hash,
     }: {
       pathname?: string;
-      query?: Query & AppQueryParams;
+      query?: Query & ApiQueryParams;
       hash?: string;
     }) => {
       try {

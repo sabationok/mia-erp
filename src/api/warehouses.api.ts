@@ -1,5 +1,5 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppQueryParams } from './index';
+import { ApiQueryParams } from './index';
 import {
   IWarehouseDocReqData,
   IWarehouseReqData,
@@ -14,7 +14,7 @@ export class WarehouseInventoriesApi {
   private static endpoints = APP_CONFIGS.endpoints.warehousing.inventories;
 
   public static getAll = (
-    params?: Pick<AppQueryParams, 'warehouseId' | 'offerId' | 'variationId'>
+    params?: Pick<ApiQueryParams, 'warehouseId' | 'offerId' | 'variationId'>
   ): Promise<ApiResponse<WarehouseItemEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
   };
@@ -40,12 +40,12 @@ export class WarehousesApi {
   public static updateWarehouse = (data?: IWarehouseReqData): Promise<ApiResponse<WarehouseEntity>> => {
     return this.api.patch(this.endpoints.update(data?._id), data?.data);
   };
-  public static getById = (warehouse?: OnlyUUID, params?: AppQueryParams): Promise<ApiResponse<WarehouseEntity>> => {
+  public static getById = (warehouse?: OnlyUUID, params?: ApiQueryParams): Promise<ApiResponse<WarehouseEntity>> => {
     return this.api.get(this.endpoints.getById(warehouse?._id), { params: params });
   };
 
   public static getAll = (
-    params?: Pick<AppQueryParams, 'ids' | 'label' | 'barCode'>
+    params?: Pick<ApiQueryParams, 'ids' | 'label' | 'barCode'>
   ): Promise<ApiResponse<WarehouseEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params: params });
   };

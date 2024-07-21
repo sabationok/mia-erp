@@ -1,5 +1,5 @@
 import { OnlyUUID } from '../../redux/app-redux.types';
-import { AppQueryParams } from '../../api';
+import { ApiQueryParams } from '../../api';
 import { IOfferBase, OfferEntity, OfferFullFormData } from './offers.types';
 import { UUID } from '../utils.types';
 import { HasBaseCmsConfigsDto } from '../cms.types';
@@ -24,5 +24,5 @@ export interface VariationDto extends Omit<IVariationBase, 'cmsConfigs'>, HasBas
 export interface IVariationReqData {
   _id?: string;
   data?: VariationDto;
-  params?: Pick<AppQueryParams, 'offerId' | 'withDeleted' | 'sku' | 'label' | 'barCode' | 'langKey' | 'search'>;
+  params?: Pick<ApiQueryParams, 'offerId' | 'withDeleted' | 'sku' | 'label' | 'barCode' | 'langKey' | 'search'>;
 }

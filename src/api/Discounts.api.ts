@@ -1,7 +1,7 @@
 import { ClientApi } from './client.api';
 import { ApiResponse } from '../redux/app-redux.types';
 import { PriceDiscountDto, PriceDiscountEntity } from '../types/price-management/discounts';
-import { AppQueryParams } from './index';
+import { ApiQueryParams } from './index';
 import { OnlyUUID } from '../types/utils.types';
 
 export interface GetDiscountQuery {
@@ -11,7 +11,7 @@ export interface GetDiscountQuery {
   getPricesLists?: boolean;
 }
 export interface GetAllDiscountsQuery
-  extends Pick<AppQueryParams, 'priceId' | 'offerId' | 'listId' | 'offset' | 'limit' | 'ids'> {}
+  extends Pick<ApiQueryParams, 'priceId' | 'offerId' | 'listId' | 'offset' | 'limit' | 'ids'> {}
 export class DiscountsApi {
   private static readonly _client = ClientApi.clientRef;
   private static readonly _BASE_URL = 'price-management/discounts';

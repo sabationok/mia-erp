@@ -4,7 +4,7 @@ import { ThunkArgs } from '../store.store';
 import { isAxiosError } from 'axios';
 import { ITransaction, ITransactionReqData } from '../../types/finances/transactions.types';
 import TransactionsApi from '../../api/transactions.api';
-import { AppQueryParams, createApiCall } from '../../api';
+import { ApiQueryParams, createApiCall } from '../../api';
 
 // export async function payloadCreator<R = any>(
 //   getResponse: () => R,
@@ -31,7 +31,7 @@ export const getAllTransactionsThunk = createAsyncThunk<
   ThunkArgs<
     {
       refresh?: boolean;
-      query?: AppQueryParams;
+      query?: ApiQueryParams;
     },
     ITransaction[]
   >

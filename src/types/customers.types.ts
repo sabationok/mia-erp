@@ -1,4 +1,4 @@
-import { AppQueryParams } from '../api';
+import { ApiQueryParams } from '../api';
 import { IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
 import { OrderEntity } from './orders/orders.types';
 import { HasCompany, HasMagicLink, HasReference, MaybeNull, UUID } from './utils.types';
@@ -49,5 +49,5 @@ export interface ICustomerFormData extends ICustomerDto {
 export interface ICustomerReqDta {
   _id?: string;
   data?: ICustomerDto;
-  params?: Pick<AppQueryParams, 'email' | 'reference' | 'referenceType' | 'phone' | 'ids' | 'ownerId' | 'userId'>;
+  params?: Pick<ApiQueryParams, 'email' | 'reference' | 'referenceType' | 'phone' | 'ids' | 'ownerId' | 'userId'>;
 }

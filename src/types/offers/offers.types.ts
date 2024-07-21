@@ -3,7 +3,7 @@ import { OfferCategoryEntity, SupplierDirEntity } from '../dir.types';
 import { PriceEntity } from '../price-management/price-management.types';
 import { WarehouseEntity, WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { IBrand } from '../../redux/directories/brands.types';
-import { AppQueries, AppQueryParams } from '../../api';
+import { ApiQueryParams, AppQueries } from '../../api';
 import { VariationEntity } from './variations.types';
 import { PropertiesGroupEntity, PropertyValueEntity } from './properties.types';
 import {
@@ -169,7 +169,7 @@ export interface OfferDto extends OfferBaseDto, OfferRelatedFieldsDto, IOfferDef
 export interface OfferReqData {
   _id?: string;
   data?: OfferDto;
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }
 
 export interface HasOffers {

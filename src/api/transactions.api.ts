@@ -5,7 +5,7 @@ import {
   ITransactionRes,
 } from 'types/finances/transactions.types';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppQueryParams } from './index';
+import { ApiQueryParams } from './index';
 import { ApiResponse } from '../redux/app-redux.types';
 import { BankAccountReqData, IBankAccount } from '../types/finances/bank-accounts.types';
 import { ClientApi } from './client.api';
@@ -14,7 +14,7 @@ export default class TransactionsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.finTransactions;
 
-  public static getAll = (params?: AppQueryParams): Promise<IAllTransactionsRes> => {
+  public static getAll = (params?: ApiQueryParams): Promise<IAllTransactionsRes> => {
     return this.api.get(this.endpoints.getAll(), {
       params,
     });
@@ -46,7 +46,7 @@ export class BankAccountsApi {
   public static update = (reqData?: BankAccountReqData): Promise<ApiResponse<IBankAccount>> => {
     return this.api.patch(this.endpoints.update(reqData?.data?._id), reqData?.data);
   };
-  public static getAll = (reqData?: { params?: AppQueryParams }): Promise<ApiResponse<IBankAccount[]>> => {
+  public static getAll = (reqData?: { params?: ApiQueryParams }): Promise<ApiResponse<IBankAccount[]>> => {
     return this.api.get(this.endpoints.getList(), { params: reqData?.params });
   };
 }

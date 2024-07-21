@@ -1,6 +1,6 @@
 import FlexBox, { FlexForm } from '../atoms/FlexBox';
 import { ChatWsInitializer } from '../Ws/ChatWsInitializer';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useChatSelector } from '../../redux/selectors.store';
 import { useAppDispatch } from '../../redux/store.store';
 import {
@@ -23,6 +23,8 @@ import { ToastService } from '../../services';
 import { addChatMessageAction } from 'redux/chat/chat.slice';
 import { omit } from 'lodash';
 import { UUID } from '../../types/utils.types';
+import { ChatMessage } from './components/ChatMessage';
+import { useScrollTo } from '../../hooks';
 
 interface ChatFormData {
   chatId: string;
@@ -36,10 +38,14 @@ const validation = yup.object().shape({
 export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; customerId?: string; chatId?: string }) => {
   const chatState = useChatSelector();
   const dispatch = useAppDispatch();
+  const {
+    listRef: messagesBoxRef,
+    scrollTo,
+    id: itemId,
+  } = useScrollTo('scrollItem', { horizontal: false, preventDefault: false });
 
   const loaders = useLoaders<'send' | 'wait' | 'getAll' | 'messages' | 'chat'>();
 
-  const [isSomeoneTyping, set_isSomeoneTyping] = useState(false);
   const [chat, setChat] = useState<ChatEntity | undefined>(() => {
     const id = chatId || (orderId ? chatState.keysMap[orderId] : undefined);
 
@@ -56,14 +62,14 @@ export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; custom
     >
   >({});
 
+  const isConnected = chatState.wsConnectionStatus;
+
   const setTyping = (data: typeof isTypingMap) => {
     setIsTypingMap(prev => ({ ...prev, ...data }));
   };
   const unSetTyping = (key: string) => {
     setIsTypingMap(prev => omit(prev, [key]));
   };
-
-  const isConnected = chatState.wsConnectionStatus;
 
   const createChat = (params: { orderId: string }) => {
     dispatch(
@@ -91,6 +97,7 @@ export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; custom
         params: params,
         onLoading: loaders.onLoading('chat'),
         onSuccess: ({ data }) => {
+          setChat(data);
           loadMessages({ chatId: data._id });
         },
         onError: (err: AxiosError) => {
@@ -101,9 +108,38 @@ export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; custom
       })
     );
   };
-  useEffect(() => {
-    console.log('from props', { chatId, orderId });
+  const renderTypings = useMemo(() => {
+    const list = Object.entries(isTypingMap);
 
+    return list.map(([key, item]) => {
+      return (
+        <FlexBox $padding={'8px'} key={key}>
+          {item?.email || item?.name}
+        </FlexBox>
+      );
+    });
+  }, [isTypingMap]);
+  const renderMessages = useMemo(() => {
+    const mapKey = chat?._id;
+
+    if (!mapKey) return null;
+
+    const list = chatState.messages.listsMap[mapKey];
+
+    return list?.map(msg => {
+      const isRequest = !!msg.sender?.user;
+
+      return <ChatMessage key={msg._id} msg={msg} isRequest={isRequest} />;
+    });
+  }, [chat?._id, chatState.messages.listsMap]);
+
+  useEffect(() => {
+    if (renderTypings.length) {
+      itemId && scrollTo(itemId);
+    }
+  }, [itemId, renderTypings.length, scrollTo]);
+
+  useEffect(() => {
     if (chatId) {
       const chat = chatState.dataMap[chatId];
       if (!chat) {
@@ -145,28 +181,34 @@ export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; custom
         }}
       />
 
-      <MessagesList overflow={'auto'} flex={1}></MessagesList>
+      <MessagesList ref={messagesBoxRef}>
+        {renderMessages}
 
-      {isSomeoneTyping && <FlexBox padding={'16px'}>{'some one typing'}</FlexBox>}
-      {isConnected && <FlexBox padding={'16px'}>{'Is connected'}</FlexBox>}
-      <ChatForm
-        chatId={chat?._id}
-        onSubmit={data => {
-          data.chatId &&
-            dispatch(
-              sendChatMessageThunk({
-                data: {
-                  data: { data },
-                },
-              })
-            );
-        }}
-      ></ChatForm>
+        <FlexBox className={itemId?.toString()} id={itemId?.toString()} fillWidth></FlexBox>
+      </MessagesList>
+
+      {!!renderTypings?.length && (
+        <FlexBox gap={12} padding={'8px 16px'}>
+          {renderTypings}
+        </FlexBox>
+      )}
+
+      {!isConnected && <FlexBox padding={'16px'}>{'Is not connected'}</FlexBox>}
+
+      <ChatForm chatId={chat?._id}></ChatForm>
     </FlexBox>
   );
 };
 
-const MessagesList = styled(FlexBox)``;
+const MessagesList = styled(FlexBox)`
+  //flex-direction: column-reverse;
+  gap: 8px;
+  padding: 8px;
+
+  flex: 1;
+  overflow: auto;
+`;
+
 const ChatForm = ({ chatId, onSubmit }: { chatId?: string; onSubmit?: (data: ChatFormData) => void }) => {
   const { watch, resetField, register, setValue, handleSubmit } = useForm<ChatFormData>({
     defaultValues: { chatId },
@@ -175,7 +217,7 @@ const ChatForm = ({ chatId, onSubmit }: { chatId?: string; onSubmit?: (data: Cha
   });
   // const typingTimeoutRef = useRef<NodeJS.Timeout>();
   const typingRef = useRef<boolean>();
-
+  const dispatch = useAppDispatch();
   const formValues = watch();
 
   // const setTyping = () => {
@@ -202,9 +244,17 @@ const ChatForm = ({ chatId, onSubmit }: { chatId?: string; onSubmit?: (data: Cha
       fxDirection={'row'}
       gap={12}
       alignItems={'center'}
-      onSubmit={handleSubmit(data => {
-        onSubmit && onSubmit(data);
-        resetField('text');
+      onSubmit={handleSubmit(fData => {
+        dispatch(
+          sendChatMessageThunk({
+            data: {
+              data: { data: fData },
+            },
+            onSuccess: () => {
+              resetField('text');
+            },
+          })
+        );
       })}
     >
       <InputText

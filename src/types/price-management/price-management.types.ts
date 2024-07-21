@@ -2,7 +2,7 @@ import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.typ
 import { TabOption } from '../../components/atoms/TabSelector';
 import { OfferEntity } from '../offers/offers.types';
 import { VariationEntity } from '../offers/variations.types';
-import { AppQueryParams } from '../../api';
+import { ApiQueryParams } from '../../api';
 import { ICompanyBase } from '../companies.types';
 import { IUserBase } from '../auth.types';
 import {
@@ -130,22 +130,22 @@ export type PriceFormDataPath = Path<IPriceFormData>;
 export interface IPriceListReqData {
   _id?: string;
   data: PriceListDto;
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }
 
 export interface IPriceListItemReqData {
   _id?: string;
   data: CreatePriceDto;
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }
 
 export interface ICreatePriceReqData {
   data: CreatePriceDto;
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }
 
 export interface IUpdatePriceReqData {
   _id?: string;
   data: UpdatePriceDto;
-  params?: AppQueryParams;
+  params?: ApiQueryParams;
 }

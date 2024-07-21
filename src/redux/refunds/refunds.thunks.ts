@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkArgs } from '../store.store';
-import { AppQueryParams, createApiCall, RefundsApi } from '../../api';
+import { ApiQueryParams, createApiCall, RefundsApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { isAxiosError } from 'axios';
 import { OnlyUUID } from '../app-redux.types';
@@ -11,7 +11,7 @@ export const getAllRefundsThunk = createAsyncThunk<
   ThunkArgs<
     {
       refresh?: boolean;
-      query?: AppQueryParams;
+      query?: ApiQueryParams;
     },
     IRefund[]
   >

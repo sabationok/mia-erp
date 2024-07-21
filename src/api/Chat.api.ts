@@ -1,25 +1,36 @@
 import APP_CONFIGS from 'redux/APP_CONFIGS';
 import { ChatEntity, MessageEntity, SendMessageDto, UpdateMessageDto } from 'types/chat/chat.types';
 import { ClientApi } from './client.api';
-import { ApiHeaders, ApiResponse, AppQueryParams } from './api.types';
+import { ApiHeaders, ApiQueryParams, ApiResponse } from './api.types';
 import { BaseApiClass } from './abstract-base-api-class.helper';
+import { UUID } from 'types/utils.types';
 
+export namespace ChatMessagesApiTypes {
+  export type FindAllQuery = Pick<ApiQueryParams, 'dataView' | 'limit' | 'offset'> & {
+    chatId: string;
+    messageId?: string;
+  };
+  export type FindOneQuery = {
+    _id?: UUID;
+  };
+}
 class ChatMessagesApi extends BaseApiClass {
   private static _api = ClientApi.clientRef;
-  private static _endpoints = ClientApi._endpoints.chat.messages;
+  private static _endpoints = APP_CONFIGS.endpoints.chat.messages;
   public static send = (input?: { data: SendMessageDto }): Promise<ApiResponse<MessageEntity>> => {
-    return this._api.post(this._endpoints.send(), input?.data);
+    return this._api.post(this._endpoints.send(), input?.data, {
+      headers: this.headers,
+    });
   };
   public static update = (input?: { data: UpdateMessageDto }): Promise<ApiResponse<MessageEntity>> => {
-    return this._api.patch(this._endpoints.update(), input?.data);
+    return this._api.patch(this._endpoints.update(), input?.data, {
+      headers: this.headers,
+    });
   };
 
   public static getAll = (
     _?: undefined,
-    params?: Pick<AppQueryParams, 'dataView' | 'limit' | 'offset'> & {
-      chatId: string;
-      messageId?: string;
-    }
+    params?: ChatMessagesApiTypes.FindAllQuery
   ): Promise<ApiResponse<MessageEntity[]>> => {
     return this._api.get(this._endpoints.getAll(), {
       params,
@@ -27,6 +38,15 @@ class ChatMessagesApi extends BaseApiClass {
     });
   };
 }
+
+export namespace ChatApiTypes {
+  export interface FindOneQuery {
+    _id?: string;
+    orderId?: string;
+    offerId?: string;
+  }
+}
+
 export class ChatApi extends BaseApiClass {
   private static _api = ClientApi.clientRef;
   private static _endpoints = APP_CONFIGS.endpoints.chat;
@@ -42,10 +62,7 @@ export class ChatApi extends BaseApiClass {
     this.messages.removeHeader(key);
     return this;
   }
-
-  public static getOne = (input?: {
-    params: { chatId?: string; orderId?: string; offerId?: string };
-  }): Promise<ApiResponse<ChatEntity>> => {
+  public static getOne = (input?: { params: ChatApiTypes.FindOneQuery }): Promise<ApiResponse<ChatEntity>> => {
     return this._api.get(this._endpoints.getOne(), {
       ...input,
       headers: this.headers,

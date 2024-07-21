@@ -8,11 +8,11 @@ import {
   PriceEntity,
   PriceListEntity,
 } from '../types/price-management/price-management.types';
-import { AppQueryParams } from './index';
+import { ApiQueryParams } from './index';
 import { DiscountsApi } from './Discounts.api';
 
 export type GetAllPricesQuery = Pick<
-  AppQueryParams,
+  ApiQueryParams,
   'list' | 'listId' | 'offer' | 'offerId' | 'variation' | 'variationId'
 >;
 
@@ -28,11 +28,11 @@ export class PriceListsApi {
     return this.api.patch(this.endpoints.updateList(data?._id || ''), data?.data);
   };
 
-  public static getAll = async (query?: AppQueryParams): Promise<ApiResponse<PriceListEntity[]>> => {
+  public static getAll = async (query?: ApiQueryParams): Promise<ApiResponse<PriceListEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params: query });
   };
 
-  public static getById = async (list?: OnlyUUID, query?: AppQueryParams): Promise<ApiResponse<PriceListEntity>> => {
+  public static getById = async (list?: OnlyUUID, query?: ApiQueryParams): Promise<ApiResponse<PriceListEntity>> => {
     return this.api.get(this.endpoints.getById(list?._id || ''), { params: query });
   };
 }

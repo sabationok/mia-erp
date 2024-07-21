@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { OfferEntity } from '../../types/offers/offers.types';
 import ProductCardSimpleOverview from '../Overviews/offer/ProductCardSimpleOverview';
-import { apiCall, AppQueryParams } from '../../api';
+import { apiCall, ApiQueryParams } from '../../api';
 import OffersApi from '../../api/offers.api';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
@@ -15,8 +15,8 @@ import { TabOption } from '../atoms/TabSelector';
 export interface SelectProductModalProps extends Omit<ModalFormProps<any, any, OfferEntity>, 'onSubmit' | 'onSelect'> {
   selected?: OfferEntity;
   onSelect?: (product: OfferEntity) => void;
-  search?: AppQueryParams['search'];
-  searchBy?: AppQueryParams['searchBy'];
+  search?: ApiQueryParams['search'];
+  searchBy?: ApiQueryParams['searchBy'];
 }
 
 const productSelectorFilterOptions: (TabOption & { placeholder?: string })[] = [

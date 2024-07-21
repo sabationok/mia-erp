@@ -2,7 +2,7 @@ import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from 'redux/app-redux.types';
 import { useMemo } from 'react';
 import { defaultThunkPayload } from 'utils/fabrics';
-import { AppQueryParams } from 'api';
+import { ApiQueryParams } from 'api';
 import {
   ICreatePriceReqData,
   IPriceListReqData,
@@ -19,15 +19,15 @@ export interface PriceManagementService {
   deleteById?: ServiceApiCaller<string, PriceListEntity>; // !!!!! ===>>> ServiceDispatcher
   updateById?: ServiceApiCaller<IPriceListReqData, PriceListEntity>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceDispatcherAsync<
-    { list: OnlyUUID; query?: AppQueryParams; refreshCurrent?: boolean },
+    { list: OnlyUUID; query?: ApiQueryParams; refreshCurrent?: boolean },
     PriceListEntity
   >;
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, PriceListEntity[]>;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: ApiQueryParams }, PriceListEntity[]>;
   refreshListById: ServiceDispatcherAsync<OnlyUUID, PriceListEntity>;
 
   // ? PRICES
   getAllPrices: ServiceDispatcherAsync<
-    { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'list' | 'offer' | 'variation'> },
+    { refreshCurrent?: boolean; params?: Pick<ApiQueryParams, 'list' | 'offer' | 'variation'> },
     PriceEntity[]
   >;
 

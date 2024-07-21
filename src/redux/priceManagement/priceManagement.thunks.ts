@@ -7,7 +7,7 @@ import {
   PriceListEntity,
 } from '../../types/price-management/price-management.types';
 import { ThunkArgs } from '../store.store';
-import { apiCall, AppQueryParams, GetOnePriceQuery, PriceManagementApi } from '../../api';
+import { apiCall, ApiQueryParams, GetOnePriceQuery, PriceManagementApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { OnlyUUID } from '../app-redux.types';
 import { isAxiosError } from 'axios';
@@ -49,14 +49,14 @@ export const getPriceThunk = createAsyncThunk<
 export const getAllPriceListsThunk = createAsyncThunk<
   | {
       refresh?: boolean;
-      query?: AppQueryParams;
+      query?: ApiQueryParams;
       data: PriceListEntity[];
     }
   | undefined,
   ThunkArgs<
     {
       refresh?: boolean;
-      query?: AppQueryParams;
+      query?: ApiQueryParams;
     },
     PriceListEntity[]
   >
@@ -149,7 +149,7 @@ export const updatePriceListByIdThunk = createAsyncThunk<
 });
 export const getPriceListByIdThunk = createAsyncThunk<
   { data: PriceListEntity; refreshCurrent?: boolean },
-  ThunkArgs<{ list: OnlyUUID; query?: AppQueryParams; refreshCurrent?: boolean }, PriceListEntity>
+  ThunkArgs<{ list: OnlyUUID; query?: ApiQueryParams; refreshCurrent?: boolean }, PriceListEntity>
 >(PriceManagementThunkType.getPriceListById, async (args, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = args;
 

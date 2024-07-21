@@ -1,5 +1,5 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppQueryParams } from './index';
+import { ApiQueryParams } from './index';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IVariationReqData, VariationEntity } from 'types/offers/variations.types';
 import { ClientApi } from './client.api';
@@ -10,7 +10,7 @@ export default class VariationsApi {
 
   public static getAll = (
     _?: undefined,
-    params?: Pick<AppQueryParams, 'offerId' | 'label' | 'sku' | 'barCode'>
+    params?: Pick<ApiQueryParams, 'offerId' | 'label' | 'sku' | 'barCode'>
   ): Promise<ApiResponse<VariationEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
   };

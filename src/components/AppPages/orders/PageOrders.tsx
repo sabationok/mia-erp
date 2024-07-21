@@ -137,17 +137,12 @@ export const useOrderTableConfigs = () => {
             search: data.search,
             searchPath: data.param.dataPath,
           };
-          const path = data.param?.dataPath;
           router.push({
             query: {
               search: data.search,
-              searchPath: path,
+              searchPath: data.param.dataPath,
             },
           });
-
-          // if (path && data.search) {
-          //   if (isString(path)) setValueByPath(path, data.search, params, { mutation: true });
-          // }
 
           setSearchParams(data);
 

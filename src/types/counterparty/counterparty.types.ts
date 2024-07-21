@@ -1,4 +1,4 @@
-import { AppQueryParams } from 'api';
+import { ApiQueryParams } from 'api';
 import { AddressEntity } from 'types/addresses/addresses.types';
 import { OrderEntity } from 'types/orders/orders.types';
 import { ProfileEntity } from 'types/profile/profile.type';
@@ -31,5 +31,5 @@ export interface ICounterpartyFormData extends ICounterpartyDto {
 export interface ICounterpartyReqDta {
   _id?: string;
   data?: ICounterpartyDto;
-  params?: Pick<AppQueryParams, 'email' | 'reference' | 'referenceType' | 'phone' | 'ids' | 'ownerId' | 'userId'>;
+  params?: Pick<ApiQueryParams, 'email' | 'reference' | 'referenceType' | 'phone' | 'ids' | 'ownerId' | 'userId'>;
 }
