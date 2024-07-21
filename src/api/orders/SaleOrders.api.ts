@@ -1,6 +1,6 @@
 import APP_CONFIGS from '../../redux/APP_CONFIGS';
 import { ICreateOrderInfoDto, OrderEntity, SaleOrdersGroupDto } from '../../types/orders/orders.types';
-import { ApiResponse, OnlyUUID } from '../../redux/app-redux.types';
+import { ApiResponse } from '../../redux/app-redux.types';
 import { ApiQuerySearchParams, ApiQuerySortParams, AppQueryParams } from '../index';
 import { ClientApi } from '../client.api';
 import { OrderSlotEntity, SaleOrderSlotDto, UpdateSaleOrderSlotDto } from '../../types/orders/order-slot.types';
@@ -65,7 +65,7 @@ export default class SaleOrdersApi {
   public static readonly groups = SaleOrderGroupsApi;
   public static readonly slots = SaleOrderSlotsApi;
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.ordersEndpoints;
+  private static endpoints = ClientApi._endpoints.ordersEndpoints;
 
   public static getAll = (_?: any, params?: GetAllSaleOrdersQuery): Promise<ApiResponse<OrderEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
@@ -75,12 +75,6 @@ export default class SaleOrdersApi {
       params,
     });
   };
-  public static getById = (
-    data?: OnlyUUID & { params?: { fullInfo?: boolean } }
-  ): Promise<ApiResponse<OrderEntity>> => {
-    return this.api.get(this.endpoints.getOrderById(data?._id), { params: data?.params });
-  };
-
   public static create = (input?: ICreateOrderInfoDto): Promise<ApiResponse<OrderEntity>> => {
     return this.api.post(this.endpoints.create());
   };

@@ -3,8 +3,15 @@ import { wsConnectionStatusAction } from 'redux/chat/chat.slice';
 import { useAppDispatch } from 'redux/store.store';
 import { ChatWs } from 'socket';
 
-export const ChatWsInitializer = () => {
+export const ChatWsInitializer = ({
+  onConnect,
+  onConnectError,
+}: {
+  onConnect?: () => void;
+  onConnectError?: (error: Error) => void;
+}) => {
   const dispatch = useAppDispatch();
+  // const authState=useAuthSelector()
 
   useEffect(() => {
     const socket = ChatWs.socketRef;
@@ -16,22 +23,21 @@ export const ChatWsInitializer = () => {
           status: false,
         })
       );
-    }
-
-    if (!connection?.active) {
+    } else if (!connection?.active) {
       const unsubscribers = [
         socket?.onConnect(() => {
           console.log('Chat connected');
-          connection.id &&
-            dispatch(
-              wsConnectionStatusAction({
-                status: true,
-              })
-            );
+          onConnect && onConnect();
+          dispatch(
+            wsConnectionStatusAction({
+              status: true,
+            })
+          );
         }),
         socket.onConnectError(error => {
           console.error('Chat connect error');
           console.error(error);
+          onConnectError && onConnectError(error);
         }),
       ];
 
@@ -40,16 +46,14 @@ export const ChatWsInitializer = () => {
         unsubscribers.forEach(clb => clb());
       };
     } else {
-      connection.id &&
+      connection.active &&
         dispatch(
           wsConnectionStatusAction({
             status: true,
           })
         );
     }
-
-    // eslint-disable-next-line
-  }, [dispatch]);
+  }, [dispatch, onConnect, onConnectError]);
 
   return null;
 };

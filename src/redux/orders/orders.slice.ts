@@ -13,8 +13,8 @@ import {
   getAllInvoicesByOrderThunk,
   getAllOrdersThunk,
   getAllPaymentsByOrderThunk,
-  getOrderByIdThunk,
   getOrderSlotsThunk,
+  getOrderThunk,
 } from './orders.thunks';
 import { onUserLogout } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
@@ -101,7 +101,7 @@ export const ordersSlice = createSlice({
       .addCase(ClearCurrentGroupFormDataAction, (s, a) => {
         s.ordersGroupFormData = { ...initialOrdersGroupFormData };
       })
-      .addCase(getOrderByIdThunk.fulfilled, (S, A) => {
+      .addCase(getOrderThunk.fulfilled, (S, A) => {
         S.currentOrder = A.payload.data;
       })
       .addCase(getOrderSlotsThunk.fulfilled, (s, a) => {

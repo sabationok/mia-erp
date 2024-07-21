@@ -12,7 +12,6 @@ import {
   IOrderReqData,
   OrderEntity,
 } from '../types/orders/orders.types';
-import { AppQueryParams } from '../api';
 import {
   AddSlotToGroupAction,
   ClearCurrentGroupFormDataAction,
@@ -25,8 +24,8 @@ import {
   getAllInvoicesByOrderThunk,
   getAllOrdersThunk,
   getAllPaymentsByOrderThunk,
-  getOrderByIdThunk,
   getOrderSlotsThunk,
+  getOrderThunk,
 } from '../redux/orders/orders.thunks';
 import {
   defaultThunkPayload,
@@ -44,11 +43,8 @@ export interface OrdersService {
   createOne: EmptyFn | ServiceDispatcherAsync<IOrderReqData, OrderEntity>;
   deleteOne: EmptyFn | ServiceDispatcherAsync;
   updateOne: EmptyFn | ServiceDispatcherAsync;
-  getById: ServiceDispatcherAsync<
-    OnlyUUID & { params?: { fullInfo?: boolean }; options?: { refreshCurrent?: boolean } },
-    OrderEntity
-  >;
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, OrderEntity[]>;
+  getById: __ServiceDispatcherAsync<typeof getOrderThunk>;
+  getAll: __ServiceDispatcherAsync<typeof getAllOrdersThunk>;
   getSlots: __ServiceDispatcherAsync<typeof getOrderSlotsThunk>;
 
   getPaymentsByOrderId: __ServiceDispatcherAsync<typeof getAllPaymentsByOrderThunk>;
@@ -82,8 +78,8 @@ const useOrdersServiceHook = (): OrdersService => {
   return useMemo(
     (): OrdersService => ({
       createOne: async () => dispatch(() => {}),
-      getById: args => dispatch(getOrderByIdThunk(defaultThunkPayload(args))),
-      getAll: args => dispatch(getAllOrdersThunk(defaultThunkPayload(args))),
+      getById: args => dispatch(getOrderThunk(args as never)),
+      getAll: args => dispatch(getAllOrdersThunk(args as never)),
 
       deleteOne: async () => dispatch(() => {}),
       updateOne: async () => dispatch(() => {}),

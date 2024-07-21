@@ -253,7 +253,6 @@ const priceManagementEndpoints = {
 
 const ordersEndpoints = {
   getAll: () => `${API_BASE_ROUTES.ORDERS}/getAll`,
-  getOrderById: (orderId?: string) => `${API_BASE_ROUTES.ORDERS}/order/${orderId}`,
   create: () => `${API_BASE_ROUTES.ORDERS}/create`,
   getOne: () => `${API_BASE_ROUTES.ORDERS}/one`,
 

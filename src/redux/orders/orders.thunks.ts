@@ -16,7 +16,7 @@ enum OrdersThunkTypeEnum {
 export enum OrdersThunkType {
   addGroup = 'orders/addGroupThunk',
   getListByQuery = 'orders/getListThunk',
-  getOneByQuery = 'orders/getOneThunk',
+  getOne = 'orders/getOneThunk',
   getOneById = 'orders/getOneByIdThunk',
   getPaymentsList = 'orders/getPaymentsListThunk',
   getDeliveryById = 'orders/getDeliveriesInfoThunk',
@@ -29,9 +29,9 @@ export const addOrdersGroup = createAppAsyncThunk(OrdersThunkType.addGroup, Orde
 
 export const getOrdersListByQueryThunk = createAppAsyncThunk(OrdersThunkType.getListByQuery, OrdersApi.getAll);
 
-export const getOrderThunk = createAppAsyncThunk(OrdersThunkType.getOneByQuery, OrdersApi.getOne);
+// export const getOrderThunk = createAppAsyncThunk(OrdersThunkType.getOneByQuery, OrdersApi.getOne);
 
-export const getOrderByIdThunk = createAppAsyncThunk(OrdersThunkType.getOneById, OrdersApi.getById);
+export const getOrderThunk = createAppAsyncThunk(OrdersThunkType.getOne, OrdersApi.getOne);
 export const getAllOrdersThunk = createAppAsyncThunk(OrdersThunkTypeEnum.getAll, OrdersApi.getAll);
 
 export const getOrderSlotsThunk = createAppAsyncThunk(OrdersThunkTypeEnum.getSlots, OrdersApi.slots.getAll);

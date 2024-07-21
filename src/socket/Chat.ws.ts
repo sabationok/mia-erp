@@ -48,7 +48,7 @@ interface ChatWsClientEventsMap extends WsClientEventsMap {
 export class ChatWs {
   public static _ws = WsClient;
 
-  public static _socket = this._ws.addSocket<ChatWsListenersMap, ChatWsClientEventsMap>('chat');
+  public static _socket = this._ws.addSocket<ChatWsListenersMap, ChatWsClientEventsMap>('');
 
   public static get socketRef() {
     return this._socket;

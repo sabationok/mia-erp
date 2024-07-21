@@ -56,6 +56,9 @@ const CurrentOrderProvider: React.FC<PageCurrentOrderProviderProps> = ({ childre
       },
     };
   }, [currentOrder, dispatch]);
+  useEffect(() => {
+    console.log({ params });
+  }, [params]);
 
   useEffect(() => {
     if (!currentOrder) {
