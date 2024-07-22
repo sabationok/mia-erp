@@ -29,14 +29,14 @@ export const CurrentOrderCTX = createContext({});
 export const useCurrentOrder = () => useContext(CurrentOrderCTX) as OrderProviderValue;
 
 const CurrentOrderProvider: React.FC<PageCurrentOrderProviderProps> = ({ children }) => {
-  const { currentOrder } = useOrdersSelector();
   const params = useAppParams();
+  const orderId = useAppParams()?.orderId;
+  const { currentOrder } = useOrdersSelector();
+
   const dispatch = useAppDispatch();
   const service = useAppServiceProvider()[ServiceName.orders];
 
   const CTX = useMemo((): OrderProviderValue => {
-    const orderId = currentOrder?._id;
-
     return {
       ...currentOrder,
       _origin: currentOrder,
@@ -55,13 +55,13 @@ const CurrentOrderProvider: React.FC<PageCurrentOrderProviderProps> = ({ childre
           : dispatch(getAllDeliveriesByOrderThunk({ ...args, data: { params: { orderId } } }));
       },
     };
-  }, [currentOrder, dispatch]);
+  }, [currentOrder, dispatch, orderId]);
 
   useEffect(() => {
-    if (!currentOrder) {
-      params.orderId && service.getById({ data: { params: { _id: params.orderId } } });
+    if (!currentOrder || (orderId && orderId !== currentOrder._id)) {
+      params.orderId && service.getById({ data: { params: { _id: orderId } } });
     }
-  }, [currentOrder, params.orderId, service]);
+  }, [currentOrder, orderId, params.orderId, service]);
 
   return <CurrentOrderCTX.Provider value={CTX ?? {}}>{children}</CurrentOrderCTX.Provider>;
 };

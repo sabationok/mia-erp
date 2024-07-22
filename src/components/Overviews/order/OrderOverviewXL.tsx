@@ -2,7 +2,6 @@ import { OrderEntity } from '../../../types/orders/orders.types';
 import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
 import React, { useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon';
 import { t } from '../../../lang';
@@ -39,10 +38,7 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
   // const orderS = useAppServiceProvider()[ServiceName.orders];
   const orderId = useAppParams()?.orderId;
   const Order = useCurrentOrder();
-
-  const navigate = useNavigate();
   const router = useAppRouter();
-  const location = useLocation();
 
   const renderTab = useMemo(() => {
     if (tabs[currentTab].value === OrderOverviewTabs.Info) {
@@ -60,11 +56,7 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
       <ModalHeader
         title={t('Order overview')}
         onBackPress={() => {
-          if (location?.pathname) {
-            const newPath = location?.pathname?.replace(`/${Order._origin?._id || orderId}`, '');
-
-            newPath && navigate(newPath);
-          }
+          router.goBack();
         }}
       />
 

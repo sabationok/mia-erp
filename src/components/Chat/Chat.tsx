@@ -15,7 +15,7 @@ import { omit } from 'lodash';
 import { UUID } from '../../types/utils.types';
 import { ChatMessage } from './components/ChatMessage';
 import ChatForm from './components/ChatForm';
-import { ChatApiTypes } from '../../api';
+import { ChatApiTypes, ChatMessagesApiTypes } from '../../api';
 
 type TypingsMap = Record<
   UUID,
@@ -60,7 +60,7 @@ export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string })
       })
     );
   };
-  const loadMessages = (params: { chatId: string }) => {
+  const loadMessages = (params: ChatMessagesApiTypes.FindAllQuery) => {
     dispatch(
       getChatMessagesThunk({
         params,
