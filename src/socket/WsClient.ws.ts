@@ -17,6 +17,7 @@ export interface WsConnectionOptions {
 
 enum SocketNamespaces {
   chat = 'chat',
+  app = 'app',
 }
 
 export class WsClient {

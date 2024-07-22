@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { wsConnectionStatusAction } from 'redux/chat/chat.slice';
 import { useAppDispatch } from 'redux/store.store';
 import { ChatServerEvents, ChatWs } from 'socket';
-import { ApiHeaders, ChatMessagesApiTypes } from '../../api';
+import { ChatMessagesApiTypes } from '../../api';
 import { ChatEntity } from '../../types/chat/chat.types';
 
 export interface ChatWsInitializerMethods {
@@ -45,13 +45,6 @@ export const ChatWsInitializer = React.forwardRef(
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-      if (permissionId) {
-        // ChatApi.setHeader(ApiHeaders.p_token, permissionId);
-        ChatWs.socketRef.setHeader(ApiHeaders.p_token, permissionId);
-      }
-    }, [permissionId]);
-
-    useEffect(() => {
       const socket = ChatWs.socketRef;
       const connection = socket?.connection;
 
@@ -64,20 +57,25 @@ export const ChatWsInitializer = React.forwardRef(
         return;
       }
 
+      const handleConnected = () => {
+        if (chatId) {
+          ChatWs.handleJoin({ data: { chatId } });
+        }
+
+        console.log('ChatWsInitializer | handleJoin | onConnect', { chatId });
+
+        dispatch(
+          wsConnectionStatusAction({
+            status: true,
+          })
+        );
+      };
+
       if (!connection?.active) {
         const unsubscribers = [
           socket?.onConnect(() => {
-            console.log('Chat connected');
             onConnect && onConnect();
-            if (chatId) {
-              ChatWs.handleJoin({ data: { chatId } });
-            }
-
-            dispatch(
-              wsConnectionStatusAction({
-                status: true,
-              })
-            );
+            handleConnected();
           }),
         ];
         if (onConnectError) {
@@ -98,20 +96,9 @@ export const ChatWsInitializer = React.forwardRef(
           unsubscribers.forEach(clb => clb());
         };
       } else if (connection.active) {
-        // console.log('chat is active', connection);
-        if (chatId) {
-          ChatWs.handleJoin({ data: { chatId } });
-        }
-
-        dispatch(
-          wsConnectionStatusAction({
-            status: true,
-          })
-        );
+        handleConnected();
       }
-
-      // eslint-disable-next-line
-    }, [dispatch]);
+    }, [chatId, dispatch, onConnect, onConnectError, onJoin, onLeave, onTyping]);
 
     return null;
   }

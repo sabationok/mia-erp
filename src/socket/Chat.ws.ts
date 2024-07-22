@@ -64,23 +64,20 @@ interface ChatWsClientEventsMap extends WsClientEventsMap {
 export class ChatWs {
   public static _ws = WsClient;
 
-  public static _socket = this._ws.addSocket<ChatWsListenersMap, ChatWsClientEventsMap>('');
+  public static _socket = this._ws.addSocket<ChatWsListenersMap, ChatWsClientEventsMap>('chat');
 
   public static get socketRef() {
     return this._socket;
   }
 
-  public static onConnect(listener: () => void) {
-    this._socket.onConnect(listener);
-    return this;
+  public static onConnect(listener: () => void): () => void {
+    return this._socket.onConnect(listener);
   }
-  public static onConnectError(listener: (error: any) => void) {
-    this._socket.onConnectError(listener);
-    return this;
+  public static onConnectError(listener: (error: any) => void): () => void {
+    return this._socket.onConnectError(listener);
   }
-  public static onDisconnect(listener: () => void) {
-    this._socket.onDisconnect(listener);
-    return this;
+  public static onDisconnect(listener: () => void): () => void {
+    return this._socket.onDisconnect(listener);
   }
 
   public static onJoin = this._socket._buildSubscriber(EventNames.joinedToRoom);
@@ -92,5 +89,5 @@ export class ChatWs {
   public static handleTyping = this._socket.buildEmitter(EventNames.messages_typing);
   public static handleJoin = this._socket.buildEmitter(EventNames.joinedToRoom);
   public static handleLeave = this._socket.buildEmitter(EventNames.leavedRoom);
-  public static send = this._socket.buildEmitter(EventNames.messages_send);
+  public static handleSend = this._socket.buildEmitter(EventNames.messages_send);
 }

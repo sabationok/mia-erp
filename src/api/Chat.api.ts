@@ -32,8 +32,6 @@ class ChatMessagesApi extends BaseApiClass {
     _?: undefined,
     params?: ChatMessagesApiTypes.FindAllQuery
   ): Promise<ApiResponse<MessageEntity[]>> => {
-    console.log('get all chat messages', params);
-
     return this._api.get(this._endpoints.getAll(), {
       params,
       headers: this.headers,

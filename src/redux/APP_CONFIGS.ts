@@ -17,7 +17,7 @@ export enum API_BASE_ROUTES {
   ORDERS = '/orders',
   ORDERS_SLOTS = '/orders/slots',
   ORDERS_SALES = '/orders/sales',
-  ORDERS_SALES_SLOTS = '/orders/sales/slots',
+  ORDERS_SALES_SLOTS = '/orders/slots', // ! /orders/sales/slots
   ORDERS_PURCHASE = '/orders/purchases',
   ORDERS_PURCHASE_SLOTS = '/orders/purchases/slots',
   REFUNDS = '/refunds',

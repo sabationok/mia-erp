@@ -132,7 +132,7 @@ export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string })
     <FlexBox overflow={'hidden'} flex={1}>
       <ChatWsInitializer
         // permissionId={profile?.permission?._id}
-        chatId={chatId}
+        chatId={chat?._id}
         onTyping={data => {
           console.log('onTyping | data', data);
           if (data.data.sender) {
