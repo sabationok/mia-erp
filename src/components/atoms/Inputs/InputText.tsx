@@ -2,27 +2,42 @@ import styled, { css } from 'styled-components';
 import { Property } from 'csstype';
 
 export interface TextInputProps {
-  error?: boolean;
-  success?: boolean;
-  align?: Property.TextAlign;
+  $isError?: boolean;
+  $isSuccess?: boolean;
+  $align?: Property.TextAlign;
+  $width?: Property.Width;
+  $minWidth?: Property.MinWidth;
+  $maxWidth?: Property.MaxWidth;
+
+  $height?: Property.Height;
+  $maxHeight?: Property.MinHeight;
+  $minHeight?: Property.MaxHeight;
+
+  $padding?: Property.Padding;
+
+  $weight?: Property.FontWeight;
+  $fontSize?: Property.FontWeight;
 }
-export const InputStyles = css<TextInputProps>`
-  padding: 5px 8px;
+export const inputCssStyles = css<TextInputProps>`
+  padding: ${p => p.$padding ?? '5px 8px'};
 
-  width: 100%;
-  height: 28px;
-  font-weight: 500;
+  height: ${p => p.$height ?? '28px'};
+  width: ${p => p.$width ?? '100%'};
+  font-weight: ${p => p.$weight ?? 500};
 
-  text-align: ${({ align = 'left' }) => align};
+  text-align: ${({ $align = 'left' }) => $align};
 
-  color: ${({ error, success, theme }) =>
-    (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || 'inherit'};
+  color: ${({ $isError, $isSuccess, theme }) =>
+    ($isError && theme.globals.colors.error) || ($isSuccess && theme.globals.colors.success) || 'inherit'};
 
   background-color: inherit;
   border-radius: 4px;
+
   border: 1px solid
-    ${({ error, success, theme }) =>
-      (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || theme.globals.inputBorder};
+    ${({ $isError, $isSuccess, theme }) =>
+      ($isError && theme.globals.colors.error) ||
+      ($isSuccess && theme.globals.colors.success) ||
+      theme.globals.inputBorder};
 
   &:hover {
     border-color: ${({ theme }) => theme.accentColor.base};
@@ -54,25 +69,12 @@ export const InputStyles = css<TextInputProps>`
   }
 `;
 
-const InputField = styled.fieldset<TextInputProps>`
-  ${InputStyles}
+export const InputField = styled.fieldset<TextInputProps>`
+  ${inputCssStyles};
 `;
 
-const InputText = styled.input<TextInputProps>`
-  ${InputStyles};
-`;
-const StyledInput = styled.input`
-  ${InputStyles};
-
-  padding: 0;
-  border: 0;
-  box-shadow: none;
-
-  &:hover {
-    border: 0;
-    box-shadow: none;
-  }
+export const InputText = styled.input<TextInputProps>`
+  ${inputCssStyles};
 `;
 
-export { InputField, StyledInput };
 export default InputText;

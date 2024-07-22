@@ -1,5 +1,5 @@
 import { WsClient, WsResponse } from './index';
-import { WsClientEventPayload, WsClientEventsMap, WsEventsMap } from './AppSocket';
+import { WsClientEventPayload, WsClientEventsMap, WsEventListenersMap } from './AppSocket';
 import { MessageEntity, SendMessageDto } from 'types/chat/chat.types';
 
 export interface WsChatResponse<
@@ -46,7 +46,7 @@ export namespace ChatServerEvents {
   export type OnTyping = WsChatResponse<{ status: boolean; chatId: string }>;
   export type OnSendMessage = WsChatResponse<MessageEntity>;
 }
-export interface ChatWsListenersMap extends WsEventsMap {
+export interface ChatWsListenersMap extends WsEventListenersMap {
   [EventNames.messages_send]: (data: ChatServerEvents.OnSendMessage) => void;
   [EventNames.messages_typing]: (data: ChatServerEvents.OnTyping) => void;
   [EventNames.joinedToRoom]: (data: ChatServerEvents.OnJoinOrLeaveMember) => void;

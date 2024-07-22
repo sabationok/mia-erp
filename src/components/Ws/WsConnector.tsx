@@ -7,7 +7,7 @@ export const WsConnector = () => {
 
   useEffect(() => {
     if (authState.access_token) {
-      WsClient.authorize({ access_token: authState.access_token });
+      WsClient.authorize({ authorization: authState.access_token });
     } else {
       WsClient.unAuthorize();
     }

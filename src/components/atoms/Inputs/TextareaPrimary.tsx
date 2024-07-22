@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import { InputStyles } from './InputText';
+import { inputCssStyles } from './InputText';
 
 const TextareaPrimary = styled.textarea<{ error?: boolean }>`
-  ${InputStyles};
+  ${inputCssStyles};
 
   height: 44px;
 

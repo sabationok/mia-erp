@@ -1,7 +1,11 @@
 import { io, Socket } from 'socket.io-client';
 import { PartialRecord } from '../types/utils.types';
 
-export interface WsEventsMap extends Record<string, (...args: any[]) => void> {}
+export type WsEvListenerType = (...args: any[]) => void;
+
+export interface WsEventListenersMap extends Record<string, WsEvListenerType> {}
+
+export interface WsClientEventsMap extends Record<string, WsClientEventPayload> {}
 
 export type WsClientEventPayload<Data = any, Params = any, Query = any, Headers = any> = {
   data?: Data;
@@ -9,9 +13,8 @@ export type WsClientEventPayload<Data = any, Params = any, Query = any, Headers 
   query?: Query;
   headers?: Headers;
 };
-export interface WsClientEventsMap extends Record<string, WsClientEventPayload> {}
 
-export class AppSocket<ListenersMap extends WsEventsMap, ClientEventsMap extends WsClientEventsMap> {
+export class AppSocket<ListenersMap extends WsEventListenersMap, ClientEventsMap extends WsClientEventsMap> {
   private readonly _socket: Socket;
   private _headers: PartialRecord<string, string> = {};
 
@@ -27,16 +30,31 @@ export class AppSocket<ListenersMap extends WsEventsMap, ClientEventsMap extends
     this._headers[key] = value;
     return this;
   }
+
   removeHeader(key: string): this {
     delete this._headers[key];
     return this;
   }
-  // unsubscribe = (...args: Parameters<typeof this._socket.off>) => {
-  //   const [name, listener] = args;
-  //
-  //   this._socket.off(name, listener);
-  //   return this;
-  // };
+
+  authorize(auth: typeof this._socket.auth): this {
+    this.disconnect();
+    this._socket.auth = auth;
+    this.connect();
+    return this;
+  }
+  unAuthorize(): this {
+    this.disconnect();
+    this._socket.auth = {};
+    this.connect();
+    return this;
+  }
+
+  unsubscribe = (...args: Parameters<typeof this._socket.off>) => {
+    const [name, listener] = args;
+
+    this._socket.off(name, listener);
+    return this;
+  };
 
   connect() {
     this._socket.connect();
@@ -72,6 +90,7 @@ export class AppSocket<ListenersMap extends WsEventsMap, ClientEventsMap extends
       this._socket.off('connect_error', listener);
     };
   }
+
   onReConnectError(listener: (error: Error) => void) {
     this._socket.on('reconnect_error', listener);
 
@@ -79,6 +98,7 @@ export class AppSocket<ListenersMap extends WsEventsMap, ClientEventsMap extends
       this._socket.off('reconnect_error', listener);
     };
   }
+
   buildSubscriber =
     <Event extends keyof ListenersMap>(name: Event) =>
     (listener: ListenersMap[Event]) => {

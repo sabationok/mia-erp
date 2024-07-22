@@ -107,11 +107,9 @@ export const chatSlice = createSlice({
 
         if (chatId) {
           const current = st.messages.listsMap[chatId];
-
-          st.messages.listsMap[chatId] = current ? current.concat([data]) : [data];
+          st.messages.listsMap[chatId] = current ? [data].concat(current) : [data];
         }
-
-        console.log('send chat message slice action', data);
+        return st;
       }),
 });
 

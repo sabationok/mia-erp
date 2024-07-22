@@ -1,16 +1,17 @@
 import { ConfigService } from 'services';
 import { io } from 'socket.io-client';
-import { ObjectKeys } from 'utils';
+import { ObjectEntries, ObjectKeys, ObjectValues } from 'utils';
 import { Keys } from '../types/utils.types';
-import { AppSocket, WsClientEventsMap, WsEventsMap } from './AppSocket';
+import { AppSocket, WsClientEventsMap, WsEventListenersMap } from './AppSocket';
+import { ApiHeaders } from '../api';
 
 export interface WsConnectionOptions {
   auth?: {
-    access_token?: `Bearer ${string}` | string;
+    authorization?: `Bearer ${string}` | string;
     privateKey?: string;
     serverKey?: string;
     publicKey?: string;
-    pToken?: string;
+    [ApiHeaders.p_token]?: string;
   };
 }
 
@@ -35,11 +36,19 @@ export class WsClient {
   public static readonly _SOCKET_OPTIONS: Record<Keys<typeof SocketNamespaces> | string, Parameters<typeof io>[1]> = {};
 
   public static readonly _SOCKETS: Record<Keys<typeof SocketNamespaces> | string, AppSocket<any, any>> = {};
-
+  public static getNsps() {
+    return ObjectKeys(this._SOCKETS);
+  }
+  public static getSockets() {
+    return ObjectValues(this._SOCKETS);
+  }
+  public static entries() {
+    return ObjectEntries(this._SOCKETS);
+  }
   static getSocket(name: Keys<typeof this._SOCKETS>) {
     return this._SOCKETS?.[name];
   }
-  static addSocket<ListenersMap extends WsEventsMap, ClientEventsMap extends WsClientEventsMap>(
+  static addSocket<ListenersMap extends WsEventListenersMap, ClientEventsMap extends WsClientEventsMap>(
     name: Keys<typeof this._SOCKETS>,
     options?: Parameters<typeof io>[1]
   ): AppSocket<ListenersMap, ClientEventsMap> {
@@ -69,7 +78,7 @@ export class WsClient {
   }
 
   static createNamespace<
-    EventListenersMap extends WsEventsMap,
+    EventListenersMap extends WsEventListenersMap,
     ClientEvMap extends WsClientEventsMap = WsClientEventsMap,
     Namespace extends Keys<typeof this._SOCKETS> = Keys<typeof this._SOCKETS>,
   >(namespace: Namespace): AppSocket<EventListenersMap, ClientEvMap> {
@@ -88,51 +97,21 @@ export class WsClient {
     this.options = {
       ...this.options,
       auth: {
-        // ...this.options.auth,
+        ...this.options?.auth,
         ...auth,
-        access_token: auth?.access_token ? 'Bearer ' + auth.access_token : undefined,
+        authorization: auth?.authorization ? 'Bearer ' + auth.authorization : undefined,
       },
     };
-
-    const keys = ObjectKeys(this._SOCKETS);
-
-    for (const key of keys) {
-      this._SOCKETS[key].disconnect();
-
-      let options = this._SOCKET_OPTIONS[key];
-      options = {
-        ...options,
-        auth: { ...options?.auth, ...this.options.auth },
-      };
-      this._SOCKET_OPTIONS[key] = options;
-
-      if (options.auth) {
-        this._SOCKETS[key].connection.auth = options.auth;
-
-        this._SOCKETS[key].connect();
-      }
+    const _auth = this.options.auth;
+    if (_auth) {
+      this.getSockets().forEach(st => st.authorize(_auth));
     }
-
-    return;
   }
   public static unAuthorize() {
-    this.options = { ...this.options, auth: {} };
-
-    const keys = ObjectKeys(this._SOCKETS);
-
-    for (const key of keys) {
-      this._SOCKETS[key].disconnect();
-
-      let options = this._SOCKET_OPTIONS[key];
-
-      options = {
-        ...options,
-        auth: {},
-      };
-
-      this._SOCKETS[key].connection.auth = {};
-
-      this._SOCKETS[key].connect();
-    }
+    this.options = {
+      ...this.options,
+      auth: {},
+    };
+    this.getSockets().forEach(st => st.unAuthorize());
   }
 }

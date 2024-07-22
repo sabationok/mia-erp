@@ -56,13 +56,10 @@ const CurrentOrderProvider: React.FC<PageCurrentOrderProviderProps> = ({ childre
       },
     };
   }, [currentOrder, dispatch]);
-  useEffect(() => {
-    console.log({ params });
-  }, [params]);
 
   useEffect(() => {
     if (!currentOrder) {
-      params.orderId && service.getById({ data: { _id: params.orderId } });
+      params.orderId && service.getById({ data: { params: { _id: params.orderId } } });
     }
   }, [currentOrder, params.orderId, service]);
 

@@ -4,6 +4,7 @@ import React from 'react';
 import { Text } from '../../atoms/Text';
 import FlexBox from 'components/atoms/FlexBox';
 import { MessageEntity } from 'types/chat/chat-messages.type';
+import { uk } from 'date-fns/locale';
 
 export const ChatMessage = ({ msg, isRequest }: { msg: MessageEntity; isRequest?: boolean }) => {
   return (
@@ -20,7 +21,7 @@ export const ChatMessage = ({ msg, isRequest }: { msg: MessageEntity; isRequest?
       </Text>
 
       <Text $align={isRequest ? 'right' : 'left'} $weight={500} $size={10}>
-        {msg.createdAt ? format(new Date(msg.createdAt), 'dd.yy hh:mm') : ''}
+        {msg.createdAt ? format(new Date(msg.createdAt), 'dd.MM.yy hh:mm', { locale: uk }) : ''}
       </Text>
     </MessageBox>
   );

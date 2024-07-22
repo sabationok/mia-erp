@@ -1,99 +1,121 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { wsConnectionStatusAction } from 'redux/chat/chat.slice';
 import { useAppDispatch } from 'redux/store.store';
 import { ChatServerEvents, ChatWs } from 'socket';
-import { ApiHeaders } from '../../api';
+import { ApiHeaders, ChatMessagesApiTypes } from '../../api';
+import { ChatEntity } from '../../types/chat/chat.types';
 
-export const ChatWsInitializer = ({
-  permissionId,
-  onConnect,
-  onConnectError,
-  onJoin,
-  onLeave,
-  onTyping,
-  chatId,
-}: {
-  chatId?: string;
-  permissionId?: string;
-  onConnect?: () => void;
-  onConnectError?: (arror: any) => void;
-  onJoin?: (data: ChatServerEvents.OnJoinOrLeaveMember) => void;
-  onLeave?: (data: ChatServerEvents.OnJoinOrLeaveMember) => void;
-  onTyping?: (data: ChatServerEvents.OnTyping) => void;
-  onSend?: (data: ChatServerEvents.OnSendMessage) => void;
-}) => {
-  const dispatch = useAppDispatch();
+export interface ChatWsInitializerMethods {
+  loadMessages: (params: ChatMessagesApiTypes.FindAllQuery) => void;
+  chat?: ChatEntity;
+}
 
-  useEffect(() => {
-    if (permissionId) {
-      // ChatApi.setHeader(ApiHeaders.p_token, permissionId);
-      ChatWs.socketRef.setHeader(ApiHeaders.p_token, permissionId);
-    }
-  }, [permissionId]);
+// type TypingsMap = Record<
+//   UUID,
+//   {
+//     email?: string;
+//     name?: string;
+//   }
+// >;
 
-  useEffect(() => {
-    const socket = ChatWs.socketRef;
-    const connection = socket?.connection;
-    if (!connection) {
-      dispatch(
-        wsConnectionStatusAction({
-          status: false,
-        })
-      );
-      return;
-    }
+export const ChatWsInitializer = React.forwardRef(
+  (
+    {
+      permissionId,
+      onConnect,
+      onConnectError,
+      onJoin,
+      onLeave,
+      onTyping,
+      chatId,
+      orderId,
+    }: {
+      chatId?: string;
+      orderId?: string;
+      permissionId?: string;
+      onConnect?: () => void;
+      onConnectError?: (arror: any) => void;
+      onJoin?: (data: ChatServerEvents.OnJoinOrLeaveMember) => void;
+      onLeave?: (data: ChatServerEvents.OnJoinOrLeaveMember) => void;
+      onTyping?: (data: ChatServerEvents.OnTyping) => void;
+      onSend?: (data: ChatServerEvents.OnSendMessage) => void;
+    },
+    ref?: React.ForwardedRef<ChatWsInitializerMethods>
+  ) => {
+    const dispatch = useAppDispatch();
 
-    if (!connection?.active) {
-      const unsubscribers = [
-        socket?.onConnect(() => {
-          console.log('Chat connected');
-          onConnect && onConnect();
-          if (chatId) {
-            ChatWs.handleJoin({ data: { chatId } });
-          }
-
-          dispatch(
-            wsConnectionStatusAction({
-              status: true,
-            })
-          );
-        }),
-      ];
-      if (onConnectError) {
-        unsubscribers.push(socket.onConnectError(onConnectError));
+    useEffect(() => {
+      if (permissionId) {
+        // ChatApi.setHeader(ApiHeaders.p_token, permissionId);
+        ChatWs.socketRef.setHeader(ApiHeaders.p_token, permissionId);
       }
-      if (onTyping) {
-        unsubscribers.push(ChatWs.onTyping(onTyping));
-      }
-      if (onJoin) {
-        unsubscribers.push(ChatWs.onJoin.onSuccess(onJoin));
-      }
-      if (onLeave) {
-        unsubscribers.push(ChatWs.onLeave.onSuccess(onLeave));
+    }, [permissionId]);
+
+    useEffect(() => {
+      const socket = ChatWs.socketRef;
+      const connection = socket?.connection;
+
+      if (!connection) {
+        dispatch(
+          wsConnectionStatusAction({
+            status: false,
+          })
+        );
+        return;
       }
 
-      socket?.connect();
-      return () => {
-        unsubscribers.forEach(clb => clb());
-      };
-    } else if (connection.active) {
-      // console.log('chat is active', connection);
-      if (chatId) {
-        ChatWs.handleJoin({ data: { chatId } });
+      if (!connection?.active) {
+        const unsubscribers = [
+          socket?.onConnect(() => {
+            console.log('Chat connected');
+            onConnect && onConnect();
+            if (chatId) {
+              ChatWs.handleJoin({ data: { chatId } });
+            }
+
+            dispatch(
+              wsConnectionStatusAction({
+                status: true,
+              })
+            );
+          }),
+        ];
+        if (onConnectError) {
+          unsubscribers.push(socket.onConnectError(onConnectError));
+        }
+        if (onTyping) {
+          unsubscribers.push(ChatWs.onTyping(onTyping));
+        }
+        if (onJoin) {
+          unsubscribers.push(ChatWs.onJoin.onSuccess(onJoin));
+        }
+        if (onLeave) {
+          unsubscribers.push(ChatWs.onLeave.onSuccess(onLeave));
+        }
+
+        socket?.connect();
+        return () => {
+          unsubscribers.forEach(clb => clb());
+        };
+      } else if (connection.active) {
+        // console.log('chat is active', connection);
+        if (chatId) {
+          ChatWs.handleJoin({ data: { chatId } });
+        }
+
+        dispatch(
+          wsConnectionStatusAction({
+            status: true,
+          })
+        );
       }
 
-      dispatch(
-        wsConnectionStatusAction({
-          status: true,
-        })
-      );
-    }
+      // eslint-disable-next-line
+    }, [dispatch]);
 
-    // eslint-disable-next-line
-  }, [dispatch]);
-
-  return null;
-};
+    return null;
+  }
+);
 
 // export const ChatWsInitializer = ({
 //   onConnect,
