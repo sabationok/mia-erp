@@ -15,6 +15,7 @@ import { omit } from 'lodash';
 import { UUID } from '../../types/utils.types';
 import { ChatMessage } from './components/ChatMessage';
 import ChatForm from './components/ChatForm';
+import { ChatApiTypes } from '../../api';
 
 type TypingsMap = Record<
   UUID,
@@ -24,7 +25,7 @@ type TypingsMap = Record<
   }
 >;
 
-export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; customerId?: string; chatId?: string }) => {
+export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string }) => {
   const chatState = useChatSelector();
   const dispatch = useAppDispatch();
 
@@ -67,10 +68,10 @@ export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; custom
       })
     );
   };
-  const getChat = (params: { chatId?: string; orderId?: string }) => {
+  const getChat = (params: ChatApiTypes.FindOneQuery) => {
     dispatch(
       getChatThunk({
-        params: params,
+        params,
         onLoading: loaders.onLoading('chat'),
         onSuccess: ({ data }) => {
           setChat(data);
@@ -116,7 +117,7 @@ export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; custom
     if (chatId) {
       const chat = chatState.dataMap[chatId];
       if (!chat) {
-        getChat({ chatId });
+        getChat({ _id: chatId });
       } else {
         setChat(chat);
         loadMessages({ chatId });

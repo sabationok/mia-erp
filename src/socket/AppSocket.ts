@@ -17,6 +17,7 @@ export type WsClientEventPayload<Data = any, Params = any, Query = any, Headers 
 export class AppSocket<ListenersMap extends WsEventListenersMap, ClientEventsMap extends WsClientEventsMap> {
   private readonly _socket: Socket;
   private _headers: PartialRecord<string, string> = {};
+  public isAuthorized: boolean = false;
 
   constructor(...args: Parameters<typeof io>) {
     this._socket = io(...args);
@@ -38,12 +39,15 @@ export class AppSocket<ListenersMap extends WsEventListenersMap, ClientEventsMap
 
   authorize(auth: typeof this._socket.auth): this {
     this.disconnect();
+    this.isAuthorized = true;
     this._socket.auth = auth;
     this.connect();
     return this;
   }
+
   unAuthorize(): this {
     this.disconnect();
+    this.isAuthorized = false;
     this._socket.auth = {};
     this.connect();
     return this;

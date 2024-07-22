@@ -25,11 +25,13 @@ export class WsClient {
     // privateKey: 'API_KEY',
     // access_token: 'Bearer authorization',
   };
+
+  public static isAuthorized: boolean = false;
   public static options: Parameters<typeof io>[1] = {
     transports: ['websocket'],
     withCredentials: true,
     auth: this.authData,
-    retries: 1,
+    retries: 5,
 
     // hostname: 'everywear.com.ua',
   };
@@ -102,6 +104,7 @@ export class WsClient {
         authorization: auth?.authorization ? 'Bearer ' + auth.authorization : undefined,
       },
     };
+    this.isAuthorized = true;
     const _auth = this.options.auth;
     if (_auth) {
       this.getSockets().forEach(st => st.authorize(_auth));
@@ -112,6 +115,8 @@ export class WsClient {
       ...this.options,
       auth: {},
     };
+    this.isAuthorized = false;
+
     this.getSockets().forEach(st => st.unAuthorize());
   }
 }

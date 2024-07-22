@@ -32,6 +32,8 @@ class ChatMessagesApi extends BaseApiClass {
     _?: undefined,
     params?: ChatMessagesApiTypes.FindAllQuery
   ): Promise<ApiResponse<MessageEntity[]>> => {
+    console.log('get all chat messages', params);
+
     return this._api.get(this._endpoints.getAll(), {
       params,
       headers: this.headers,
@@ -62,9 +64,9 @@ export class ChatApi extends BaseApiClass {
     this.messages.removeHeader(key);
     return this;
   }
-  public static getOne = (input?: { params: ChatApiTypes.FindOneQuery }): Promise<ApiResponse<ChatEntity>> => {
+  public static getOne = (_?: undefined, params?: ChatApiTypes.FindOneQuery): Promise<ApiResponse<ChatEntity>> => {
     return this._api.get(this._endpoints.getOne(), {
-      ...input,
+      params,
       headers: this.headers,
     });
   };
