@@ -16,6 +16,8 @@ import { UUID } from '../../types/utils.types';
 import { ChatMessage } from './components/ChatMessage';
 import ChatForm from './components/ChatForm';
 import { ChatApiTypes, ChatMessagesApiTypes } from '../../api';
+import ButtonIcon from '../atoms/ButtonIcon';
+import { ChatWs } from '../../socket';
 
 type TypingsMap = Record<
   UUID,
@@ -144,10 +146,22 @@ export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string })
           }
         }}
         onJoin={data => {
-          ToastService.info(`${data.data?.email || data.data?.label} joined to chat`);
+          ToastService.info(
+            `${
+              data.data?.member?.user?.email ||
+              data.data?.member?.customer?.email ||
+              data.data?.member?.integration?.label
+            } joined to chat`
+          );
         }}
         onLeave={data => {
-          ToastService.info(`${data.data?.email || data.data?.label} leaved to chat`);
+          ToastService.info(
+            `${
+              data.data?.member?.user?.email ||
+              data.data?.member?.customer?.email ||
+              data.data?.member?.integration?.label
+            } leaved to chat`
+          );
         }}
         onSend={data => {
           const chatId = data.data.chat?._id;
@@ -166,6 +180,34 @@ export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string })
       {!isConnected && <FlexBox padding={'16px'}>{'Is not connected'}</FlexBox>}
 
       <ChatForm chatId={chat?._id}></ChatForm>
+      <FlexBox padding={'24px 16px'}>
+        <ButtonIcon
+          variant={'filledMiddle'}
+          onClick={() => {
+            ChatWs.handleJoin({
+              data: {
+                chatId: chat?._id ?? 'chatId',
+              },
+            });
+            ChatWs.handleTyping({
+              data: {
+                chatId: chat?._id ?? 'chatId',
+                status: true,
+              },
+            });
+            setTimeout(() => {
+              ChatWs.handleTyping({
+                data: {
+                  chatId: chat?._id ?? 'chatId',
+                  status: false,
+                },
+              });
+            }, 1000);
+          }}
+        >
+          {'Join'}
+        </ButtonIcon>
+      </FlexBox>
     </FlexBox>
   );
 };

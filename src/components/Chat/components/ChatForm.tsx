@@ -3,7 +3,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useEffect, useRef } from 'react';
 import { useAppDispatch } from '../../../redux/store.store';
 import { FlexForm } from '../../atoms/FlexBox';
-import { sendChatMessageThunk } from '../../../redux/chat/chat.thunks';
 import InputText from '../../atoms/Inputs/InputText';
 import { ChatWs } from '../../../socket';
 import ButtonIcon from '../../atoms/ButtonIcon';
@@ -54,16 +53,23 @@ const ChatForm = ({ chatId, onSubmit }: { chatId?: string; onSubmit?: (data: Cha
       gap={12}
       alignItems={'center'}
       onSubmit={handleSubmit(fData => {
-        dispatch(
-          sendChatMessageThunk({
-            data: {
-              data: { data: fData },
-            },
-            onSuccess: () => {
-              resetField('text');
-            },
-          })
-        );
+        // dispatch(
+        //   // sendChatMessageThunk({
+        //   //   data: {
+        //   //     data: { data: fData },
+        //   //   },
+        //   //   onSuccess: () => {
+        //   //     resetField('text');
+        //   //   },
+        //   // })
+        // );
+
+        ChatWs.handleSend({
+          data: {
+            chatId: fData.chatId,
+            text: fData.text,
+          },
+        });
       })}
     >
       <InputText

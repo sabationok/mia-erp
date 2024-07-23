@@ -4,6 +4,7 @@ import { ChatWs, WsClient } from '../../socket';
 import { useAppParams } from '../../hooks';
 import { useAppDispatch } from '../../redux/store.store';
 import { wsConnectionStatusAction, WsTypeEnum } from '../../redux/chat/chat.slice';
+import { ApiHeaders } from '../../api';
 
 export const WsConnector = () => {
   const authState = useAuthSelector();
@@ -13,24 +14,22 @@ export const WsConnector = () => {
 
   useEffect(() => {
     if (permissionId) {
-      if (!ChatWs.socketRef.connection.active) {
-        ChatWs.socketRef.connect({
-          onConnect: () => {
-            dispatch(wsConnectionStatusAction({ status: true, type: WsTypeEnum.chat }));
-          },
-          onConnectError: () => {
-            dispatch(wsConnectionStatusAction({ status: false, type: WsTypeEnum.chat }));
-          },
-        });
-      }
+      ChatWs.socketRef.connect({
+        onConnect: () => {
+          dispatch(wsConnectionStatusAction({ status: true, type: WsTypeEnum.chat }));
+        },
+        onConnectError: () => {
+          dispatch(wsConnectionStatusAction({ status: false, type: WsTypeEnum.chat }));
+        },
+      });
     } else {
       ChatWs.socketRef.disconnect(() => {});
     }
   }, [dispatch, permissionId]);
 
   useEffect(() => {
-    if (authState.access_token) {
-      WsClient.authorize({ authorization: authState.access_token });
+    if (authState.access_token && permissionId) {
+      WsClient.authorize({ authorization: authState.access_token, [ApiHeaders.P_Token]: permissionId });
     } else {
       WsClient.unAuthorize();
     }

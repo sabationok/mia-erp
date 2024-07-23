@@ -8,6 +8,7 @@ import { AppResponseType } from '../redux/app-redux.types';
 
 export enum ApiHeaders {
   p_token = 'p-token',
+  P_Token = 'P-Token',
   p_token_server = 'p-token-server',
   authorization = 'authorization',
   x_token_crm = 'x-token-crm',

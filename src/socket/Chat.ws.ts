@@ -38,12 +38,10 @@ export interface ChatSenderEntity {
 }
 export namespace ChatServerEvents {
   export type OnJoinOrLeaveMember = WsChatResponse<{
-    memberId: string;
+    member: ChatSenderEntity;
     chatId: string;
-    email?: string;
-    label?: string;
   }>;
-  export type OnTyping = WsChatResponse<{ status: boolean; chatId: string }>;
+  export type OnTyping = WsChatResponse<{ status: boolean; chatId: string; member?: ChatSenderEntity }>;
   export type OnSendMessage = WsChatResponse<MessageEntity>;
 }
 export interface ChatWsListenersMap extends WsEventListenersMap {

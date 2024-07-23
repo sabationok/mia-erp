@@ -62,8 +62,6 @@ export const ChatWsInitializer = React.forwardRef(
           ChatWs.handleJoin({ data: { chatId } });
         }
 
-        console.log('ChatWsInitializer | handleJoin | onConnect', { chatId });
-
         dispatch(
           wsConnectionStatusAction({
             status: true,

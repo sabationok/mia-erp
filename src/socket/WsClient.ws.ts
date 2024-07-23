@@ -12,6 +12,7 @@ export interface WsConnectionOptions {
     serverKey?: string;
     publicKey?: string;
     [ApiHeaders.p_token]?: string;
+    [ApiHeaders.P_Token]?: string;
   };
 }
 
