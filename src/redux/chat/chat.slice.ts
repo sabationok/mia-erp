@@ -6,7 +6,7 @@ import { Action } from '../store.store';
 
 export type ChatStateRoom = ChatEntity & { isConnected?: boolean };
 
-enum WsTypeEnum {
+export enum WsTypeEnum {
   chat = 'chat',
 }
 export interface ChatState {

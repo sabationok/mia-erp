@@ -31,6 +31,7 @@ export class WsClient {
   public static options: Parameters<typeof io>[1] = {
     transports: ['websocket'],
     withCredentials: true,
+    secure: true,
     auth: this.authData,
     retries: 5,
 

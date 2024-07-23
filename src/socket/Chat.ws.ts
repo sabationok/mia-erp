@@ -62,7 +62,7 @@ interface ChatWsClientEventsMap extends WsClientEventsMap {
   [EventNames.leavedRoom]: WsChatEventPayload<{ chatId: string }>;
 }
 export class ChatWs {
-  public static _ws = WsClient;
+  private static _ws = WsClient;
 
   public static _socket = this._ws.addSocket<ChatWsListenersMap, ChatWsClientEventsMap>('chat');
 

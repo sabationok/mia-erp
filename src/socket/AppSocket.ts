@@ -60,16 +60,26 @@ export class AppSocket<ListenersMap extends WsEventListenersMap, ClientEventsMap
     return this;
   };
 
-  connect() {
+  connect({ onConnect, onConnectError }: { onConnect?: () => void; onConnectError?: (error: Error) => void } = {}) {
     this._socket.connect();
+    if (onConnect) {
+      this.onConnect(onConnect);
+    }
+    if (onConnectError) {
+      this.onConnectError(onConnectError);
+    }
 
     return () => {
       this._socket.disconnect();
     };
   }
 
-  disconnect() {
+  disconnect(onDisconnect?: (...args: Parameters<typeof this._socket.disconnect>) => void) {
     this._socket.disconnect();
+    if (onDisconnect) {
+      this.onDisconnect(onDisconnect);
+    }
+    return this;
   }
 
   onConnect(listener: () => void): () => void {
