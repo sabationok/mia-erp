@@ -145,22 +145,26 @@ export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string })
           }
         }}
         onJoin={data => {
-          ToastService.info(
-            `${
-              data.data?.member?.user?.email ||
-              data.data?.member?.customer?.email ||
-              data.data?.member?.integration?.label
-            } joined to chat`
-          );
+          if (data.data.member?._id !== permissionId) {
+            ToastService.info(
+              `${
+                data.data?.member?.user?.email ||
+                data.data?.member?.customer?.email ||
+                data.data?.member?.integration?.label
+              } joined to chat`
+            );
+          }
         }}
         onLeave={data => {
-          ToastService.info(
-            `${
-              data.data?.member?.user?.email ||
-              data.data?.member?.customer?.email ||
-              data.data?.member?.integration?.label
-            } leaved to chat`
-          );
+          if (data.data.member?._id !== permissionId) {
+            ToastService.info(
+              `${
+                data.data?.member?.user?.email ||
+                data.data?.member?.customer?.email ||
+                data.data?.member?.integration?.label
+              } leaved to chat`
+            );
+          }
         }}
         onSend={data => {
           if (data.data?.member?._id === permissionId) {
