@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { wsConnectionStatusAction, WsTypeEnum } from 'redux/chat/chat.slice';
 import { useAppDispatch } from 'redux/store.store';
-import { ChatServerEvents, ChatWs } from 'socket';
+import { ChatWs, WsChat } from 'socket';
 import { ChatMessagesApiTypes } from '../../api';
 import { ChatEntity } from '../../types/chat/chat.types';
 import { AnyFn } from '../../utils/types';
@@ -37,10 +37,10 @@ export const ChatWsInitializer = React.forwardRef(
       permissionId?: string;
       onConnect?: () => void;
       onConnectError?: (arror: any) => void;
-      onJoin?: (data: ChatServerEvents.OnJoinOrLeaveMember) => void;
-      onLeave?: (data: ChatServerEvents.OnJoinOrLeaveMember) => void;
-      onTyping?: (data: ChatServerEvents.OnTyping) => void;
-      onSend?: (data: ChatServerEvents.OnSendMessage) => void;
+      onJoin?: WsChat.ListenersMap[WsChat.EventNames.joinedToRoom];
+      onLeave?: WsChat.ListenersMap[WsChat.EventNames.leavedRoom];
+      onTyping?: WsChat.ListenersMap[WsChat.EventNames.messages_typing];
+      onSend?: WsChat.ListenersMap[WsChat.EventNames.messages_send];
     },
     ref?: React.ForwardedRef<ChatWsInitializerMethods>
   ) => {

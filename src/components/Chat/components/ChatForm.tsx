@@ -49,7 +49,7 @@ const ChatForm = ({ chatId, onSubmit }: { chatId?: string; onSubmit?: (data: Cha
 
   return (
     <FlexForm
-      padding={'16px 8px 16px'}
+      padding={'8px 8px 16px'}
       fxDirection={'row'}
       gap={12}
       alignItems={'center'}

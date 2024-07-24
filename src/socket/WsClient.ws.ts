@@ -2,7 +2,7 @@ import { ConfigService } from 'services';
 import { io } from 'socket.io-client';
 import { ObjectEntries, ObjectKeys, ObjectValues } from 'utils';
 import { Keys } from '../types/utils.types';
-import { AppSocket, WsClientEventsMap, WsEventListenersMap } from './AppSocket';
+import { AppSocket, WsClientEventsMap, WsEventsMap } from './AppSocket';
 import { ApiHeaders } from '../api';
 
 export interface WsConnectionOptions {
@@ -53,7 +53,7 @@ export class WsClient {
   static getSocket(name: Keys<typeof this._SOCKETS>) {
     return this._SOCKETS?.[name];
   }
-  static addSocket<ListenersMap extends WsEventListenersMap, ClientEventsMap extends WsClientEventsMap>(
+  static addSocket<ListenersMap extends WsEventsMap, ClientEventsMap extends WsClientEventsMap>(
     name: Keys<typeof this._SOCKETS>,
     options?: Parameters<typeof io>[1]
   ): AppSocket<ListenersMap, ClientEventsMap> {
@@ -73,7 +73,7 @@ export class WsClient {
   }
 
   static createNamespace<
-    EventListenersMap extends WsEventListenersMap,
+    EventListenersMap extends WsEventsMap,
     ClientEvMap extends WsClientEventsMap = WsClientEventsMap,
     Namespace extends Keys<typeof this._SOCKETS> = Keys<typeof this._SOCKETS>,
   >(namespace: Namespace): AppSocket<EventListenersMap, ClientEvMap> {

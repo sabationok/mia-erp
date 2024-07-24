@@ -1,7 +1,7 @@
 import FlexBox from '../atoms/FlexBox';
 import { ChatWsInitializer } from '../Ws/ChatWsInitializer';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useChatSelector, usePermissionsSelector } from '../../redux/selectors.store';
+import { useChatSelector } from '../../redux/selectors.store';
 import { useAppDispatch } from '../../redux/store.store';
 import { createChatThunk, getChatMessagesThunk, getChatThunk } from '../../redux/chat/chat.thunks';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
@@ -16,8 +16,7 @@ import { UUID } from '../../types/utils.types';
 import { ChatMessage } from './components/ChatMessage';
 import ChatForm from './components/ChatForm';
 import { ChatApiTypes, ChatMessagesApiTypes } from '../../api';
-import ButtonIcon from '../atoms/ButtonIcon';
-import { ChatWs } from '../../socket';
+import { useAppParams } from '../../hooks';
 
 type TypingsMap = Record<
   UUID,
@@ -30,7 +29,7 @@ type TypingsMap = Record<
 export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string }) => {
   const chatState = useChatSelector();
   const dispatch = useAppDispatch();
-  const permissionId = usePermissionsSelector().permission;
+  const permissionId = useAppParams().permissionId;
 
   const loaders = useLoaders<'send' | 'wait' | 'getAll' | 'messages' | 'chat'>();
 
@@ -137,11 +136,11 @@ export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string })
         // permissionId={profile?.permission?._id}
         chatId={chat?._id}
         onTyping={data => {
-          if (data.data.sender) {
+          if (data.data.member) {
             if (data.data.status) {
-              setTyping({ [data.data.sender?._id]: { email: 'email' } });
+              setTyping({ [data.data.member?._id]: { email: 'email' } });
             } else {
-              unSetTyping(data.data.sender?._id);
+              unSetTyping(data.data.member?._id);
             }
           }
         }}
@@ -164,7 +163,7 @@ export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string })
           );
         }}
         onSend={data => {
-          if (data.data?.sender._id === permissionId) {
+          if (data.data?.member?._id === permissionId) {
             console.log({ permissionId, data });
             return;
           }
@@ -184,34 +183,6 @@ export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string })
       {!isConnected && <FlexBox padding={'16px'}>{'Is not connected'}</FlexBox>}
 
       <ChatForm chatId={chat?._id}></ChatForm>
-      <FlexBox padding={'24px 16px'}>
-        <ButtonIcon
-          variant={'filledMiddle'}
-          onClick={() => {
-            ChatWs.handleJoin({
-              data: {
-                chatId: chat?._id ?? 'chatId',
-              },
-            });
-            ChatWs.handleTyping({
-              data: {
-                chatId: chat?._id ?? 'chatId',
-                status: true,
-              },
-            });
-            setTimeout(() => {
-              ChatWs.handleTyping({
-                data: {
-                  chatId: chat?._id ?? 'chatId',
-                  status: false,
-                },
-              });
-            }, 1000);
-          }}
-        >
-          {'Join'}
-        </ButtonIcon>
-      </FlexBox>
     </FlexBox>
   );
 };

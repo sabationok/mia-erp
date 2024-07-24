@@ -3,7 +3,7 @@ import { PartialRecord } from '../types/utils.types';
 
 export type WsEvListenerType = (...args: any[]) => void;
 
-export interface WsEventListenersMap extends Record<string, WsEvListenerType> {}
+export interface WsEventsMap extends Record<string, WsEvListenerType> {}
 
 export interface WsClientEventsMap extends Record<string, WsClientEventPayload> {}
 
@@ -14,7 +14,7 @@ export type WsClientEventPayload<Data = any, Params = any, Query = any, Headers 
   headers?: Headers;
 };
 
-export class AppSocket<ListenersMap extends WsEventListenersMap, ClientEventsMap extends WsClientEventsMap> {
+export class AppSocket<ListenersMap extends WsEventsMap, ClientEventsMap extends WsClientEventsMap> {
   public isAuthorized: boolean = false;
   private readonly _socket: Socket;
   private _headers: PartialRecord<string, string> = {};
