@@ -80,9 +80,9 @@ export class ChatWs {
 
   public static onJoin = this._socket._buildSubscriber(EventNames.joinedToRoom);
   public static onLeave = this._socket._buildSubscriber(EventNames.joinedToRoom);
-  public static onTyping = this._socket.buildSubscriber(EventNames.messages_typing);
+  public static onTyping = this._socket._buildSubscriber(EventNames.messages_typing);
 
-  public static onSend = this._socket.buildEmitter(EventNames.messages_send);
+  public static onSend = this._socket._buildSubscriber(EventNames.messages_send);
 
   public static handleTyping = this._socket.buildEmitter(EventNames.messages_typing);
   public static handleJoin = this._socket.buildEmitter(EventNames.joinedToRoom);

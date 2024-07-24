@@ -75,9 +75,9 @@ export const chatSlice = createSlice({
       }
     },
     addChatMessageAction: (st, { payload: { chatId, data } }: Action<{ data: MessageEntity; chatId: string }>) => {
-      const current = st.messages.listsMap[chatId];
+      const current = st.messages.listsMap[chatId ?? data.chat?._id];
 
-      st.messages.listsMap[chatId] = current ? current.concat([data]) : [data];
+      st.messages.listsMap[chatId] = current ? [data].concat(current) : [data];
     },
   },
   extraReducers: builder =>
@@ -97,7 +97,7 @@ export const chatSlice = createSlice({
 
         if (a.payload.update) {
           const current = st.messages.listsMap[chatId];
-          current && current.concat(a.payload.data);
+          st.messages.listsMap[chatId] = current ? a.payload.data.concat(current) : a.payload.data;
         } else {
           st.messages.listsMap[chatId] = a.payload.data;
         }

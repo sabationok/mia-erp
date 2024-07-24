@@ -4,6 +4,7 @@ import { useAppDispatch } from 'redux/store.store';
 import { ChatServerEvents, ChatWs } from 'socket';
 import { ChatMessagesApiTypes } from '../../api';
 import { ChatEntity } from '../../types/chat/chat.types';
+import { AnyFn } from '../../utils/types';
 
 export interface ChatWsInitializerMethods {
   loadMessages: (params: ChatMessagesApiTypes.FindAllQuery) => void;
@@ -29,6 +30,7 @@ export const ChatWsInitializer = React.forwardRef(
       onTyping,
       chatId,
       orderId,
+      onSend,
     }: {
       chatId?: string;
       orderId?: string;
@@ -68,35 +70,40 @@ export const ChatWsInitializer = React.forwardRef(
           })
         );
       };
+      const unsubscribers: AnyFn[] = [];
 
       if (!connection?.active) {
-        const unsubscribers = [
-          socket?.onConnect(() => {
-            onConnect && onConnect();
-            handleConnected();
-          }),
-        ];
-        if (onConnectError) {
-          unsubscribers.push(socket.onConnectError(onConnectError));
-        }
-        if (onTyping) {
-          unsubscribers.push(ChatWs.onTyping(onTyping));
-        }
-        if (onJoin) {
-          unsubscribers.push(ChatWs.onJoin.onSuccess(onJoin));
-        }
-        if (onLeave) {
-          unsubscribers.push(ChatWs.onLeave.onSuccess(onLeave));
-        }
-
         socket?.connect();
-        return () => {
-          unsubscribers.forEach(clb => clb());
-        };
       } else if (connection.active) {
         handleConnected();
       }
-    }, [chatId, dispatch, onConnect, onConnectError, onJoin, onLeave, onTyping]);
+      unsubscribers.push(
+        socket?.onConnect(() => {
+          onConnect && onConnect();
+          handleConnected();
+        })
+      );
+
+      if (onConnectError) {
+        unsubscribers.push(socket.onConnectError(onConnectError));
+      }
+      if (onTyping) {
+        unsubscribers.push(ChatWs.onTyping.onSuccess(onTyping));
+      }
+      if (onJoin) {
+        unsubscribers.push(ChatWs.onJoin.onSuccess(onJoin));
+      }
+      if (onLeave) {
+        unsubscribers.push(ChatWs.onLeave.onSuccess(onLeave));
+      }
+      if (onSend) {
+        unsubscribers.push(ChatWs.onSend.onSuccess(onSend));
+      }
+
+      return () => {
+        unsubscribers.forEach(clb => clb());
+      };
+    }, [chatId, dispatch, onConnect, onConnectError, onJoin, onLeave, onSend, onTyping]);
 
     return null;
   }

@@ -7,6 +7,7 @@ import InputText from '../../atoms/Inputs/InputText';
 import { ChatWs } from '../../../socket';
 import ButtonIcon from '../../atoms/ButtonIcon';
 import { yup } from 'validations';
+import { sendChatMessageThunk } from '../../../redux/chat/chat.thunks';
 
 interface ChatFormData {
   chatId: string;
@@ -53,23 +54,16 @@ const ChatForm = ({ chatId, onSubmit }: { chatId?: string; onSubmit?: (data: Cha
       gap={12}
       alignItems={'center'}
       onSubmit={handleSubmit(fData => {
-        // dispatch(
-        //   // sendChatMessageThunk({
-        //   //   data: {
-        //   //     data: { data: fData },
-        //   //   },
-        //   //   onSuccess: () => {
-        //   //     resetField('text');
-        //   //   },
-        //   // })
-        // );
-
-        ChatWs.handleSend({
-          data: {
-            chatId: fData.chatId,
-            text: fData.text,
-          },
-        });
+        dispatch(
+          sendChatMessageThunk({
+            data: {
+              data: { data: fData },
+            },
+            onSuccess: () => {
+              resetField('text');
+            },
+          })
+        );
       })}
     >
       <InputText
