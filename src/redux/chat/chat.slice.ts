@@ -16,6 +16,7 @@ export interface ChatState {
   dataMap: Record<UUID, ChatStateRoom>;
   keysMap: Record<UUID, UUID>;
   messages: {
+    last?: MessageEntity;
     list: MessageEntity[];
     listsMap: Record<UUID, MessageEntity[]>;
     dataMap: Record<UUID, MessageEntity>;

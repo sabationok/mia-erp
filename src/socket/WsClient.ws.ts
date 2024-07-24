@@ -57,16 +57,6 @@ export class WsClient {
     name: Keys<typeof this._SOCKETS>,
     options?: Parameters<typeof io>[1]
   ): AppSocket<ListenersMap, ClientEventsMap> {
-    // const ws = new AppSocket<ListenersMap, ClientEventsMap>(
-    //   this.BASE_URL + name,
-    //   {
-    //     ...this.options,
-    //     autoConnect: false,
-    //     ...options,
-    //   }
-    // );
-
-    // console.log(this.BASE_URL + name, ws);
     this._SOCKET_OPTIONS[name] = {
       ...this.options,
       autoConnect: false,

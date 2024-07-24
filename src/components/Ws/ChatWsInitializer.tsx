@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { wsConnectionStatusAction } from 'redux/chat/chat.slice';
+import React, { useCallback, useEffect } from 'react';
+import { wsConnectionStatusAction, WsTypeEnum } from 'redux/chat/chat.slice';
 import { useAppDispatch } from 'redux/store.store';
 import { ChatServerEvents, ChatWs } from 'socket';
 import { ChatMessagesApiTypes } from '../../api';
@@ -45,31 +45,36 @@ export const ChatWsInitializer = React.forwardRef(
     ref?: React.ForwardedRef<ChatWsInitializerMethods>
   ) => {
     const dispatch = useAppDispatch();
+    const handleConnected = useCallback(() => {
+      if (chatId) {
+        ChatWs.handleJoin({ data: { chatId } });
+      }
 
+      dispatch(
+        wsConnectionStatusAction({
+          type: WsTypeEnum.chat,
+          status: true,
+        })
+      );
+    }, [chatId, dispatch]);
+
+    const handleDisconnect = useCallback(() => {
+      dispatch(
+        wsConnectionStatusAction({
+          type: WsTypeEnum.chat,
+          status: false,
+        })
+      );
+    }, [dispatch]);
     useEffect(() => {
       const socket = ChatWs.socketRef;
       const connection = socket?.connection;
 
       if (!connection) {
-        dispatch(
-          wsConnectionStatusAction({
-            status: false,
-          })
-        );
+        handleDisconnect();
         return;
       }
 
-      const handleConnected = () => {
-        if (chatId) {
-          ChatWs.handleJoin({ data: { chatId } });
-        }
-
-        dispatch(
-          wsConnectionStatusAction({
-            status: true,
-          })
-        );
-      };
       const unsubscribers: AnyFn[] = [];
 
       if (!connection?.active) {
@@ -85,7 +90,13 @@ export const ChatWsInitializer = React.forwardRef(
       );
 
       if (onConnectError) {
-        unsubscribers.push(socket.onConnectError(onConnectError));
+        unsubscribers.push(
+          socket.onConnectError(error => {
+            onConnectError && onConnectError(error);
+
+            handleDisconnect();
+          })
+        );
       }
       if (onTyping) {
         unsubscribers.push(ChatWs.onTyping.onSuccess(onTyping));

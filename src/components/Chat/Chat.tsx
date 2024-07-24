@@ -1,7 +1,7 @@
 import FlexBox from '../atoms/FlexBox';
 import { ChatWsInitializer } from '../Ws/ChatWsInitializer';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useChatSelector } from '../../redux/selectors.store';
+import { useChatSelector, usePermissionsSelector } from '../../redux/selectors.store';
 import { useAppDispatch } from '../../redux/store.store';
 import { createChatThunk, getChatMessagesThunk, getChatThunk } from '../../redux/chat/chat.thunks';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
@@ -30,6 +30,7 @@ type TypingsMap = Record<
 export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string }) => {
   const chatState = useChatSelector();
   const dispatch = useAppDispatch();
+  const permissionId = usePermissionsSelector().permission;
 
   const loaders = useLoaders<'send' | 'wait' | 'getAll' | 'messages' | 'chat'>();
 
@@ -136,7 +137,6 @@ export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string })
         // permissionId={profile?.permission?._id}
         chatId={chat?._id}
         onTyping={data => {
-          console.log('onTyping | data', data);
           if (data.data.sender) {
             if (data.data.status) {
               setTyping({ [data.data.sender?._id]: { email: 'email' } });
@@ -164,6 +164,10 @@ export const Chat = ({ orderId, chatId }: { orderId?: string; chatId?: string })
           );
         }}
         onSend={data => {
+          if (data.data?.sender._id === permissionId) {
+            console.log({ permissionId, data });
+            return;
+          }
           const chatId = data.data.chat?._id;
           chatId && dispatch(addChatMessageAction({ chatId, data: data.data }));
         }}

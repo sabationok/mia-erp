@@ -144,7 +144,6 @@ export class AppSocket<ListenersMap extends WsEventListenersMap, ClientEventsMap
   buildEmitter =
     <Event extends keyof ClientEventsMap>(name: Event) =>
     (data: ClientEventsMap[Event]) => {
-      console.log(name, data, 'isActive', this._socket.active, this._socket.id);
       return this._socket.emit(`${name as string}`.replaceAll('//', '/'), data);
     };
 }

@@ -28,14 +28,17 @@ enum EventNames {
   messages_send = 'messages/send',
   messages_update = 'messages/update',
 }
-
-export interface ChatSenderEntity {
-  _id: string;
-  user?: { _id: string; email?: string };
-  customer?: { _id: string; email?: string };
-  integration?: { _id: string; label?: string };
-  bot?: { _id: string; label?: string };
+export namespace WsChat {
+  export interface Member {
+    _id: string;
+    user?: { _id: string; email?: string };
+    customer?: { _id: string; email?: string };
+    integration?: { _id: string; label?: string };
+    bot?: { _id: string; label?: string };
+  }
 }
+export type ChatSenderEntity = WsChat.Member;
+
 export namespace ChatServerEvents {
   export type OnJoinOrLeaveMember = WsChatResponse<{
     member: ChatSenderEntity;
