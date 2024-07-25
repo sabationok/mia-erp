@@ -5,11 +5,13 @@ export interface ICmsBaseConfigs {
   key?: MaybeNull<string>;
   extRef?: MaybeNull<string>;
   labels?: MaybeNull<LangPack>;
+  descriptions?: MaybeNull<LangPack>;
 }
 export interface CmsBaseConfigsDto {
   key?: string;
   extRef?: string;
   labels?: LangPack;
+  descriptions?: LangPack;
 }
 
 export interface HasBaseCmsConfigs<Configs = ICmsBaseConfigs> {

@@ -12,6 +12,7 @@ import { t } from '../../../../lang';
 import { formAddImageSetTabs } from '../../../../data';
 import { ImageSetSrcType } from '../../../../types/offers/offer-images.types';
 import { isNumber } from 'lodash';
+import UploadOfferImageModal from './UploadOfferImageModal';
 
 export interface FormOfferImagesComponentProps {
   onChangeState?: (state: Partial<OfferImageSlotEntity>[]) => void;
@@ -25,6 +26,8 @@ export interface FormOfferImagesComponentProps {
   HeaderComponent?: React.FC;
 
   onlyPreviews?: boolean;
+
+  offerId?: string;
 }
 
 const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
@@ -37,10 +40,11 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
   contentContainerStyle,
   hideLabel,
   onlyPreviews = true,
+  offerId,
 }) => {
   const modalS = useModalService();
-
   const [formData, setFormData] = useState<Partial<OfferImageSlotEntity>[]>([]);
+
   useEffect(() => {
     if (!initialData) {
       return;
@@ -132,12 +136,19 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
   );
 
   const handleAddNewSet = () => {
-    modalS.open({
-      ModalChildren: AddImageSetModal,
-      modalChildrenProps: {
-        onSubmit: data => {
-          handleAddImageSet(data);
-        },
+    modalS.create(AddImageSetModal, {
+      onSubmit: data => {
+        handleAddImageSet(data);
+      },
+    });
+  };
+  const handleUploadNewImgModalOpen = () => {
+    modalS.create(UploadOfferImageModal, {
+      offerId: offerId,
+      onSuccess: data => {
+        handleAddImageSet({
+          img_preview: data.url,
+        });
       },
     });
   };
@@ -251,6 +262,12 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
         flexWrap={onlyPreviews ? 'wrap' : 'unset'}
       >
         {renderImageSets}
+      </FlexBox>
+
+      <FlexBox padding={'16px 8px'}>
+        <ButtonIcon variant={'filled'} sizeType={'middle'} onClick={handleUploadNewImgModalOpen}>
+          {'Upload'}
+        </ButtonIcon>
       </FlexBox>
 
       {FooterComponent && <FooterComponent onAddNewImageSetPress={handleAddNewSet} />}

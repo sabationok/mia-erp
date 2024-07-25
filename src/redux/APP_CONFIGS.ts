@@ -1,4 +1,5 @@
 import { IntegrationTypeEnum } from '../types/integrations.types';
+import { Keys } from '../types/utils.types';
 
 export enum API_BASE_ROUTES {
   APP = 'APP',
@@ -11,6 +12,7 @@ export enum API_BASE_ROUTES {
   FINANCES_BANK_ACCOUNTS = '/finances/bank-accounts',
   FINANCES_FIN_ACCOUNTS = '/finances/fin-counts',
   CUSTOM_ROLES = '/roles',
+  FILES = '/files',
   PRODUCTS = '/products',
   PROPERTIES = '/products/properties',
   VARIATIONS = '/products/variations',
@@ -441,6 +443,24 @@ const chat = {
     getAll: () => `${API_BASE_ROUTES.CHAT_MESSAGES}/getAll`,
   },
 };
+
+const createEndpoints = <Endpoints extends Record<string, string>>(
+  entryPoint: Keys<typeof API_BASE_ROUTES>,
+  enpoints: Endpoints
+) => {
+  const baseUr = API_BASE_ROUTES[entryPoint];
+  type KeyType = Keys<Endpoints>;
+
+  return Object.assign(
+    {},
+    ...Object.entries(enpoints).map(([key, value]) => {
+      return {
+        [key]: () => baseUr + (value.startsWith('/') ? value : '/' + value),
+      };
+    })
+  ) as Record<KeyType, () => string>;
+};
+
 const APP_CONFIGS = {
   endpoints: {
     chat,
@@ -448,6 +468,11 @@ const APP_CONFIGS = {
     permissions,
     companies,
     auth,
+    files: createEndpoints('FILES', {
+      getAll: 'getAll',
+      getUploadUrl: 'get-upload-url',
+      saveUploadedFileUrl: 'save-uploaded-file-url',
+    } as const),
     directories,
     customRoles,
     finTransactions: finances,

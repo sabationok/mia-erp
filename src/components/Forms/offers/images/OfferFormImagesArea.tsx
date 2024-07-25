@@ -24,6 +24,7 @@ export const OfferFormImagesArea = ({
   defaultValues,
 }: OfferFormImagesAreaProps) => {
   const loaders = useOfferLoadersProvider();
+
   const [state, setState] = useState<OfferField>(defaultValues || loaders?.state?.images || []);
 
   const service = useAppServiceProvider()[ServiceName.offers];

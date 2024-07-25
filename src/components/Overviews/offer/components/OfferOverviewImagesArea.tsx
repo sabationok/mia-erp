@@ -2,7 +2,7 @@ import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import React, { useMemo } from 'react';
 import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
-import FormProductImages from '../../../Overlays/FormOfferImagesOverlay';
+import FormOfferImagesOverlay from '../../../Overlays/FormOfferImagesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
 import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
@@ -35,7 +35,7 @@ export const OfferOverviewImagesArea: RenderOverviewAreaComponent<OfferEntity> =
       <OverviewAreaHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
-          overlayHandler({ RenderComponent: FormProductImages, props: { offer: data } });
+          overlayHandler({ RenderComponent: FormOfferImagesOverlay, props: { offer: data } });
         }}
       />
 

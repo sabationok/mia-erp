@@ -46,3 +46,7 @@ export * from './integrations.api';
 // sep PRICES
 export * from './Discounts.api';
 export * from './priceManagement.api';
+
+// * FILES
+
+export * from './Files.api';

@@ -15,7 +15,7 @@ import { formAddImageSetTabs } from 'data';
 export interface FormAddImageSetData extends Partial<Omit<OfferImageSlotEntity, '_id' | 'createdAt' | 'updatedAt'>> {}
 
 export interface AddImageSetModalProps extends Omit<ModalFormProps<any, any, FormAddImageSetData>, 'onSubmit'> {
-  onSubmit?: (data: Partial<FormAddImageSetData>, setId?: string, setIndex?: number) => void;
+  onSubmit?: (data: Partial<FormAddImageSetData> , setId?: string, setIndex?: number) => void;
   setId?: string;
   setIndex?: number;
   type?: ImageSetSrcType;

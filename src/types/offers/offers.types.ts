@@ -1,9 +1,9 @@
 import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
-import { OfferCategoryEntity, SupplierDirEntity } from '../dir.types';
+import { OfferCategoryEntity } from '../dir.types';
 import { PriceEntity } from '../price-management/price-management.types';
 import { WarehouseEntity, WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { IBrand } from '../../redux/directories/brands.types';
-import { ApiQueryParams, AppQueries } from '../../api';
+import type { ApiQueryParams, AppQueries, FilesApi } from '../../api';
 import { VariationEntity } from './variations.types';
 import { PropertiesGroupEntity, PropertyValueEntity } from './properties.types';
 import {
@@ -31,6 +31,7 @@ import { OfferImageSlotEntity } from './offer-images.types';
 import { WarehouseInventoryEntity } from '../warehousing/warehouse-inventory.types';
 import { HasBaseCmsConfigs } from '../cms.types';
 import { HasTags, TagEntity } from '../tags.types';
+import { CounterpartyEntity } from '../counterparty/counterparty.types';
 
 export type { OfferImageSlotEntity } from './offer-images.types';
 
@@ -100,7 +101,7 @@ export interface IOfferRelatedDefaultFields {
   price?: PriceEntity;
   warehouse?: WarehouseEntity;
   inventory?: WarehouseItemEntity;
-  supplier?: SupplierDirEntity;
+  supplier?: CounterpartyEntity;
 }
 export interface OfferEntity
   extends IBase,
@@ -119,6 +120,7 @@ export interface OfferEntity
   template?: PropertiesGroupEntity;
   properties?: PropertyValueEntity[];
   tags?: TagEntity[];
+  files?: FilesApi.FileEntity[];
 
   variations?: VariationEntity[];
   prices?: PriceEntity[];
@@ -134,6 +136,7 @@ export interface OfferFullFormData extends OfferDto {
   defaults?: OfferDefaultsFormData;
 
   images?: OfferImageSlotEntity[];
+  files?: FilesApi.UploadFileByLinkDto;
 
   propValuesIdsMap?: Record<string, string>;
   propertiesMap?: PropertyValuesMap;
@@ -145,7 +148,6 @@ export interface OfferFormData extends OfferFullFormData {}
 export interface OfferBaseDto extends Omit<IOfferBase, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt'> {}
 
 export enum OfferFormRelatedFieldKeyEnum {
-  tags = 'tags',
   categoriesIds = 'categoriesIds',
   recommendsIds = 'recommendsIds',
   propertiesIds = 'propertiesIds',
@@ -164,12 +166,26 @@ export interface IOfferDefaultsDto
   extends PartialRecord<OfferDefaultRefKey, OnlyUUID>,
     PartialRecord<OfferDefaultsIdKey, UUID> {}
 
-export interface OfferDto extends OfferBaseDto, OfferRelatedFieldsDto, IOfferDefaultsDto {}
+export interface OfferDto extends OfferBaseDto, OfferRelatedFieldsDto, IOfferDefaultsDto {
+  id?: UUID;
+}
 
 export interface OfferReqData {
   _id?: string;
   data?: OfferDto;
-  params?: ApiQueryParams;
+  params?: Pick<
+    ApiQueryParams,
+    | 'offset'
+    | 'limit'
+    | 'ids'
+    | 'withDeleted'
+    | 'propertiesIds'
+    | 'categoriesIds'
+    | 'brandsIds'
+    | 'warehousesIds'
+    | 'search'
+    | 'sortOrder'
+  >;
 }
 
 export interface HasOffers {
