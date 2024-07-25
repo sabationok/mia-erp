@@ -46,7 +46,11 @@ export namespace FilesApi {
       return this._api.post(this._enps.saveUploadedFileUrl(), data);
     };
     public static uploadFileByLink = (data?: UploadFileByLinkDto): Promise<AxiosResponse<string>> => {
-      return axios.put(data?.url ?? '', data?.file);
+      return axios.put(data?.url ?? '', data?.file, {
+        headers: {
+          'Content-Type': data?.file?.type,
+        },
+      });
     };
     public static uploadFile = async (
       { file, offerId, ...data }: Partial<UploadFileWithLinkDto> = {
