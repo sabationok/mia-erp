@@ -5,7 +5,7 @@ import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import FlexBox from '../../atoms/FlexBox';
 import InputSecurityControlHOC from '../../atoms/Inputs/SecurityInputControlHOC';
-import { ExtServiceBase, InputIntegrationBase, IntegrationFormData } from '../../../types/integrations.types';
+import { ExtServiceBase, InputIntegrationEntity, IntegrationFormData } from '../../../types/integrations.types';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useState } from 'react';
@@ -17,7 +17,7 @@ import { omit } from 'lodash';
 export interface FormCreateInputIntegrationProps
   extends Omit<ModalFormProps<any, any, IntegrationFormData>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<IntegrationFormData>;
-  onSuccess?: (data: { data: InputIntegrationBase }) => void;
+  onSuccess?: (data: { data: InputIntegrationEntity }) => void;
   service: ExtServiceBase;
 }
 

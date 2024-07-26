@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../types/integrations.types';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { ApiQueryParams } from '../../../api';
+import { useIntegrationsSelector } from '../../../redux/selectors.store';
 
 export function useExtServicesQuery() {
-  const [extServProviders, setExtServProviders] = useState<ExtServiceBase[]>([]);
+  const state = useIntegrationsSelector();
+
   const [isLoading, setIsLoading] = useState(false);
   const {
     integrations: { getAllExtServices },
@@ -12,15 +14,15 @@ export function useExtServicesQuery() {
 
   const loadExtServices = ({ params }: { params?: ApiQueryParams<ExternalServiceTypeEnum> } = {}) => {
     return getAllExtServices({
-      data: { params },
-      onSuccess: setExtServProviders,
+      params: params,
+      onSuccess: () => {},
       onLoading: setIsLoading,
     });
   };
 
   return {
     loadExtServices,
-    extServProviders,
+    extServProviders: state.extList,
     isLoading,
   };
 }

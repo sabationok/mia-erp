@@ -16,7 +16,6 @@ export { default as DeliveriesApi } from './deliveries.api';
 export { default as CustomersApi } from './customers.api';
 export { default as CommunicationApi } from './communication.api';
 export { default as ExtServicesApi } from './ext-services.api';
-export { default as IntegrationsApi } from './integrations.api';
 
 export * from './client.api';
 export * from './offers.api';

@@ -3,7 +3,7 @@ import { ApiResponse, IBase, OnlyUUID } from '../redux/app-redux.types';
 import { CompanyEntity } from './companies.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
-import { OutputIntegrationBase } from './integrations.types';
+import { OutputIntegrationEntity } from './integrations.types';
 import { AppDate } from './utils.types';
 
 export enum PermissionStatus {
@@ -19,7 +19,7 @@ export enum PermissionRecipientEnum {
 export interface PermissionEntity extends IBase {
   company?: CompanyEntity;
   user?: IUserBase;
-  integration?: OutputIntegrationBase;
+  integration?: OutputIntegrationEntity;
   owner?: IUserBase;
   role?: ICustomRole;
   email?: string;

@@ -10,6 +10,7 @@ export enum IntegrationTypeEnum {
   input = 'input',
   output = 'output',
 }
+
 export enum ExternalServiceTypeEnum {
   payment = 'payment',
   shipment = 'shipment',
@@ -39,6 +40,7 @@ export enum ExternalServiceProvidersEnum {
   instagram = 'instagram',
   facebook = 'facebook',
 }
+
 export enum PaymentProviderName {
   mono = 'mono',
   privat24 = 'privat24',
@@ -46,6 +48,7 @@ export enum PaymentProviderName {
   wayForPay = 'wayForPay',
   novapay = 'novapay',
 }
+
 export enum MonoCheckoutMethod {
   pan = 'pan',
   apple = 'apple',
@@ -81,7 +84,7 @@ export interface ExtServiceBase extends IBase {
   label: string;
   provider: ExternalServiceProvidersEnum;
   lang?: LangPack;
-  defIntegration?: InputIntegrationBase;
+  defIntegration?: InputIntegrationEntity;
   disabled?: boolean;
   // originServices?: ExtSubServicesEntity;
   services?: ExternalServiceTypeEnum[];
@@ -92,30 +95,99 @@ export interface ExtSubServicesEntity extends Record<ExternalServiceTypeEnum | s
 export interface ChatIds {
   telegram?: (string | number)[];
 }
-export interface InputIntegrationBase extends IBase, HasLabel, HasCompany, HasType<ExternalServiceTypeEnum> {
-  service: ExtServiceBase;
 
-  apiKey?: string; // !
-  secret?: string; // !
+export namespace Integration {
+  export enum Type {
+    input = 'input',
+    output = 'output',
+  }
+  export interface ByType {
+    [Type.input]: Input.Entity;
+    [Type.output]: Output.Entity;
+  }
+  interface BaseEntity extends IBase, HasLabel, HasCompany, HasType<ExternalServiceTypeEnum> {
+    service: ExtServiceBase;
 
-  publicKey?: string; // !
-  privateKey?: string; // !
+    publicKey?: string; // !
+    privateKey?: string; // !
+    login?: string;
+    password?: string;
 
-  publicKeyMask?: string; // !
-  privateKeyMask?: string; // !
+    publicKeyMask?: string; // !
+    privateKeyMask?: string; // !
 
-  // hasSecret?: boolean;
-  expireAt?: string | Date;
+    // hasSecret?: boolean;
 
-  login?: string;
-  password?: string;
+    expireAt?: string | Date;
+    description?: string;
+  }
 
-  description?: string;
+  interface BaseDto {
+    expireAt?: string;
+    label?: string;
+    description?: string;
+    redirectBaseUrl?: string;
+    setAsDefault?: boolean;
+  }
+
+  interface FromDataBase {
+    serviceId?: UUID;
+    warehouseId?: UUID;
+    finAccountId?: UUID;
+
+    setAsDefault?: boolean;
+
+    service?: IFormDataValueWithID;
+    warehouse?: IFormDataValueWithID;
+    finCount?: IFormDataValueWithID;
+  }
+
+  export namespace Output {
+    export interface Entity extends BaseEntity {
+      redirectBaseUrl?: string;
+      chatIds?: ChatIds;
+    }
+    export interface CreateDto extends BaseDto {
+      roleId?: UUID;
+      redirectBaseUrl?: string;
+    }
+    export interface FormData extends CreateDto {
+      role?: IFormDataValueWithID;
+    }
+  }
+
+  export namespace Input {
+    export interface Entity<Extra = Record<string, any>> extends BaseEntity {
+      extra?: Extra;
+      corsPolicy?: {
+        origins?: string[];
+      };
+    }
+
+    export interface CreateDto<Extra = Record<string, any>> extends BaseDto {
+      login?: string;
+      password?: string;
+
+      publicKey?: string;
+      privateKey?: string;
+
+      serviceId?: UUID;
+      warehouseId?: UUID;
+      finAccountId?: UUID;
+
+      corsPolicy?: {
+        origins?: string[];
+      };
+
+      extra?: Extra;
+    }
+    export interface FormData<Extra = Record<string, any>> extends FromDataBase, CreateDto<Extra> {}
+  }
 }
-export interface OutputIntegrationBase extends InputIntegrationBase {
-  redirectBaseUrl?: string;
-  chatIds?: ChatIds;
-}
+
+export type InputIntegrationEntity = Integration.Input.Entity;
+
+export type OutputIntegrationEntity = Integration.Output.Entity;
 
 export interface IntegrationBaseDto {
   expireAt?: string;
@@ -125,9 +197,6 @@ export interface IntegrationBaseDto {
 }
 
 export interface IntegrationFormData extends Partial<Omit<IntegrationBaseDto, 'service'>>, Partial<OnlyUUID> {
-  apiKey?: string;
-  secret?: string;
-
   publicKey?: string;
   privateKey?: string;
 
@@ -145,20 +214,7 @@ export interface IntegrationFormData extends Partial<Omit<IntegrationBaseDto, 's
   finCount?: IFormDataValueWithID;
 }
 
-export interface InputIntegrationDto extends IntegrationBaseDto {
-  apiKey?: string;
-  secret?: string;
-
-  login?: string;
-  password?: string;
-
-  publicKey?: string;
-  privateKey?: string;
-
-  serviceId?: UUID;
-  warehouseId?: UUID;
-  finAccountId?: UUID;
-}
+export type InputIntegrationDto = Integration.Input.CreateDto;
 
 export interface CreateOutputIntegrationFormData
   extends Partial<Pick<IntegrationBaseDto, 'description' | 'expireAt' | 'label'>> {
@@ -166,6 +222,7 @@ export interface CreateOutputIntegrationFormData
   redirectBaseUrl?: string;
   chatIds?: ChatIds;
 }
+
 export interface OutputIntegrationDto extends IntegrationBaseDto {
   role?: OnlyUUID;
   service?: OnlyUUID;
@@ -181,12 +238,15 @@ export interface OutputIntegrationDto extends IntegrationBaseDto {
 export interface ExtPaymentService extends ExtServiceBase {
   methods?: IPaymentMethod[];
 }
+
 export interface ExtInvoicingService extends ExtServiceBase {
   methods?: IInvoicingMethod[];
 }
+
 export interface ExtCommunicationService extends ExtServiceBase {
   methods?: ICommunicationMethod[];
 }
+
 export interface ExtDeliveryService extends ExtServiceBase {
   methods?: IDeliveryMethod[];
 }
@@ -194,6 +254,7 @@ export interface ExtDeliveryService extends ExtServiceBase {
 export interface ExtPaymentService extends ExtServiceBase {
   methods?: IPaymentMethod[];
 }
+
 export interface ServiceMethodBase<
   InternalType extends string = any,
   ExternalType extends string = any,
@@ -209,11 +270,13 @@ export interface ServiceMethodBase<
   service?: MaybeNull<Service>;
   extService?: MaybeNull<Service>;
 }
+
 export interface IMethodReqData<DtoLike = any> {
   _id?: string;
   data?: Partial<OnlyUUID> & Omit<DtoLike, IBaseKeys | 'isDefault' | 'service' | 'extService'>;
   params?: Pick<ApiQueryParams, 'disabled' | 'withDeleted' | 'withDefault'>;
 }
+
 export enum PaymentInternalTypeEnum {
   postTransfer = 'postTransfer',
 
@@ -241,6 +304,7 @@ export enum DeliveryMethodCategoryEnum {
 
 // * COMMUNICATION
 export interface ICommunicationMethod extends ServiceMethodBase<string, string, ExtCommunicationService> {}
+
 export interface ICommunicationMethodReqData extends IMethodReqData<ICommunicationMethod> {}
 
 // * INVOICING
@@ -250,12 +314,14 @@ export interface IInvoicingMethod
     MonoInvoicingTypeEnum | LiqPayInvoicingTypeEnum,
     ExtInvoicingService
   > {}
+
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
 
 // * DELIVERY
 export interface IDeliveryMethodMinCostFields {
   minCost?: { delivery?: number; return?: number };
 }
+
 export interface IDeliveryMethod extends ServiceMethodBase<string, string, ExtDeliveryService> {
   configs?: {
     duration?: MaybeNull<number>;
@@ -290,6 +356,7 @@ export interface IPaymentMethod
     commissionReceiver?: number;
   };
 }
+
 export interface IPaymentMethodReqData extends IMethodReqData<IPaymentMethod> {}
 
 export enum PaymentCheckoutEnum {

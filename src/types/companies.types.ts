@@ -3,7 +3,7 @@ import { PermissionEntity } from './permissions.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { WarehouseEntity } from './warehousing/warehouses.types';
-import { ExtServiceBase, InputIntegrationBase, OutputIntegrationBase } from './integrations.types';
+import { ExtServiceBase, InputIntegrationEntity, OutputIntegrationEntity } from './integrations.types';
 import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, IBase, MaybeNull, OnlyUUID, UUID, Values } from './utils.types';
 import { SupplierDirEntity } from './dir.types';
 import { ContactsDto } from './contacts/contacts.types';
@@ -89,8 +89,8 @@ export interface CompanyEntity
   warehouses?: MaybeNull<WarehouseEntity[]>;
   externalServices?: MaybeNull<ExtServiceBase[]>;
 
-  inputs?: MaybeNull<InputIntegrationBase[]>;
-  outputs?: MaybeNull<OutputIntegrationBase[]>;
+  inputs?: MaybeNull<InputIntegrationEntity[]>;
+  outputs?: MaybeNull<OutputIntegrationEntity[]>;
 }
 
 export interface CompaniesState {

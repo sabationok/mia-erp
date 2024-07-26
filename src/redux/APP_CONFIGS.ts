@@ -1,4 +1,4 @@
-import { IntegrationTypeEnum } from '../types/integrations.types';
+import { Integration } from '../types/integrations.types';
 import { Keys } from '../types/utils.types';
 
 export enum API_BASE_ROUTES {
@@ -408,11 +408,11 @@ const extServices = {
   updateInputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/input/update`,
   updateOutputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/output/update`,
 };
-export type IntegrationType = keyof typeof IntegrationTypeEnum;
+export type IntegrationType = Keys<typeof Integration.Type>;
 
 const integrations = {
   getAll: (type: IntegrationType | string = '') => `${API_BASE_ROUTES.INTEGRATIONS}/getAll`,
-  getById: (id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${id}`,
+  getById: (type?: IntegrationType, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${type}/${id}`,
   create: (type?: IntegrationType) => `${API_BASE_ROUTES.INTEGRATIONS}/create/${type}`,
   update: (type?: IntegrationType, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/update/${type}/${id}`,
   delete: (type?: IntegrationType, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${type}/${id}`,

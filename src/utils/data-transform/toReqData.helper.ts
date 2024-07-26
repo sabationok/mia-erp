@@ -36,6 +36,9 @@ export function toReqData<IncomeDataType extends Record<string, any> = any, Omit
       if (['undefined', 'function', 'null'].includes(typeof value)) {
         return;
       }
+      if (!value) {
+        return;
+      }
 
       if (options?.ignorePaths?.includes(key)) {
         // console.log('ignorePaths', { key }, { value });

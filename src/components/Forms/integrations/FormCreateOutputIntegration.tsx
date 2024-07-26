@@ -8,20 +8,22 @@ import {
   ChatIds,
   CreateOutputIntegrationFormData,
   ExtServiceBase,
+  Integration,
   IntegrationFormData,
-  OutputIntegrationBase,
+  OutputIntegrationEntity,
 } from '../../../types/integrations.types';
 import FlexBox from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect';
-import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { AppModuleName } from '../../../redux/reduxTypes.types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ButtonIcon from '../../atoms/ButtonIcon';
 import { Text } from '../../atoms/Text';
+import { useAppDispatch } from '../../../redux/store.store';
+import { createOutputIntegrationThunk } from '../../../redux/integrations/integrations.thunk';
+import { toReqData } from '../../../utils';
 
 export interface FormCreateOutputIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<IntegrationFormData>;
-  onSuccess?: (info: { data: OutputIntegrationBase }) => void;
+  onSuccess?: (info: { data: OutputIntegrationEntity }) => void;
   service?: ExtServiceBase;
 }
 type ChatProviderKey = keyof ChatIds;
@@ -32,23 +34,26 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
   onClose,
   ...p
 }) => {
+  const dispatch = useAppDispatch();
   const form = useForm<CreateOutputIntegrationFormData>();
-  const intServ = useAppServiceProvider()[AppModuleName.integrations];
+  // const intServ = useAppServiceProvider()[AppModuleName.integrations];
   const [inputValueByChatProvider, setInputValueByChatProvider] = useState<Record<ChatProviderKey, string | number>>({
     telegram: '',
   });
 
   const [isOpenChatIdInput, setIsOpenChatInput] = useState<Record<ChatProviderKey, boolean>>({ telegram: false });
 
-  const onValid = (data: IntegrationFormData) => {
-    intServ.createOutput({
-      onSuccess: data => {
-        console.log('Form Create OUTPUT Integration', data);
-        onSuccess && onSuccess({ data });
-        onClose && onClose();
-      },
-      data: { data },
-    });
+  const onValid = ({ setAsDefault, ...data }: Integration.Output.FormData) => {
+    dispatch(
+      createOutputIntegrationThunk({
+        data: { data: { data: toReqData(data), params: { setAsDefault } } },
+        onSuccess: data => {
+          console.log('Form Create OUTPUT Integration | submit success', data);
+          onSuccess && onSuccess(data);
+          onClose && onClose();
+        },
+      })
+    );
   };
   const setInputValueByProvider = (name: ChatProviderKey, value: string | number) => {
     setInputValueByChatProvider(p => ({ ...p, [name]: value }));
@@ -76,8 +81,6 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
     }
     setInputValueByProvider(provider, '');
     handleToggleInputStateByChatProvider(provider);
-
-    console.log(fv.chatIds);
   };
   const handleDeleteChatIdByProvider = (provider: ChatProviderKey, chatId?: string | number) => {
     if (fv.chatIds && fv.chatIds[provider]) {
@@ -86,9 +89,6 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
     }
   };
 
-  useEffect(() => {
-    console.log(fv);
-  }, [fv]);
   return (
     <ModalForm onClose={onClose} title={t('Create new integration')} {...p} onSubmit={form.handleSubmit(onValid)}>
       <FlexBox padding={'0 8px 8px'} fillWidth>

@@ -76,6 +76,10 @@ export type ServiceApiCaller<SD = any, RD = any, E = any | unknown, MD = any> = 
   payload: ApiCallerPayload<SD, RD, E>
 ) => Promise<ApiResponse<RD, MD> | undefined>;
 
+export type _ServiceApiCaller<Type extends (...args: any[]) => any> = (
+  ...args: Parameters<Type>
+) => ReturnType<Type> | Promise<any>;
+
 // AsyncThunk<ActionPayload, ThunkPayload, any>
 export type __ServiceDispatcherAsync<Thunk extends (...args: any[]) => any> = (...args: Parameters<Thunk>) => Promise<
   | {

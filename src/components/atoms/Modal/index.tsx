@@ -38,9 +38,6 @@ const ModalBase: React.FC<ModalBaseProps> = ({
   ...props
 }) => {
   const modal = useModal();
-
-  console.log(title, 'props', props);
-
   return (
     <ModalContainer className="modal_base" {...props}>
       <ModalHeader

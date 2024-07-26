@@ -1,53 +1,94 @@
-import APP_CONFIGS, { IntegrationType } from '../redux/APP_CONFIGS';
-import { AppQueries } from './index';
+import { ApiResponse, AppQueries, ClientApi } from './index';
 import {
-  InputIntegrationBase,
   InputIntegrationDto,
-  OutputIntegrationBase,
+  InputIntegrationEntity,
+  Integration,
   OutputIntegrationDto,
 } from '../types/integrations.types';
-import { ApiResponse } from '../redux/app-redux.types';
-import { ClientApi } from './client.api';
+import APP_CONFIGS from '../redux/APP_CONFIGS';
 
-export type GetAllIntegrationsQueries = Partial<Pick<AppQueries, 'warehouseId' | 'serviceId'>> & {
-  type: IntegrationType;
-};
-export class ExtServicesApi {
-  private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.integrations;
+export namespace IntegrationsApi {
+  export interface GetOneQuery {
+    _id?: string;
+  }
 
-  public static createInputIntegration = (data?: {
-    data: InputIntegrationDto;
-  }): Promise<ApiResponse<InputIntegrationBase>> => {
-    return this.api.post(this.endpoints.create('input'), data?.data);
+  export type GetAllQuery<Type extends Integration.Type = Integration.Type> = Partial<
+    Pick<AppQueries, 'warehouseId' | 'serviceId'>
+  > & {
+    type: Type;
   };
 
-  public static createOutputIntegration = (data?: {
-    data: OutputIntegrationDto;
-    params: { setAsDefault?: boolean };
-  }): Promise<ApiResponse<InputIntegrationBase>> => {
-    return this.api.post(this.endpoints.create('output'), data?.data, {
-      params: { setAsDefault: data?.data.setAsDefault ?? data?.params.setAsDefault },
-    });
-  };
+  export class Client {
+    private static api = ClientApi.clientRef;
+    private static endpoints = APP_CONFIGS.endpoints.integrations;
 
-  public static updateOutputIntegration = (data?: {
-    data: OutputIntegrationDto;
-  }): Promise<ApiResponse<InputIntegrationBase>> => {
-    return this.api.post(this.endpoints.create('output'), data?.data);
-  };
+    public static getAll = (
+      _data?: unknown,
+      params?: GetAllIntegrationsQueries
+    ): Promise<ApiResponse<(Integration.Input.Entity | Integration.Output.Entity)[]>> => {
+      return this.api.get(this.endpoints.getAll(params?.type), { params });
+    };
 
-  public static getAllByQueries = (
-    params?: GetAllIntegrationsQueries
-  ): Promise<ApiResponse<(InputIntegrationBase | OutputIntegrationBase)[]>> => {
-    return this.api.get(this.endpoints.getAll(params?.type), { params });
-  };
+    public static integrations = {
+      remove: (data?: {
+        type: 'input' | 'output' | undefined;
+        _id: string | undefined;
+      }): Promise<ApiResponse<{ result: boolean }>> => {
+        return this.api.delete(this.endpoints.delete(data?.type, data?._id));
+      },
+    };
 
-  public static remove = (data?: {
-    type: 'input' | 'output' | undefined;
-    id: string | undefined;
-  }): Promise<ApiResponse<{ result: boolean }>> => {
-    return this.api.delete(this.endpoints.delete(data?.type, data?.id));
-  };
+    public static input = {
+      getAll: (
+        _data?: unknown,
+        params?: GetAllIntegrationsQueries
+      ): Promise<ApiResponse<Integration.Input.Entity[]>> => {
+        return this.api.get(this.endpoints.getAll('input'), { params });
+      },
+      create: (data?: {
+        data: InputIntegrationDto;
+        params?: { setAsDefault?: boolean };
+      }): Promise<ApiResponse<Integration.Input.Entity>> => {
+        return this.api.post(this.endpoints.create('input'), data?.data, { params: data?.params });
+      },
+      getById: (
+        _data?: unknown,
+        params?: IntegrationsApi.GetOneQuery
+      ): Promise<ApiResponse<Integration.Output.Entity>> => {
+        return this.api.get(this.endpoints.getById('input', params?._id), { params });
+      },
+    };
+    public static output = {
+      getById: (
+        _data?: unknown,
+        params?: IntegrationsApi.GetOneQuery
+      ): Promise<ApiResponse<Integration.Output.Entity>> => {
+        return this.api.get(this.endpoints.getById('output', params?._id), { params });
+      },
+
+      getAll: (
+        _data?: unknown,
+        params?: GetAllIntegrationsQueries
+      ): Promise<ApiResponse<Integration.Output.Entity[]>> => {
+        return this.api.get(this.endpoints.getAll('output'), { params });
+      },
+      create: (data?: {
+        data: OutputIntegrationDto;
+        params?: { setAsDefault?: boolean };
+      }): Promise<ApiResponse<InputIntegrationEntity>> => {
+        return this.api.post(this.endpoints.create('output'), data?.data, {
+          params: data?.params,
+        });
+      },
+      update: (data?: { data: OutputIntegrationDto }): Promise<ApiResponse<Integration.Input.Entity>> => {
+        return this.api.post(this.endpoints.update('output'), data?.data);
+      },
+    };
+  }
 }
-export default ExtServicesApi;
+
+export type GetAllIntegrationsQueries<Type extends Integration.Type = Integration.Type> = Partial<
+  Pick<AppQueries, 'warehouseId' | 'serviceId'>
+> & {
+  type: Type;
+};

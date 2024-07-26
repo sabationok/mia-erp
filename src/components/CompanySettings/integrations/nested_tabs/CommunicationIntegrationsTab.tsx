@@ -5,7 +5,7 @@ import { Text } from '../../../atoms/Text';
 import { t } from 'lang';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
-import { InputIntegrationBase } from 'types/integrations.types';
+import { InputIntegrationEntity } from 'types/integrations.types';
 import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
 import { getIdRef, toQueriesForReq } from 'utils/data-transform';
 import styled from 'styled-components';
@@ -23,7 +23,7 @@ const CommunicationIntegrationsTab: React.FC<CommunicationIntegrationsTabProps> 
   currentService: currentServiceData,
 }) => {
   const service = useAppServiceProvider()[AppModuleName.integrations];
-  const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
+  const [integrationsList, setIntegrationsList] = useState<InputIntegrationEntity[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);

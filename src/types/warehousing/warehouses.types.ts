@@ -16,7 +16,7 @@ import {
   WithPeriod,
 } from '../utils.types';
 import { WarehouseInventoryEntity } from './warehouse-inventory.types';
-import { InputIntegrationBase } from '../integrations.types';
+import { InputIntegrationEntity } from '../integrations.types';
 import { WarehousingDocumentEntity } from './warehousing-documents.types';
 import { AddressDto, AddressEntity } from '../addresses/addresses.types';
 
@@ -47,7 +47,7 @@ export interface WarehouseEntity extends IBase {
   inventories?: WarehouseInventoryEntity[];
   documents?: WarehousingDocumentEntity[];
 
-  integrations?: InputIntegrationBase[];
+  integrations?: InputIntegrationEntity[];
 
   novaposhtaApiKey?: string;
   ukrposhtaApiKey?: string;

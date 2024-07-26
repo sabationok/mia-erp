@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
 import AccordionList, { IAccordionOptionProps } from '../../SideBarContent/AccordionList';
-import { InputIntegrationBase } from '../../../types/integrations.types';
+import { InputIntegrationEntity } from '../../../types/integrations.types';
 import IntegrationOverview from './IntegrationOverview';
 import FlexBox from '../../atoms/FlexBox';
 
 export interface InputIntegrationsListProps {
-  list: InputIntegrationBase[];
-  onSetAsDefault?: (info: InputIntegrationBase) => void;
-  onDelete?: (info: InputIntegrationBase) => void;
-  onEdit?: (info: InputIntegrationBase) => void;
-  active?: InputIntegrationBase;
-  checkIsActive?: (data: InputIntegrationBase) => boolean;
+  list: InputIntegrationEntity[];
+  onSetAsDefault?: (info: InputIntegrationEntity) => void;
+  onDelete?: (info: InputIntegrationEntity) => void;
+  onEdit?: (info: InputIntegrationEntity) => void;
+  active?: InputIntegrationEntity;
+  checkIsActive?: (data: InputIntegrationEntity) => boolean;
 }
 
 const InputIntegrationsList = ({
@@ -22,7 +22,7 @@ const InputIntegrationsList = ({
   active,
 }: InputIntegrationsListProps) => {
   const preparedList = useMemo((): IAccordionOptionProps[] => {
-    return list.map((opt: InputIntegrationBase): IAccordionOptionProps => {
+    return list.map((opt: InputIntegrationEntity): IAccordionOptionProps => {
       const isActive = checkIsActive && checkIsActive(opt);
       return {
         title: opt.label ?? '',

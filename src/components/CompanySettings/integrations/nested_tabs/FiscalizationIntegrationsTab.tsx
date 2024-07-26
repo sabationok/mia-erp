@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { t } from 'lang';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
-import { InputIntegrationBase } from 'types/integrations.types';
+import { InputIntegrationEntity } from 'types/integrations.types';
 import { getIdRef, toQueriesForReq } from 'utils';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import { useAppServiceProvider } from 'hooks/useAppServices.hook';
@@ -22,7 +22,7 @@ const FiscalizationIntegrationsTab: React.FC<FiscalizationIntegrationsTabProps> 
   ...props
 }) => {
   const service = useAppServiceProvider()[AppModuleName.integrations];
-  const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
+  const [integrationsList, setIntegrationsList] = useState<InputIntegrationEntity[]>([]);
   const modalS = useModalService();
   // const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
 
