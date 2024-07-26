@@ -4,6 +4,7 @@ import { LangPack } from '../lang';
 import { Path } from 'react-hook-form';
 import { MeasurementUnit } from './enums.types';
 import { AddressDto } from './addresses/addresses.types';
+import { PermissionEntity } from './permissions.types';
 
 export type UUID = string;
 export type LABEL = string;
@@ -78,6 +79,9 @@ export interface HasDisabledAttributes {
 
 export interface HasOwnerAsCompany {
   owner?: MaybeNull<CompanyEntity>;
+}
+export interface HasPermission {
+  permission?: PermissionEntity;
 }
 export interface HasBrutto {
   brutto?: MaybeNull<string>;
@@ -292,6 +296,9 @@ export interface HasIsVisibleFlag {
 export interface HasIsDisabledFlag {
   isDisabled?: MaybeNull<boolean>;
 }
+export type HasFlags<Flag extends string> = {
+  [key in Flag]?: boolean;
+};
 
 export interface HasIsValidFlag {
   isValid?: MaybeNull<boolean>;

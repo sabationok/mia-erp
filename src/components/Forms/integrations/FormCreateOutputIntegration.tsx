@@ -6,7 +6,6 @@ import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import {
   ChatIds,
-  CreateOutputIntegrationFormData,
   ExtServiceBase,
   Integration,
   IntegrationFormData,
@@ -26,6 +25,7 @@ export interface FormCreateOutputIntegrationProps extends Omit<ModalFormProps, '
   onSuccess?: (info: { data: OutputIntegrationEntity }) => void;
   service?: ExtServiceBase;
 }
+
 type ChatProviderKey = keyof ChatIds;
 const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = ({
   onSubmit,
@@ -35,13 +35,15 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
   ...p
 }) => {
   const dispatch = useAppDispatch();
-  const form = useForm<CreateOutputIntegrationFormData>();
+  const form = useForm<Integration.Output.FormData>();
   // const intServ = useAppServiceProvider()[AppModuleName.integrations];
-  const [inputValueByChatProvider, setInputValueByChatProvider] = useState<Record<ChatProviderKey, string | number>>({
+  const [inputValueByChatProvider, setInputValueByChatProvider] = useState<Record<ChatProviderKey | string, string>>({
     telegram: '',
   });
 
-  const [isOpenChatIdInput, setIsOpenChatInput] = useState<Record<ChatProviderKey, boolean>>({ telegram: false });
+  const [isOpenChatIdInput, setIsOpenChatInput] = useState<Record<ChatProviderKey | string, boolean>>({
+    telegram: false,
+  });
 
   const onValid = ({ setAsDefault, ...data }: Integration.Output.FormData) => {
     dispatch(
@@ -55,7 +57,7 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
       })
     );
   };
-  const setInputValueByProvider = (name: ChatProviderKey, value: string | number) => {
+  const setInputValueByProvider = (name: ChatProviderKey, value: string) => {
     setInputValueByChatProvider(p => ({ ...p, [name]: value }));
   };
   const fv = form.watch();
@@ -68,19 +70,15 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
     if (!inputValue) return;
 
     if (fv.chatIds) {
-      const provIds = fv.chatIds[provider];
+      const prevIds = fv.chatIds[provider] || [];
+      const remove = () => prevIds?.filter(exist => exist !== inputValue);
+      const add = () => prevIds?.concat([inputValue]);
+      const currentIds = prevIds.includes(inputValue) ? remove() : add();
+      form.setValue(`chatIds.${provider}`, currentIds);
 
-      if (provIds) {
-        const filtered = provIds.filter(exist => exist !== inputValue);
-        form.setValue(`chatIds.${provider}`, [...filtered, inputValue]);
-      } else {
-        form.setValue(`chatIds.${provider}`, [inputValue]);
-      }
-    } else {
-      form.setValue(`chatIds.${provider}`, [inputValue]);
+      setInputValueByProvider(provider, '');
+      handleToggleInputStateByChatProvider(provider);
     }
-    setInputValueByProvider(provider, '');
-    handleToggleInputStateByChatProvider(provider);
   };
   const handleDeleteChatIdByProvider = (provider: ChatProviderKey, chatId?: string | number) => {
     if (fv.chatIds && fv.chatIds[provider]) {
@@ -96,19 +94,6 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
           <InputText placeholder={t('Label')} {...form.register('label')} />
         </InputLabel>
 
-        {/*<InputLabel label={t('Login')}>*/}
-        {/*  <InputText placeholder={t('Login')} {...form.register('login')} />*/}
-        {/*</InputLabel>*/}
-
-        {/*<InputLabel label={t('Api-key')}>*/}
-        {/*  <InputText placeholder={t('Api-key')} {...form.register('apiKey')} />*/}
-        {/*</InputLabel>*/}
-
-        {/*<InputLabel label={t('Secret key')}>*/}
-        {/*  <InputSecurityControlHOC*/}
-        {/*    renderInput={p => <InputText placeholder={t('Secret key')} {...p} {...form.register('secret')} />}*/}
-        {/*  />*/}
-        {/*</InputLabel>*/}
         <CustomSelect label={t('Select role')} placeholder={'Select role'} />
 
         <InputLabel label={t('Expired at')}>

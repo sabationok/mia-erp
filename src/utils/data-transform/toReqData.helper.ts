@@ -12,20 +12,21 @@ export interface ToRequestDataOptions<OmitPath extends string = string> {
   uuidArraysFieldKeysMap?: Record<string, string>;
 }
 
-export function toReqData<IncomeDataType extends Record<string, any> = any, OmitPath extends string = string>(
-  incomeData: IncomeDataType,
-  options?: ToRequestDataOptions<OmitPath>
-): Partial<IncomeDataType> {
+export function toReqData<
+  IncomeDataType extends Record<string, any> = any,
+  OmitPath extends string = string,
+  OutputData extends Record<string, any> = Record<string, any>,
+>(incomeData: IncomeDataType, options?: ToRequestDataOptions<OmitPath>): Partial<OutputData> {
   // console.log(options?.omitPathArr);
   const _omitkeys = ['createdAt', 'updatedAt', ...(options?.omitPathArr || [])];
   if (options?.isRoot === false) {
     _omitkeys.unshift('_id');
   }
-  const inputCopy = options?.isRoot
+  const inputCopy: IncomeDataType = options?.isRoot
     ? JSON.parse(JSON.stringify(omit(incomeData, _omitkeys)))
     : omit(incomeData, _omitkeys);
 
-  let outData: Record<string, any> = {};
+  let outData: Record<string, any> = {} as OutputData;
   // console.log('before', { inputCopy }, { outData });
   try {
     Object.entries(inputCopy).forEach(([key, value]) => {
@@ -125,5 +126,5 @@ export function toReqData<IncomeDataType extends Record<string, any> = any, Omit
     console.error(e);
   }
   // console.log('after', outData);
-  return outData as Partial<IncomeDataType>;
+  return outData as Partial<OutputData>;
 }

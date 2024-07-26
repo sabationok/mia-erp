@@ -11,10 +11,14 @@ import { Text } from '../../atoms/Text';
 import { toAppDateFormat } from '../../../utils';
 import { isNumber } from 'lodash';
 import ButtonIcon from '../../atoms/ButtonIcon';
-import { StorageService } from '../../../services';
+import { WebService } from '../../../services';
 import { useIntegrationsSelector } from '../../../redux/selectors.store';
 import { useAppDispatch } from '../../../redux/store.store';
-import { getAllIntegrationsByTypeThunk } from '../../../redux/integrations/integrations.thunk';
+import {
+  getAllIntegrationsByTypeThunk,
+  getOutputIntegrationByIdThunk,
+} from '../../../redux/integrations/integrations.thunk';
+import { Tag } from 'antd';
 
 export interface OutputIntegrationsTabProps {}
 
@@ -31,17 +35,19 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
 
   const preparedList = useMemo((): IAccordionOptionProps[] => {
     return integrationsList.map((opt: OutputIntegrationEntity): IAccordionOptionProps => {
+      const get = () => state.dataMap[opt._id] || opt;
+
       return {
         title: opt.label ?? '',
-        ChildrenComponent: () => <ApiKeyItem opt={opt} />,
+        ChildrenComponent: () => <ApiKeyItem opt={get()} />,
       };
     });
-  }, [integrationsList]);
+  }, [integrationsList, state.dataMap]);
 
   useEffect(() => {
     dispatch(
       getAllIntegrationsByTypeThunk({
-        params: { type: Integration.Type.output },
+        params: { type: Integration.DirectionType.output },
       })
     );
 
@@ -72,22 +78,28 @@ const Container = styled(FlexBox)`
 export default OutputIntegrationsTab;
 
 const ApiKeyItem = ({ opt }: { opt: Integration.Output.Entity }) => {
+  const dispatch = useAppDispatch();
+
+  const onLoadHandler = async () => {
+    dispatch(getOutputIntegrationByIdThunk({ params: { _id: opt._id } }));
+  };
   return (
-    <FlexBox fillWidth padding={'8px 2px'} gap={8}>
+    <FlexBox fillWidth padding={'8px 2px'} gap={12}>
       <Text $size={12} $weight={600}>
         {t('Public key')}
       </Text>
-      <ApiKeyBox apiKey={opt.publicKey} keyMask={opt.publicKeyMask} />
+      <ApiKeyBox apiKey={opt.publicKey} keyMask={opt.publicKeyMask} onLoadApiKey={onLoadHandler} />
 
       <Text $size={12} $weight={600}>
         {t('Private key')}
       </Text>
-      <ApiKeyBox apiKey={opt.privateKey} keyMask={opt.privateKeyMask} />
+      <ApiKeyBox apiKey={opt.privateKey} keyMask={opt.privateKeyMask} onLoadApiKey={onLoadHandler} />
 
       <Text $size={12} $weight={600}>
         {t('Redirect base url')}
       </Text>
       <Text>{opt?.redirectBaseUrl}</Text>
+
       {opt.expireAt && (
         <>
           <Text $size={12} $weight={600}>
@@ -105,44 +117,92 @@ const ApiKeyItem = ({ opt }: { opt: Integration.Output.Entity }) => {
           <Text>{opt.description}</Text>
         </>
       )}
+
+      {!!opt.corsPolicy?.origins?.length && (
+        <>
+          <Text $size={12} $weight={600}>
+            {t('Description')}
+          </Text>
+
+          {opt.corsPolicy?.origins?.map(item => {
+            return <Tag key={item}>{item}</Tag>;
+          })}
+        </>
+      )}
     </FlexBox>
   );
 };
-const ApiKeyBox = ({ apiKey, keyMask }: { apiKey?: string; keyMask?: string }) => {
+const ApiKeyBox = ({
+  apiKey,
+  keyMask,
+  onLoadApiKey,
+  isLoading,
+}: {
+  apiKey?: string;
+  keyMask?: string;
+  onLoadApiKey?: () => Promise<void>;
+  isLoading?: boolean;
+}) => {
   const [isVis, setIsVis] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopyButtonLeave = () => {
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 750);
+  };
+
+  const handleCopy = () => {
+    if (apiKey) {
+      WebService.copyText(apiKey).then(() => {
+        setIsCopied(true);
+      });
+    }
+  };
 
   return (
-    <FlexBox fillWidth style={{ position: 'relative' }} fxDirection={'row'} gap={8}>
-      {apiKey && (
-        <ButtonIcon
-          variant={'onlyIcon'}
-          icon={isVis ? 'visibilityOn' : 'visibilityOff'}
-          iconSize={'100%'}
-          size={'18px'}
-          onClick={() => {
-            setIsVis(p => !p);
-          }}
-        ></ButtonIcon>
-      )}
-
+    <FlexBox fillWidth fxDirection={'row'} alignItems={'center'} gap={10}>
       <ButtonIcon
         variant={'onlyIcon'}
-        icon={'copy'}
+        icon={isVis ? 'visibilityOn' : 'visibilityOff'}
         iconSize={'100%'}
         size={'18px'}
+        isLoading={isLoading}
         onClick={() => {
-          apiKey && StorageService.copyText(apiKey);
+          if (!apiKey && onLoadApiKey) {
+            onLoadApiKey().then(apiKey => {
+              setIsVis(true);
+            });
+          } else {
+            setIsVis(true);
+          }
+        }}
+        onMouseLeave={() => {
+          setTimeout(() => {
+            setIsVis(false);
+          }, 750);
         }}
       ></ButtonIcon>
 
       <ButtonIcon
-        variant={'textExtraSmall'}
-        style={{ padding: 0, height: 'fit-content' }}
-        onClick={() => {
-          apiKey && StorageService.copyText(apiKey);
-        }}
+        variant={'onlyIcon'}
+        icon={isCopied ? 'done' : 'copy'}
+        iconSize={'100%'}
+        size={'18px'}
+        disabled={!apiKey}
+        onClick={handleCopy}
+        onMouseLeave={handleCopyButtonLeave}
+      ></ButtonIcon>
+
+      <ButtonIcon
+        variant={'defNoEffects'}
+        sizeType={'middle'}
+        style={{ height: 'fit-content' }}
+        disabled={!apiKey}
+        onClick={handleCopy}
+        onMouseLeave={handleCopyButtonLeave}
       >
-        <Text>{isVis ? apiKey : keyMask}</Text>
+        <Text>{isVis && apiKey ? apiKey : keyMask}</Text>
       </ButtonIcon>
     </FlexBox>
   );

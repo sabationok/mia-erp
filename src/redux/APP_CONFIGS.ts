@@ -408,7 +408,7 @@ const extServices = {
   updateInputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/input/update`,
   updateOutputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/output/update`,
 };
-export type IntegrationType = Keys<typeof Integration.Type>;
+export type IntegrationType = Keys<typeof Integration.DirectionType>;
 
 const integrations = {
   getAll: (type: IntegrationType | string = '') => `${API_BASE_ROUTES.INTEGRATIONS}/getAll`,

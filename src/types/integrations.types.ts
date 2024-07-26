@@ -3,8 +3,21 @@ import { LangPack } from '../lang';
 import { CompanyEntity } from './companies.types';
 import { ApiQueryParams } from '../api';
 import { HasBaseCmsConfigs } from './cms.types';
-import { HasCompany, HasDisabledAttributes, HasEmbeddedType, HasLabel, HasType, MaybeNull, UUID } from './utils.types';
+import {
+  HasAuthor,
+  HasDisabledAttributes,
+  HasEditor,
+  HasEmbeddedType,
+  HasFlags,
+  HasLabel,
+  HasOwnerAsCompany,
+  HasPermission,
+  HasType,
+  MaybeNull,
+  UUID,
+} from './utils.types';
 import { IBankAccount } from './finances/bank-accounts.types';
+import { PermissionRecipientEnum } from './permissions.types';
 
 export enum IntegrationTypeEnum {
   input = 'input',
@@ -78,6 +91,16 @@ export enum LiqPayInvoicingTypeEnum {
   pay = 'pay',
   hold = 'hold',
 }
+export namespace ExternalService {
+  export interface BaseEntity
+    extends IBase,
+      HasOwnerAsCompany,
+      HasLabel,
+      HasBaseCmsConfigs,
+      HasFlags<'disabled' | 'isDisabled'> {
+    availableFor?: HasFlags<PermissionRecipientEnum>;
+  }
+}
 
 export interface ExtServiceBase extends IBase {
   owner: CompanyEntity;
@@ -90,22 +113,21 @@ export interface ExtServiceBase extends IBase {
   services?: ExternalServiceTypeEnum[];
 }
 
-export interface ExtSubServicesEntity extends Record<ExternalServiceTypeEnum | string, string[]> {}
-
 export interface ChatIds {
-  telegram?: (string | number)[];
+  telegram?: string[];
+  local?: UUID[];
 }
 
 export namespace Integration {
-  export enum Type {
+  export enum DirectionType {
     input = 'input',
     output = 'output',
   }
   export interface ByType {
-    [Type.input]: Input.Entity;
-    [Type.output]: Output.Entity;
+    [DirectionType.input]: Input.Entity;
+    [DirectionType.output]: Output.Entity;
   }
-  interface BaseEntity extends IBase, HasLabel, HasCompany, HasType<ExternalServiceTypeEnum> {
+  interface BaseEntity extends IBase, HasLabel, HasOwnerAsCompany, HasAuthor, HasEditor, HasType<DirectionType> {
     service: ExtServiceBase;
 
     publicKey?: string; // !
@@ -118,15 +140,11 @@ export namespace Integration {
 
     // hasSecret?: boolean;
 
-    expireAt?: string | Date;
+    expireAt?: string;
     description?: string;
   }
 
-  interface BaseDto {
-    expireAt?: string;
-    label?: string;
-    description?: string;
-    redirectBaseUrl?: string;
+  interface BaseDto extends Partial<Pick<BaseEntity, 'expireAt' | 'description' | 'label'>> {
     setAsDefault?: boolean;
   }
 
@@ -137,21 +155,24 @@ export namespace Integration {
 
     setAsDefault?: boolean;
 
-    service?: IFormDataValueWithID;
-    warehouse?: IFormDataValueWithID;
-    finCount?: IFormDataValueWithID;
+    // service?: IFormDataValueWithID;
+    // warehouse?: IFormDataValueWithID;
+    // finAccount?: IFormDataValueWithID;
   }
 
   export namespace Output {
-    export interface Entity extends BaseEntity {
+    export interface Entity extends BaseEntity, HasPermission {
       redirectBaseUrl?: string;
       chatIds?: ChatIds;
+      corsPolicy?: {
+        origins?: string[];
+      };
     }
-    export interface CreateDto extends BaseDto {
+    export interface CreateDto extends BaseDto, Partial<Pick<Entity, 'chatIds' | 'redirectBaseUrl' | 'corsPolicy'>> {
       roleId?: UUID;
-      redirectBaseUrl?: string;
     }
     export interface FormData extends CreateDto {
+      roleId?: UUID;
       role?: IFormDataValueWithID;
     }
   }
@@ -159,9 +180,6 @@ export namespace Integration {
   export namespace Input {
     export interface Entity<Extra = Record<string, any>> extends BaseEntity {
       extra?: Extra;
-      corsPolicy?: {
-        origins?: string[];
-      };
     }
 
     export interface CreateDto<Extra = Record<string, any>> extends BaseDto {
@@ -174,10 +192,6 @@ export namespace Integration {
       serviceId?: UUID;
       warehouseId?: UUID;
       finAccountId?: UUID;
-
-      corsPolicy?: {
-        origins?: string[];
-      };
 
       extra?: Extra;
     }

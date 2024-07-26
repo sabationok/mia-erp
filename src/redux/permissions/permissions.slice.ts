@@ -1,5 +1,5 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IPermissionsState } from '../../types/permissions.types';
+import { IPermissionsState, PermissionEntity } from '../../types/permissions.types';
 import {
   createCompanyWithPermissionThunk,
   createPermissionThunk,
@@ -21,7 +21,16 @@ import { StateErrorType } from '../reduxTypes.types';
 import { getAllAccessKeys } from '../../components/AppPages';
 import { onUserLogout } from '../auth/auth.actions';
 
-const initState: IPermissionsState = {
+export interface PermissionsState {
+  permission: Partial<PermissionEntity>;
+  permissions: PermissionEntity[];
+  users: PermissionEntity[];
+  permission_token?: string;
+  isLoading: boolean;
+  error: StateErrorType;
+}
+
+const initState: PermissionsState = {
   permission: {},
   permission_token: '',
   permissions: [],

@@ -12,7 +12,7 @@ export namespace IntegrationsApi {
     _id?: string;
   }
 
-  export type GetAllQuery<Type extends Integration.Type = Integration.Type> = Partial<
+  export type GetAllQuery<Type extends Integration.DirectionType = Integration.DirectionType> = Partial<
     Pick<AppQueries, 'warehouseId' | 'serviceId'>
   > & {
     type: Type;
@@ -87,7 +87,7 @@ export namespace IntegrationsApi {
   }
 }
 
-export type GetAllIntegrationsQueries<Type extends Integration.Type = Integration.Type> = Partial<
+export type GetAllIntegrationsQueries<Type extends Integration.DirectionType = Integration.DirectionType> = Partial<
   Pick<AppQueries, 'warehouseId' | 'serviceId'>
 > & {
   type: Type;
