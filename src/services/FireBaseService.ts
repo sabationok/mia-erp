@@ -20,7 +20,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 export const auth = getAuth(firebaseApp);
 export const storage = getStorage(firebaseApp);
 export const firestoreDB = getFirestore(firebaseApp);
-export default class FireBaseService {
+export class FireBaseService {
   public static app = firebase.initializeApp(ConfigService.getFireBaseConfig());
 
   public static db = getDatabase(this.app);

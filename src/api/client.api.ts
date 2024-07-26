@@ -32,9 +32,9 @@ export class ClientApi {
 
   private static readonly _clientRef = createApiClient({
     onUnauthorized: this._onUnauthorized,
-    baseURL: ConfigService.baseApiProvider.isLocalhost
+    baseURL: ConfigService.baseApiProviderIs.localhost
       ? this.BASE_URL_LOCALHOST
-      : ConfigService.baseApiProvider.isRailway
+      : ConfigService.baseApiProviderIs.railway
         ? this.BASE_URL_RAILWAY
         : ConfigService.IS_DEV_MODE
           ? this.BASE_URL_LOCALHOST

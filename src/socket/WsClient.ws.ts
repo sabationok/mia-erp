@@ -22,7 +22,7 @@ enum SocketNamespaces {
 }
 
 export class WsClient {
-  public static readonly BASE_URL = ConfigService._WS_RAILWAY_BASE_URL_STAGE_DEV;
+  public static readonly BASE_URL = ConfigService.getBaseApiUrl();
   public static readonly authData: WsConnectionOptions['auth'] = {
     // privateKey: 'API_KEY',
     // access_token: 'Bearer authorization',
