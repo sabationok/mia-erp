@@ -5,13 +5,13 @@ import { getAllUsersThunk } from './users.thunks';
 import { checks, sliceCleaner } from '../../utils';
 import { onUserLogout } from '../auth/auth.actions';
 
-export interface IUsersState {
+export interface UsersState {
   users: any[];
   isLoading: boolean;
   error: any;
 }
 
-const initialState: IUsersState = {
+const initialState: UsersState = {
   users: [],
   isLoading: false,
   error: null,
@@ -21,17 +21,9 @@ export const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {},
-  // extraReducers: {
-  //* ОТРИМАТИ ВСІХ КОРИСТУВАЧІВ
-  // [getAllUsersThunk.fulfilled]: (state: IUsersState, { payload }: PayloadAction<number>) => {
-  //   state.isLoading = false;
-  //   state.users = [...payload];
-  //   console.log('getAllUsersThunk', payload);
-  // },
-  // },
   extraReducers: builder => {
     builder
-      .addCase(getAllUsersThunk.fulfilled, (state: Draft<IUsersState>, { payload }) => {
+      .addCase(getAllUsersThunk.fulfilled, (state: Draft<UsersState>, { payload }) => {
         state.isLoading = false;
         state.users = [...payload];
       })

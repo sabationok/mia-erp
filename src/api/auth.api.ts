@@ -1,15 +1,9 @@
 import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
-import {
-  ILoggedUserInfoRes,
-  ILoginUserData,
-  IRegisteredUserInfoRes,
-  RegisterDto,
-  UserEntity,
-} from '../types/auth.types';
+import { ILoggedUserInfoRes, IRegisteredUserInfoRes, LoginUserDto, RegisterDto, UserEntity } from '../types/auth.types';
 import { ClientApi } from './client.api';
 import { ApiResponse } from '../redux/app-redux.types';
 
-type LogoutResponse = Pick<ILoginUserData, 'email'> & { result: boolean };
+type LogoutResponse = Pick<LoginUserDto, 'email'> & { result: boolean };
 export default class AuthApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.auth;
@@ -18,7 +12,7 @@ export default class AuthApi {
     return this.api.post(this.endpoints[Endpoints.register](), data);
   };
 
-  public static logInUser = async (data: ILoginUserData): Promise<ILoggedUserInfoRes> => {
+  public static logInUser = async (data: LoginUserDto): Promise<ILoggedUserInfoRes> => {
     const res: ILoggedUserInfoRes = await this.api.post(this.endpoints[Endpoints.logIn](), data);
     if (res.data.data.access_token) {
       ClientApi.setToken(res.data.data.access_token);

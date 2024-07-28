@@ -31,7 +31,7 @@ const App: React.FC = () => {
         ClientApi.onRefreshToken(data => {
           console.log('onRefreshToken ==========================================');
 
-          console.log(data);
+          dispatch();
         }),
       ];
 

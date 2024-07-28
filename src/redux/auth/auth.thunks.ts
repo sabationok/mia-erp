@@ -5,8 +5,8 @@ import {
   ICurrentUser,
   ICurrentUserInfoRes,
   ILoggedUserInfo,
-  ILoginUserData,
   IRegisteredUser,
+  LoginUserDto,
   RegisterDto,
 } from '../../types/auth.types';
 import { ThunkArgs } from '../store.store';
@@ -27,13 +27,13 @@ export const registerUserThunk = createAppAsyncThunk<IRegisteredUser, ThunkArgs<
 
 export const logInUserThunk = createAsyncThunk<
   ILoggedUserInfo,
-  ThunkArgs<ILoginUserData>,
+  ThunkArgs<LoginUserDto>,
   {
     state: { auth: IAuthState };
   }
 >(AuthThunkTypeEnum.logIn, async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    const response = await AuthApi.logInUser(data as ILoginUserData);
+    const response = await AuthApi.logInUser(data as LoginUserDto);
 
     onSuccess && onSuccess(data);
     return response.data.data;

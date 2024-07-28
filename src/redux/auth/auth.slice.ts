@@ -1,18 +1,37 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { getCurrentUserThunk, logInUserThunk, logOutUserThunk, registerUserThunk } from './auth.thunks';
-import { IAuthState } from '../../types/auth.types';
-import { karina_avatar } from '../../img';
-import { checks } from '../../utils';
+import { UserEntity } from '../../types/auth.types';
 import { SetLoggedUserAction } from './auth.actions';
+import { isString } from 'lodash';
+import { PermissionEntity } from '../../types/permissions.types';
+import { Action } from '../store.store';
+import { IBase } from '../../types/utils.types';
 
-const initialState: IAuthState = {
-  user: {
-    _id: '',
-    avatarURL: karina_avatar,
-  },
+export interface AuthState {
+  user?: UserEntity&{session?:AuthSession.Entity};
+  permission: PermissionEntity;
+  access_token?: string;
+  refresh_token?: string;
+  isLoading: boolean;
+  isLoggedIn: boolean;
+  error: AuthErrorType;
+}
+
+export namespace AuthSession{
+   interface BaseEntity extends IBase{
+    access_token: '',
+    refresh_token: '',
+  }
+
+  export type Entity =BaseEntity
+}
+
+const initialState: AuthState = {
+  user: undefined,
   permission: { _id: '' },
   access_token: '',
+  refresh_token: '',
   isLoading: true,
   isLoggedIn: false,
   error: null,
@@ -21,7 +40,12 @@ const initialState: IAuthState = {
 export const authSlice = createSlice({
   name: 'auth',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    setAccessTokensAction: (st, a: Action<{ access_token: string refresh_token?:string}>) => {
+      st.access_token = a.payload.access_token;
+      st.refresh_token = a.payload.refresh_token;
+    },
+  },
   extraReducers: builder =>
     builder
       .addCase(SetLoggedUserAction, (s, a) => {
@@ -80,7 +104,7 @@ export const authSlice = createSlice({
 });
 
 export function isAuthCase(type: string) {
-  return checks.isStr(type) && type.startsWith('users');
+  return isString(type) && type.startsWith('users');
 }
 function inPending(a: AnyAction) {
   return isAuthCase(a.type) && a.type.endsWith('pending');

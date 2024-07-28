@@ -1,8 +1,10 @@
 import { ApiResponse, IBase } from '../redux/app-redux.types';
-import { AuthErrorType } from '../redux/reduxTypes.types';
 import { PermissionEntity } from './permissions.types';
-import { HasEmbeddedLabel, HasEmbeddedName, HasEmbeddedReference } from './utils.types';
+import { AppDate, HasEmbeddedLabel, HasEmbeddedName, HasEmbeddedReference } from './utils.types';
 import { BusinessSubjectTypeEnum } from './companies.types';
+import { AuthState } from '../redux/auth/auth.slice';
+
+export type IAuthState = AuthState;
 
 export interface ISystemRole extends IBase {
   name?: string;
@@ -10,29 +12,33 @@ export interface ISystemRole extends IBase {
   actions: string[];
 }
 
-export interface IUserBase extends IBase, HasEmbeddedName, HasEmbeddedLabel, HasEmbeddedReference {
-  email?: string;
-  phone?: string;
-  avatarURL?: string;
-  sysRole?: ISystemRole;
-  ref?: string;
+export namespace User {
+  export enum BaseRole {
+    GUEST = 'GUEST',
+    ADMIN = 'ADMIN',
+  }
+
+  export interface BaseEntity extends IBase, HasEmbeddedName, HasEmbeddedLabel, HasEmbeddedReference {
+    email?: string;
+    phone?: string;
+    avatarURL?: string;
+    sysRole?: ISystemRole;
+
+    verification_token?: string;
+    verification_code?: string;
+    verifiedAt?: AppDate;
+  }
+
+  export interface Entity extends BaseEntity {
+    permissions?: Partial<PermissionEntity>[];
+  }
 }
 
-export interface UserEntity extends IUserBase {
-  permissions?: Partial<PermissionEntity>[];
-}
+export interface IUserBase extends User.BaseEntity {}
+
+export interface UserEntity extends User.Entity {}
 
 export interface IManager extends PermissionEntity {}
-
-export interface IAuthState {
-  user: UserEntity;
-  permission: PermissionEntity;
-  access_token?: string;
-  refresh_token?: string;
-  isLoading: boolean;
-  isLoggedIn: boolean;
-  error: AuthErrorType;
-}
 
 export type ILoggedUserInfo = Pick<IAuthState, 'access_token'> & Pick<UserEntity, 'email' | '_id'>;
 
@@ -40,22 +46,17 @@ export interface ILoggedUserInfoRes extends ApiResponse<ILoggedUserInfo> {}
 
 export interface IRegisteredUserInfoRes extends ApiResponse<IRegisteredUser> {}
 
-export interface IRecoveryPasswordRes extends ApiResponse<ILoggedUserInfo> {}
-
 export interface ICurrentUserInfoRes extends ApiResponse<ICurrentUser> {}
 
 export interface IRegisteredUser {
+  _id: string;
   email?: string;
+  reference?: string;
 }
 
-export interface ILoginUserData {
+export interface LoginUserDto {
   email?: string;
   password?: string;
-}
-
-export interface IRegistrationData extends ILoginUserData {
-  name?: string;
-  secondName?: string;
 }
 
 export interface HasRegisterUserDtoFields {
@@ -64,6 +65,7 @@ export interface HasRegisterUserDtoFields {
     second?: string;
   };
 }
+
 export interface HasRegisterCompanyDtoFields {
   label?: {
     base?: string;
@@ -71,6 +73,7 @@ export interface HasRegisterCompanyDtoFields {
     print?: string;
   };
 }
+
 export type RegisterDto = {
   email?: string;
   password?: string;
