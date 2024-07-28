@@ -114,7 +114,18 @@ export const ChatWsInitializer = React.forwardRef(
       return () => {
         unsubscribers.forEach(clb => clb());
       };
-    }, [chatId, dispatch, onConnect, onConnectError, onJoin, onLeave, onSend, onTyping]);
+    }, [
+      chatId,
+      dispatch,
+      handleConnected,
+      handleDisconnect,
+      onConnect,
+      onConnectError,
+      onJoin,
+      onLeave,
+      onSend,
+      onTyping,
+    ]);
 
     return null;
   }

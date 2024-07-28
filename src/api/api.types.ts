@@ -14,6 +14,8 @@ export enum ApiHeaders {
   x_token_crm = 'x-token-crm',
   Device_Id = 'Device-Id',
   User_Reference = 'User-Reference',
+  cookiesPermission = 'Cookies-Permission',
+  dnt = 'dnt',
 }
 
 export enum AppQueryKey {

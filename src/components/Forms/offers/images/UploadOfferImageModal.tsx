@@ -38,7 +38,7 @@ const validation = YUP.object().shape({
     }),
 });
 
-const _undefinedOrNullRegExp = /(?:undefined\/|null\/)/g;
+export const _undefinedOrNullRegExp = /(?:undefined\/|null\/)/g;
 
 const UploadOfferImageModal = ({ onSuccess, onClose, offerId, ...props }: AddImageSetModalProps) => {
   const loaders = useLoaders<'getLink' | 'uploadingImg' | 'saveLink' | 'processing'>({
@@ -118,7 +118,7 @@ const UploadOfferImageModal = ({ onSuccess, onClose, offerId, ...props }: AddIma
   }, [file]);
   useEffect(() => {
     console.log({ preview, file });
-  }, [preview]);
+  }, [file, preview]);
   return (
     <DrawerBase title={'Завантажити зображення'} fillHeight width={'360px'} onClosePress={onClose}>
       <FormContentGrid

@@ -68,7 +68,7 @@ export class WsClient {
       this.BASE_URL + name,
       this._SOCKET_OPTIONS[name]
     );
-
+    console.log();
     return this._SOCKETS[name];
   }
 

@@ -48,7 +48,11 @@ const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props })
     return providers?.find(pr => pr.provider === providerType);
   }, [providerType, providers]);
 
-  const TabComponent = useMemo(() => tabsMap[currentType], [currentType]);
+  const renderTab = useMemo(() => {
+    const TabComponent = tabsMap[currentType];
+
+    return <TabComponent compId={currentType} providers={providers} currentService={currentServiceData} infoVisible />;
+  }, [currentServiceData, currentType, providers]);
 
   useEffect(() => {
     loadExtServices();
@@ -87,7 +91,7 @@ const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props })
       />
 
       <Container flex={1} fillWidth overflow={'hidden'}>
-        <TabComponent compId={currentType} providers={providers} currentService={currentServiceData} infoVisible />
+        {renderTab}{' '}
       </Container>
     </>
   );

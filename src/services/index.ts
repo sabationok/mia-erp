@@ -6,3 +6,5 @@ export { default as GeolocationService } from './Geolocation.service';
 export * as geolocation from './Geolocation.service';
 
 export * from './WebService';
+
+export * from './AppEventEmitter.service';

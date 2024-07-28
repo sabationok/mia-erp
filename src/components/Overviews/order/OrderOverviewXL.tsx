@@ -5,7 +5,7 @@ import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon';
 import { t } from '../../../lang';
-import { useAppParams, useAppRouter } from '../../../hooks';
+import { useAppRouter } from '../../../hooks';
 import { enumToFilterOptions } from '../../../utils';
 import TabSelector from '../../atoms/TabSelector';
 import OrderOverviewInfoTab from './tabs/OrderOverviewInfoTab';
@@ -36,7 +36,7 @@ const tabs = enumToFilterOptions(OrderOverviewTabs);
 const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   // const orderS = useAppServiceProvider()[ServiceName.orders];
-  const orderId = useAppParams()?.orderId;
+  // const orderId = useAppParams()?.orderId;
   const Order = useCurrentOrder();
   const router = useAppRouter();
 

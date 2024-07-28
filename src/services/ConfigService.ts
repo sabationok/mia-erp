@@ -1,11 +1,11 @@
 import { Keys, PartialRecord } from '../types/utils.types';
 
-export enum ENV_KEYS {
+export enum EnvKeyEnum {
   ERP_API_KEY = 'ERP_API_KEY',
   PROVIDER = 'PROVIDER',
   STAGE = 'STAGE',
 }
-
+const REACT_APP_PREFIX = 'REACT_APP_';
 export namespace Configs {
   export enum ApiStageType {
     development = 'development',
@@ -13,7 +13,14 @@ export namespace Configs {
     test = 'test',
   }
 
-  export enum React_Env_Keys {
+  export enum BaseApiProvider {
+    // RAILWAY = 'RAILWAY',
+    // LOCALHOST = 'LOCALHOST',
+    railway = 'railway',
+    localhost = 'localhost',
+  }
+
+  export enum ReactEnvKeys {
     FRB_apiKey = 'FRB_apiKey',
     FRB_authDomain = 'FRB_authDomain',
     FRB_databaseURL = 'FRB_databaseURL',
@@ -22,16 +29,16 @@ export namespace Configs {
     FRB_messagingSenderId = 'FRB_messagingSenderId',
     FRB_appId = 'FRB_appId',
     FRB_measurementId = 'FRB_measurementId',
+
     LOCALHOST_API_PORT = 'LOCALHOST_API_PORT',
+    PROVIDER = 'PROVIDER',
+    STAGE = 'STAGE',
   }
 
-  export enum BaseApiProvider {
-    railway = 'railway',
-    localhost = 'localhost',
-  }
-
-  export type ApiUrlsMap = PartialRecord<Configs.ApiStageType.test | Configs.ApiStageType.production, string> &
+  export type ApiProviderUrlsMap = PartialRecord<Configs.ApiStageType.test | Configs.ApiStageType.production, string> &
     Record<Configs.ApiStageType.development, string>;
+
+  export type ApiUrlsMap = Record<BaseApiProvider, ApiProviderUrlsMap>;
 }
 
 export const firebaseConfig = {
@@ -48,12 +55,12 @@ export default class ConfigService {
   public static isDevMode() {
     return this.IS_DEV_MODE;
   }
-  public static _react_env_keys = Object.fromEntries(Object.entries(Configs.React_Env_Keys));
+  public static _react_env_keys = Object.fromEntries(Object.entries(Configs.ReactEnvKeys));
   public static get<Value extends string = string>(
-    name: Keys<typeof ENV_KEYS | typeof Configs.React_Env_Keys> | string
+    name: Keys<typeof EnvKeyEnum | typeof Configs.ReactEnvKeys> | string
   ): Value | undefined {
     if (this._react_env_keys[name]) {
-      return process.env['REACT_APP_' + name] as Value;
+      return process.env[REACT_APP_PREFIX + name] as Value;
     }
     return process.env[name] as Value;
   }
@@ -79,30 +86,25 @@ export default class ConfigService {
     };
   }
 
-  public static _railway_api_urls: Configs.ApiUrlsMap = {
-    [Configs.ApiStageType.production]: 'https://mia-erp.up.railway.app/',
-    [Configs.ApiStageType.development]: 'https://mia-erp-dev.up.railway.app/',
-  };
-  public static _localhost_api_urls: Configs.ApiUrlsMap = {
-    [Configs.ApiStageType.development]: 'http://localhost:4500/',
+  public static _api_urls: Configs.ApiUrlsMap = {
+    railway: {
+      [Configs.ApiStageType.production]: 'https://mia-erp.up.railway.app/',
+      [Configs.ApiStageType.development]: 'https://mia-erp-dev.up.railway.app/',
+    },
+    localhost: {
+      [Configs.ApiStageType.development]: 'http://localhost:4500/',
+    },
   };
 
   public static _WS_BASE_URL = this.baseApiProviderIs.localhost
     ? 'http://localhost:4500/'
     : 'https://mia-erp-dev.up.railway.app/';
 
-  public static _WS_BASE_URL_STAGE_DEV = this.baseApiProviderIs.localhost
-    ? 'http://localhost:4500/'
-    : 'https://mia-erp-dev.up.railway.app/';
-  public static _WS_BASE_URL_STAGE_PROD = this.baseApiProviderIs.localhost
-    ? 'http://localhost:4500/'
-    : 'https://mia-erp.up.railway.app/';
-
   static getProvider() {
-    return this.get<Configs.BaseApiProvider>(ENV_KEYS.PROVIDER) ?? Configs.BaseApiProvider.localhost;
+    return this.get<Configs.BaseApiProvider>(EnvKeyEnum.PROVIDER) ?? Configs.BaseApiProvider.localhost;
   }
   static getStage() {
-    return this.get<Configs.ApiStageType>(ENV_KEYS.STAGE) ?? Configs.ApiStageType.development;
+    return this.get<Configs.ApiStageType>(EnvKeyEnum.STAGE) ?? Configs.ApiStageType.development;
   }
 
   static getApiUrlsKey(pr: Configs.BaseApiProvider) {
@@ -111,8 +113,8 @@ export default class ConfigService {
   static getBaseApiUrl() {
     const provider = this.getProvider();
     const stage = this.getStage();
-    const key = this.getApiUrlsKey(provider);
-    const urls = this[key];
+
+    const urls = this._api_urls[provider];
 
     return stage ? urls[stage] ?? urls.development : urls.development;
   }

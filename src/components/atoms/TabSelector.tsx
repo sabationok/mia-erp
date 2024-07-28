@@ -154,7 +154,7 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
   }, [asStepper, current, options, handleSelectOpt, renderLabel]);
 
   return (
-    <FlexBox className="filter" overflow={'hidden'} fillWidth maxWidth={'100%'} {...props}>
+    <FilterBox className="filter" overflow={'hidden'} fillWidth maxWidth={'100%'} {...props}>
       <Filter optionProps={optionProps} gridRepeat={(options?.length ?? 0) + (onResetPress ? 1 : 0)}>
         {onResetPress && (
           <StButtonIcon variant="def" onClick={handleReset} isActive={current === -1}>
@@ -163,10 +163,16 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
         )}
         {renderOptions}
       </Filter>
-    </FlexBox>
+    </FilterBox>
   );
 };
 
+const FilterBox = styled(FlexBox)`
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+`;
 const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: boolean } }>`
   display: grid;
   align-items: center;
