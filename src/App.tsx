@@ -9,6 +9,7 @@ import { t } from './lang';
 import { ClientApi } from './api';
 import { useAppDispatch } from './redux/store.store';
 import useAppAuthHook from './hooks/useAppAuth.hook';
+import { setAccessTokensAction } from 'redux/auth/auth.slice';
 
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettingsSelector();
@@ -20,28 +21,34 @@ const App: React.FC = () => {
   }, [access_token]);
 
   useLayoutEffect(() => {
+    const unsubscribers: (() => void)[] = [];
+
     if (access_token) {
       ClientApi.setToken(access_token);
 
-      const unsubscribers = [
+      unsubscribers.push(
         ClientApi.onUnauthorized(error => {
           console.error('onUnauthorized ==========================================', error);
+          ClientApi.unsetToken();
           logOutUser();
         }),
         ClientApi.onRefreshToken(data => {
           console.log('onRefreshToken ==========================================');
 
-          dispatch();
-        }),
-      ];
+          dispatch(setAccessTokensAction({ access_token: data.access_token }));
+        })
+      );
 
       return () => {
         unsubscribers.forEach(off => off());
       };
     } else {
       ClientApi.unsetToken();
+      return () => {
+        unsubscribers.forEach(off => off());
+      };
     }
-  }, [access_token, hasAccess, logOutUser]);
+  }, [access_token, dispatch, hasAccess, logOutUser]);
 
   return (
     <>

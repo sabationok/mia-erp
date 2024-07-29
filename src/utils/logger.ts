@@ -1,7 +1,6 @@
 type ConsoleType = typeof console;
 
 type LogType = keyof Pick<ConsoleType, 'error' | 'debug' | 'log' | 'warn'>;
-
 export class ClientLogger {
   private _ctx: string = ClientLogger.name;
   private _prefix?: string = '';
@@ -29,9 +28,7 @@ export class ClientLogger {
   }
 
   get log(): ConsoleType['log'] {
-    return (...args) => {
-      console.log(`${this._getLogType('log')}`, ...args);
-    };
+    return (...args) => console.log(`${this._getLogType('log')}`, ...args);
   }
 
   private _getLogType = (type: LogType) => `[${type.toUpperCase()}]`.padEnd(10, ' ') + this._fullPrefix;

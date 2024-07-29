@@ -2,7 +2,6 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import { memo, useEffect, useMemo } from 'react';
 import useAppParams from '../../hooks/useAppParams.hook';
-import { AxiosError } from 'axios';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import AppLoader from '../atoms/AppLoader';
 import { isUndefined } from 'lodash';
@@ -31,16 +30,14 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
 
   const isValidPermissionId = useMemo(() => {
     const isValid = !isUndefined(permissionId) && state?.permission?._id === permissionId;
+
     if (isValid) {
       ClientApi.setP_Token(permissionId);
     } else {
-      console.warn(
-        'PermissionCheck ACCESS DENIED',
-        ClientApi.clientRef?.defaults?.headers?.Permission || ClientApi.clientRef?.defaults?.headers
-      );
+      console.warn('[PermissionCheck] ACCESS DENIED');
       ClientApi.unSetP_Token();
     }
-    return ClientApi.clientRef.defaults?.headers?.Permission === permissionId;
+    return permissionId && ClientApi.getTokens().p_token === permissionId;
   }, [permissionId, state.permission._id]);
 
   const hasPermission = useMemo(() => !!state.permission._id, [state.permission._id]);
@@ -52,39 +49,26 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
     onSuccess: onAppLoadFinish,
   });
 
-  useEffect(() => {
-    if (!isValidPermissionId) {
-      navigate('/');
-    }
-  }, [isValidPermissionId, navigate]);
+  // useEffect(() => {
+  //   if (!isValidPermissionId) {
+  //     navigate('/app');
+  //   }
+  // }, [isValidPermissionId, navigate]);
 
   useEffect(() => {
     if (!hasPermission) {
-      ClientApi.clientRef.interceptors.response.clear();
     } else {
-      ClientApi.clientRef.interceptors.response.use(
-        value => value,
-        (e: AxiosError) => {
-          if (e.status === 409) {
-            console.log(e);
-            ToastService.error('Forbidden company action');
-            clearCurrent();
-          }
-          if (e.status === 401) {
-            console.log(e);
-            ToastService.error('Auth failed');
-            logOutUser();
-          }
-          throw e;
-        },
-        {}
-      );
-    }
+      const unsubcribe = () =>
+        ClientApi.onForbidden(error => {
+          ToastService.error('Forbidden company action');
+          console.log(error);
+          clearCurrent();
+        });
 
-    return () => {
-      ClientApi.clientRef.interceptors.response.clear();
-      // clearCurrent();
-    };
+      return () => {
+        unsubcribe();
+      };
+    }
   }, [clearCurrent, hasPermission, logOutUser, permissionId]);
 
   if (loaders.isLoading?.permission) {

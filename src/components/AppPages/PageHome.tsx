@@ -73,9 +73,11 @@ const PageHome: React.FC<Props> = ({ path }) => {
   }, []);
 
   useEffect(() => {
-    user._id && permissionsService.getAllByUserId({ data: { userId: user._id }, onLoading: setLoading });
+    if (user) {
+      user._id && permissionsService.getAllByUserId({ data: { userId: user._id }, onLoading: setLoading });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user._id]);
+  }, [user?._id]);
 
   return (
     <Page>

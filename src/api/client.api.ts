@@ -1,36 +1,55 @@
 import axios, { AxiosError, AxiosInstance, HttpStatusCode } from 'axios';
-import { AppEventEmitter, ConfigService } from '../services';
-import { ApiHeaders, ApiResponse } from './api.types';
+import { ConfigService, EvEmitter, EventEmitter1 } from '../services';
+import { ApiResponse } from './api.types';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { BooleanType, PartialRecord } from '../types/utils.types';
 import { AxiosQueue } from './axios-queue';
 
-type ClientApiHeaders = {
-  [ApiHeaders.p_token]?: string;
-  [ApiHeaders.cookiesPermission]?: BooleanType;
-  [ApiHeaders.dnt]?: 1 | 0;
-};
+export namespace Api {
+  export enum Header {
+    p_token = 'p-token',
+    P_Token = 'P-Token',
+    p_token_server = 'p-token-server',
+    authorization = 'authorization',
+    x_token_crm = 'x-token-crm',
+    Device_Id = 'Device-Id',
+    User_Reference = 'User-Reference',
+    cookiesPermission = 'Cookies-Permission',
+    dnt = 'dnt',
+  }
 
-type ClientApiEvents = {
-  onUnauthorized?: (error: AxiosError) => void;
-  onForbidden?: (error: AxiosError) => void;
+  export type BaseHeaders = {
+    [Header.p_token]?: string;
+    [Header.cookiesPermission]?: BooleanType;
+    [Header.dnt]?: 1 | 0;
+  };
 
-  onRefreshToken?: (data: { _id: string; access_token: string }) => void;
-};
-type HttpStatusEvents = PartialRecord<`${HttpStatusCode}`, (...args: any[]) => void>;
+  export type EventListeners = {
+    onUnauthorized: (error: AxiosError) => void;
+    onForbidden: (error: AxiosError) => void;
+
+    onRefreshToken: (data: { _id: string; access_token: string }) => void;
+  };
+  export type EmitEvent = EvEmitter.Events<{
+    onUnauthorized: AxiosError;
+    onForbidden: AxiosError;
+    onRefreshToken: { _id: string; access_token: string };
+  }>;
+  export type HttpStatusEventListeners = PartialRecord<`on_${HttpStatusCode}`, (...args: any[]) => void>;
+}
+
 function createApiClient({
   baseURL,
   headers,
   onForbidden,
   onUnauthorized,
   onRefreshToken,
-  statusEvents,
+  refreshUrl = 'auth/refresh-token',
 }: {
+  refreshUrl?: string;
   baseURL?: string;
-  headers?: ClientApiHeaders;
-} & ClientApiEvents & {
-    statusEvents?: HttpStatusEvents;
-  }): AxiosInstance {
+  headers?: Api.BaseHeaders;
+} & Api.EventListeners): AxiosInstance {
   const _client = axios.create({
     withCredentials: true,
     headers,
@@ -38,7 +57,7 @@ function createApiClient({
   });
   const queue = new AxiosQueue(_client);
   const refreshRequest = async (): Promise<ApiResponse<{ access_token: string; _id: string }>> => {
-    const refreshResult = await _client.get('auth/refresh-token');
+    const refreshResult = await _client.get(refreshUrl);
     if (refreshResult.data.data.access_token) {
       throw new Error('[ access_token ] not received in request');
     }
@@ -58,12 +77,6 @@ function createApiClient({
 
   _client.interceptors.response.use(
     async (data: ApiResponse) => {
-      if (statusEvents) {
-        const emit = statusEvents[`${data.status as HttpStatusCode}`];
-        if (emit) {
-          emit({ data });
-        }
-      }
       return data;
     },
     async (error: AxiosError) => {
@@ -77,6 +90,7 @@ function createApiClient({
             return axios(error.config);
           } catch (err) {
             if (onUnauthorized) onUnauthorized(error);
+
             queue.clear();
 
             return Promise.reject(error);
@@ -96,14 +110,14 @@ export class ClientApi {
   private static LOCALHOST_API_PORT = ConfigService.get('LOCALHOST_API_PORT') || 4500;
   private static BASE_URL_LOCALHOST = `http://localhost:${this.LOCALHOST_API_PORT}/api/`;
   private static BASE_URL_RAILWAY = `https://mia-erp-dev.up.railway.app/api/`;
-  public static apiEventEmitter = new AppEventEmitter<ClientApiEvents>();
-  private static _onUnauthorized: ((error: AxiosError) => void) | undefined = undefined;
+  public static _emitter = new EventEmitter1<Api.EmitEvent>();
   private static readonly _clientRef = createApiClient({
-    onUnauthorized: e => this.apiEventEmitter.emit('onUnauthorized', e),
-    onForbidden: e => this.apiEventEmitter.emit('onForbidden', e),
-    onRefreshToken: e => this.apiEventEmitter.emit('onRefreshToken', e),
+    onUnauthorized: e => this._emitter.emit('onUnauthorized', e),
+    onForbidden: e => this._emitter.emit('onForbidden', e),
+    onRefreshToken: e => this._emitter.emit('onRefreshToken', e),
     headers: {
-      [ApiHeaders.cookiesPermission]: true,
+      [Api.Header.cookiesPermission]: true,
+      [Api.Header.dnt]: 1,
     },
     baseURL:
       ConfigService.getBaseApiUrl() || ConfigService.baseApiProviderIs.localhost
@@ -119,19 +133,18 @@ export class ClientApi {
     return this._clientRef;
   }
 
-  public static onUnauthorized = (listener: ClientApiEvents['onUnauthorized']) => {
-    return this.apiEventEmitter.onWith('onUnauthorized', listener?.name ?? 'onUnauthorized', listener);
+  public static onUnauthorized = (listener: Api.EventListeners['onUnauthorized']) => {
+    return this._emitter.onWith('onUnauthorized', listener?.name || 'onUnauthorized', listener);
   };
-  public static onForbidden = (listener: ClientApiEvents['onForbidden']) =>
-    this.apiEventEmitter.onWith('onForbidden', listener?.name ?? 'onForbidden', listener);
-  public static onRefreshToken = (listener: ClientApiEvents['onRefreshToken']) =>
-    this.apiEventEmitter.onWith('onRefreshToken', listener?.name ?? 'onRefreshToken', listener);
+  public static onForbidden = (listener: Api.EventListeners['onForbidden']) =>
+    this._emitter.onWith('onForbidden', listener?.name || 'onForbidden', listener);
+  public static onRefreshToken = (listener: Api.EventListeners['onRefreshToken']) =>
+    this._emitter.onWith('onRefreshToken', listener?.name || 'onRefreshToken', listener);
 
   public static getTokens() {
     return {
       access: this._clientRef.defaults.headers.Authorization,
-      permission: this._clientRef.defaults.headers.Permission,
-      p_token: this._clientRef.defaults.headers?.['P-Token'],
+      p_token: this._clientRef.defaults.headers?.[Api.Header.P_Token],
     };
   }
 
@@ -146,13 +159,11 @@ export class ClientApi {
   }
 
   public static setP_Token(token: string) {
-    this._clientRef.defaults.headers.Permission = token;
-    this._clientRef.defaults.headers['P-Token'] = token;
+    this._clientRef.defaults.headers[Api.Header.P_Token] = token;
   }
 
   public static unSetP_Token() {
-    this._clientRef.defaults.headers.Permission = '';
-    this._clientRef.defaults.headers['P-Token'] = '';
+    this._clientRef.defaults.headers[Api.Header.P_Token] = '';
   }
 
   public static setLocalhostProvider(permissionId?: string) {
@@ -167,9 +178,10 @@ export class ClientApi {
     return this;
   }
 
-  public static setAuthInterceptor({ onUnauthorized }: { onUnauthorized?: (error: AxiosError) => void }) {
-    this._onUnauthorized = onUnauthorized;
-
-    console.log('setAuthInterceptor |||| onUnauthorized');
+  static getHeader(name: string) {
+    return this._clientRef.defaults.headers?.[name];
+  }
+  static setHeader(name: string, value: string) {
+    return (this._clientRef.defaults.headers[name] = value);
   }
 }

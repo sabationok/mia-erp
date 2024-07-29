@@ -7,4 +7,4 @@ export * as geolocation from './Geolocation.service';
 
 export * from './WebService';
 
-export * from './AppEventEmitter.service';
+export * from './EventEmitter1.service';

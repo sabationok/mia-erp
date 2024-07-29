@@ -29,6 +29,8 @@ export class FireBaseService {
 
   public static uploadImage() {}
 }
+
+export default FireBaseService;
 // rules_version = '2';
 //
 // service cloud.firestore {

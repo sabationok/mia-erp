@@ -1,7 +1,7 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { PropertyEntity } from '../types/offers/properties.types';
 import { t } from '../lang';
-import { VariationEntity, VariationPropertiesMapInTableData } from '../types/offers/variations.types';
+import { VariationEntity } from '../types/offers/variations.types';
 import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../types/price-management/price-management.types';
 import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';
 import { numberWithSpaces } from './numbers';
@@ -36,7 +36,7 @@ export class TableActionsBuilder<Service = any, TData = any, Extra = any, Name e
 }
 
 export const transformVariationTableData = (variation: VariationEntity): VariationEntity => {
-  let propertiesMap: VariationPropertiesMapInTableData = {};
+  let propertiesMap: Record<string, any> = {};
 
   variation.properties?.map(value => {
     if (value.parent?._id) {

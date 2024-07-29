@@ -9,7 +9,7 @@ import { Action } from '../store.store';
 import { IBase } from '../../types/utils.types';
 
 export interface AuthState {
-  user?: UserEntity&{session?:AuthSession.Entity};
+  user?: UserEntity & { session?: AuthSession.Entity };
   permission: PermissionEntity;
   access_token?: string;
   refresh_token?: string;
@@ -18,13 +18,13 @@ export interface AuthState {
   error: AuthErrorType;
 }
 
-export namespace AuthSession{
-   interface BaseEntity extends IBase{
-    access_token: '',
-    refresh_token: '',
+export namespace AuthSession {
+  interface BaseEntity extends IBase {
+    access_token: '';
+    refresh_token: '';
   }
 
-  export type Entity =BaseEntity
+  export type Entity = BaseEntity;
 }
 
 const initialState: AuthState = {
@@ -41,7 +41,7 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState: initialState,
   reducers: {
-    setAccessTokensAction: (st, a: Action<{ access_token: string refresh_token?:string}>) => {
+    setAccessTokensAction: (st, a: Action<{ access_token: string; refresh_token?: string }>) => {
       st.access_token = a.payload.access_token;
       st.refresh_token = a.payload.refresh_token;
     },
@@ -102,6 +102,8 @@ export const authSlice = createSlice({
         state.error = action.payload;
       }),
 });
+
+export const { setAccessTokensAction } = authSlice.actions;
 
 export function isAuthCase(type: string) {
   return isString(type) && type.startsWith('users');

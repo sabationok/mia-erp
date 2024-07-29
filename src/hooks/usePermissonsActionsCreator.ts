@@ -214,6 +214,7 @@ const usePermissionsActionsCreator = (companyType: CompanyQueryTypeEnum): Permis
         query: { type: companyType },
       },
     });
+
     return [
       createEnterCompanyAction(controls),
       createLogOutCompanyAction(controls),
