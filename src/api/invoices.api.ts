@@ -1,4 +1,3 @@
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiQueryParams } from './index';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IInvoicingMethod, IInvoicingMethodReqData } from '../types/integrations.types';
@@ -7,7 +6,7 @@ import { ClientApi } from './client.api';
 
 export default class InvoicesApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.invoices;
+  private static endpoints = ClientApi._endpoints.invoices;
 
   public static createForOrder(req?: CreateInvoiceReqData): Promise<ApiResponse<IInvoice>> {
     return this.api.post(this.endpoints.createForOrder(), req?.data, { params: req?.params });

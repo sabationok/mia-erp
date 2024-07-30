@@ -1,4 +1,3 @@
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiQueryParams } from './index';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IVariationReqData, VariationEntity } from 'types/offers/variations.types';
@@ -6,7 +5,7 @@ import { ClientApi } from './client.api';
 
 export default class VariationsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.variationsApiEndpoints;
+  private static endpoints = ClientApi._endpoints.variationsApiEndpoints;
 
   public static getAll = (
     _?: undefined,

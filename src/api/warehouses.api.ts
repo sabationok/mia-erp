@@ -1,4 +1,3 @@
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiQueryParams } from './index';
 import {
   IWarehouseDocReqData,
@@ -11,7 +10,7 @@ import { ClientApi } from './client.api';
 
 export class WarehouseInventoriesApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.warehousing.inventories;
+  private static endpoints = ClientApi._endpoints.warehousing.inventories;
 
   public static getAll = (
     params?: Pick<ApiQueryParams, 'warehouseId' | 'offerId' | 'variationId'>
@@ -22,14 +21,14 @@ export class WarehouseInventoriesApi {
 
 export class WarehousingDocumentsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.warehousing.documents;
+  private static endpoints = ClientApi._endpoints.warehousing.documents;
   public static createDocument = (input?: IWarehouseDocReqData): Promise<ApiResponse<WarehouseItemEntity>> => {
     return this.api.post(this.endpoints.create(), input?.data, { params: input?.params });
   };
 }
 export class WarehousesApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.warehousing;
+  private static endpoints = ClientApi._endpoints.warehousing;
   public static inventories = WarehouseInventoriesApi;
   public static documents = WarehousingDocumentsApi;
 

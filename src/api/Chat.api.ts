@@ -1,4 +1,3 @@
-import APP_CONFIGS from 'redux/APP_CONFIGS';
 import { ChatEntity, MessageEntity, SendMessageDto, UpdateMessageDto } from 'types/chat/chat.types';
 import { ClientApi } from './client.api';
 import { ApiHeaders, ApiQueryParams, ApiResponse } from './api.types';
@@ -16,7 +15,7 @@ export namespace ChatMessagesApiTypes {
 }
 class ChatMessagesApi extends BaseApiClass {
   private static _api = ClientApi.clientRef;
-  private static _endpoints = APP_CONFIGS.endpoints.chat.messages;
+  private static _endpoints = ClientApi._endpoints.chat.messages;
   public static send = (input?: { data: SendMessageDto }): Promise<ApiResponse<MessageEntity>> => {
     return this._api.post(this._endpoints.send(), input?.data, {
       headers: this.headers,
@@ -49,7 +48,7 @@ export namespace ChatApiTypes {
 
 export class ChatApi extends BaseApiClass {
   private static _api = ClientApi.clientRef;
-  private static _endpoints = APP_CONFIGS.endpoints.chat;
+  private static _endpoints = ClientApi._endpoints.chat;
   public static messages = ChatMessagesApi;
 
   static setHeader(key: ApiHeaders | string, value: string) {

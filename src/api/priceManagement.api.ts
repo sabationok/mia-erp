@@ -1,5 +1,4 @@
 import { ClientApi } from './client.api';
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiResponse, OnlyUUID } from '../redux/app-redux.types';
 import {
   ICreatePriceReqData,
@@ -18,7 +17,7 @@ export type GetAllPricesQuery = Pick<
 
 export class PriceListsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.priceManagementEndpoints;
+  private static endpoints = ClientApi._endpoints.priceManagementEndpoints;
 
   public static create = async (data?: IPriceListReqData): Promise<ApiResponse<PriceListEntity>> => {
     return this.api.post(this.endpoints.createList(), data?.data);
@@ -42,7 +41,7 @@ export interface GetOnePriceQuery {
 }
 export class PricesApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.priceManagementEndpoints;
+  private static endpoints = ClientApi._endpoints.priceManagementEndpoints;
 
   public static getOne = async (_?: undefined, params?: GetOnePriceQuery): Promise<ApiResponse<PriceEntity>> => {
     return this.api.get(this.endpoints.getOne(), { params });

@@ -1,5 +1,5 @@
 import { ClientLogger } from '../utils/logger';
-import { PartialRecord } from '../types/utils.types';
+import { MaybePromise, PartialRecord } from '../types/utils.types';
 import ConfigService from './ConfigService';
 import { ObjectKeys } from '../utils';
 import { AxiosError } from 'axios';
@@ -101,12 +101,12 @@ export class EventEmitter1<
     event: Key,
     args: EmitEvMap[Key],
     { async }: { async?: Async } = {}
-  ): Result<Async> {
+  ): MaybePromise<Async> {
     const _exec = (): boolean => {
       try {
         const queue = this._getQueue(event);
         if (queue) {
-          const exec = this._getRuner(event, args);
+          const exec = this._getRunner(event, args);
 
           const list = queue.list.slice(0).concat(Array.from(queue.map.values()))!;
           if (!list.length) {
@@ -126,7 +126,7 @@ export class EventEmitter1<
       }
     };
 
-    return (async ? Promise.resolve(_exec()) : _exec()) as Result<Async>;
+    return (async ? Promise.resolve(_exec()) : _exec()) as MaybePromise<Async>;
   }
 
   private _getQueue<Key extends Event>(event: Key): EvEmitter.EventQueues<EmitEvMap[Key]> {
@@ -168,7 +168,7 @@ export class EventEmitter1<
     delete this._queues[event];
   }
 
-  private _getRuner<Key extends Event>(name: Key, args: EmitEvMap[Key]) {
+  private _getRunner<Key extends Event>(name: Key, args: EmitEvMap[Key]) {
     return ({ listener, once, id }: EvEmitter.SubscriberData<EmitEvMap[Key]>) => {
       try {
         listener(args);
@@ -181,5 +181,3 @@ export class EventEmitter1<
     };
   }
 }
-
-type Result<Async extends boolean> = Async extends true ? Promise<boolean> : boolean;

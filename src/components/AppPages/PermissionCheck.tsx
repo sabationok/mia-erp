@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import { memo, useEffect, useMemo } from 'react';
 import useAppParams from '../../hooks/useAppParams.hook';
@@ -16,7 +16,7 @@ type Props = {
 };
 const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   const loaders = useLoaders<'permission' | 'isLoaded' | 'appData', { isLoaded?: boolean }>();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { permissionId } = useAppParams();
 
   const {

@@ -1,4 +1,3 @@
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiQueryParams } from './index';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IDeliveryMethod } from '../types/integrations.types';
@@ -6,7 +5,7 @@ import { ClientApi } from './client.api';
 
 export default class ShipmentsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.shipments;
+  private static endpoints = ClientApi._endpoints.shipments;
 
   public static createOne(args?: any, params?: ApiQueryParams) {
     return this.api.post(this.endpoints.create());

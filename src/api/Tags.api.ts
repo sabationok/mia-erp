@@ -1,12 +1,11 @@
 import { ClientApi } from './client.api';
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { TagEntity, TagItemDto } from '../types/tags.types';
 import { TagTypeEnum } from '../types/directories.types';
 import { ApiResponse } from '../redux/app-redux.types';
 
 export class TagsApi extends ClientApi {
   private static readonly _api = this.clientRef;
-  private static readonly endpoints = APP_CONFIGS.endpoints.tags;
+  private static readonly endpoints = ClientApi._endpoints.tags;
 
   public static getAll = (
     _?: undefined,

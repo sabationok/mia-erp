@@ -1,4 +1,4 @@
-import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
+import { Endpoints } from '../redux/APP_CONFIGS';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IBaseDirItem } from '../types/dir.types';
 import { ApiQueryParams } from './index';
@@ -12,7 +12,7 @@ export interface IDirRes<RD = any> extends ApiResponse<RD> {}
 
 export default class DirectoriesApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.directories;
+  private static endpoints = ClientApi._endpoints.directories;
 
   public static async create<DTO = any, RD = IBaseDirItem>({
     dirType,

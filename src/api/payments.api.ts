@@ -1,4 +1,3 @@
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiQueryParams } from './index';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IPayment } from '../types/payments.types';
@@ -7,7 +6,7 @@ import { IPaymentMethod, IPaymentMethodReqData } from '../types/integrations.typ
 
 export class PaymentMethodsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.payments.methods;
+  private static endpoints = ClientApi._endpoints.payments.methods;
 
   public static getAll = (
     params?: Pick<ApiQueryParams, 'disabled' | 'isDefault'>
@@ -20,7 +19,7 @@ export class PaymentMethodsApi {
 }
 export class PaymentsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.payments;
+  private static endpoints = ClientApi._endpoints.payments;
   public static methods = PaymentMethodsApi;
   public static createForOrder(): Promise<ApiResponse<IPayment>> {
     return this.api.post(this.endpoints.create());

@@ -1,4 +1,3 @@
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiQueryParams } from './index';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IDeliveryMethod, IDeliveryMethodReqData } from '../types/integrations.types';
@@ -7,7 +6,7 @@ import { IDelivery } from '../types/deliveries.types';
 
 export class DeliveryMethodsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.deliveries.methods;
+  private static endpoints = ClientApi._endpoints.deliveries.methods;
 
   public static getAll = (
     params?: Pick<ApiQueryParams, 'disabled' | 'isDefault'>
@@ -20,7 +19,7 @@ export class DeliveryMethodsApi {
 }
 export class DeliveriesApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.deliveries;
+  private static endpoints = ClientApi._endpoints.deliveries;
   static readonly methods = DeliveryMethodsApi;
   public static createOne = (args?: any, params?: ApiQueryParams): Promise<ApiResponse<IDelivery>> => {
     return this.api.post(this.endpoints.create(), args?.data);

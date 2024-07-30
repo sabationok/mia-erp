@@ -1,11 +1,10 @@
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiResponse } from '../redux/app-redux.types';
 import { IPropertyReqData, PropertyEntity } from 'types/offers/properties.types';
 import { ClientApi } from './client.api';
 
 export default class PropertiesApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.propertiesApiEndpoints;
+  private static endpoints = ClientApi._endpoints.propertiesApiEndpoints;
 
   public static getAll = (
     _?: undefined,

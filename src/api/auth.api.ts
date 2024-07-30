@@ -1,4 +1,4 @@
-import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
+import { Endpoints } from '../redux/APP_CONFIGS';
 import { ILoggedUserInfoRes, IRegisteredUserInfoRes, LoginUserDto, RegisterDto, UserEntity } from '../types/auth.types';
 import { ClientApi } from './client.api';
 import { ApiResponse } from '../redux/app-redux.types';
@@ -6,7 +6,7 @@ import { ApiResponse } from '../redux/app-redux.types';
 type LogoutResponse = Pick<LoginUserDto, 'email'> & { result: boolean };
 export default class AuthApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.auth;
+  private static endpoints = ClientApi._endpoints.auth;
 
   public static register = (data?: RegisterDto): Promise<IRegisteredUserInfoRes> => {
     return this.api.post(this.endpoints[Endpoints.register](), data);

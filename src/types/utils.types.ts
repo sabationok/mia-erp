@@ -54,6 +54,8 @@ export type AppDate = string | number | Date;
 
 export type MaybeNull<T = any> = T | null;
 
+export type MaybePromise<Async extends boolean> = Async extends true ? Promise<boolean> : boolean;
+
 export type MaybeArr<T = any> = T extends (infer U)[] ? U[] : T;
 
 export interface HasCurrencyCode {

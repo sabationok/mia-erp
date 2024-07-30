@@ -1,11 +1,9 @@
 import { IFormDataValueWithID } from '../redux/app-redux.types';
-import { PermissionEntity } from './permissions.types';
+import { Permission } from './permissions.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { WarehouseEntity } from './warehousing/warehouses.types';
-import { ExtServiceBase, InputIntegrationEntity, OutputIntegrationEntity } from './integrations.types';
 import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, IBase, MaybeNull, OnlyUUID, UUID, Values } from './utils.types';
-import { SupplierDirEntity } from './dir.types';
 import { ContactsDto } from './contacts/contacts.types';
 import { AddressEntity } from './addresses/addresses.types';
 
@@ -60,7 +58,7 @@ export interface HasWarehousingPolicy {
 }
 export interface HasSupplementPolicy {
   supplementPolicy?: MaybeNull<{
-    supplier?: MaybeNull<SupplierDirEntity>;
+    supplier?: MaybeNull<Permission.Entity>;
   }>;
 }
 
@@ -85,12 +83,12 @@ export interface CompanyEntity
     HasWarehousingPolicy,
     HasSupplementPolicy {
   owner?: Pick<IUserBase, '_id' | 'name' | 'email'>;
-  permissions?: Partial<PermissionEntity>[];
-  warehouses?: MaybeNull<WarehouseEntity[]>;
-  externalServices?: MaybeNull<ExtServiceBase[]>;
-
-  inputs?: MaybeNull<InputIntegrationEntity[]>;
-  outputs?: MaybeNull<OutputIntegrationEntity[]>;
+  // permissions?: Partial<PermissionEntity>[];
+  // warehouses?: MaybeNull<WarehouseEntity[]>;
+  // externalServices?: MaybeNull<ExtServiceBase[]>;
+  //
+  // inputs?: MaybeNull<InputIntegrationEntity[]>;
+  // outputs?: MaybeNull<OutputIntegrationEntity[]>;
 }
 
 export interface CompaniesState {

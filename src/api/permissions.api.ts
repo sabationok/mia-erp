@@ -1,4 +1,4 @@
-import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
+import { Endpoints } from '../redux/APP_CONFIGS';
 import {
   IPermissionForReq,
   IPermissionReqData,
@@ -13,7 +13,7 @@ import { ClientApi } from './client.api';
 
 export default class PermissionsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.permissions;
+  private static endpoints = ClientApi._endpoints.permissions;
 
   public static create(data: IPermissionForReq): Promise<ApiResponse<PermissionEntity>> {
     return this.api.post(this.endpoints.create(), data);

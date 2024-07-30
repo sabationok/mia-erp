@@ -1,4 +1,3 @@
-import APP_CONFIGS from '../../redux/APP_CONFIGS';
 import { ICreateOrderInfoDto, OrderEntity, SaleOrdersGroupDto } from '../../types/orders/orders.types';
 import { ApiResponse } from '../../redux/app-redux.types';
 import { ApiQueryParams, ApiQuerySearchParams, ApiQuerySortParams } from '../index';
@@ -12,7 +11,7 @@ export interface GetOrderSlotsApiQuery
 
 export class SaleOrderSlotsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.ordersEndpoints.sales.slots;
+  private static endpoints = ClientApi._endpoints.ordersEndpoints.sales.slots;
 
   public static getAll = (
     input: {
@@ -34,7 +33,7 @@ export class SaleOrderSlotsApi {
 
 export class SaleOrderGroupsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.ordersEndpoints.sales.groups;
+  private static endpoints = ClientApi._endpoints.ordersEndpoints.sales.groups;
   public static createByWarehouse = (data?: SaleOrdersGroupDto, params?: undefined): Promise<any> => {
     return this.api.post(this.endpoints.createByWarehouse(), { slots: data?.slots, ...data?.info }, { params: params });
   };

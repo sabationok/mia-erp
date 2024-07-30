@@ -1,4 +1,3 @@
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiQueryParams, ApiQuerySearchParams, ApiQuerySortParams, DatePeriodQuery } from './index';
 import { OfferEntity, OfferReqData, OfferStatusEnum, OfferTypeEnum } from '../types/offers/offers.types';
 import { ApiResponse } from '../redux/app-redux.types';
@@ -34,7 +33,7 @@ export interface GetAllOffersQuery
 }
 export default class OffersApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.offers;
+  private static endpoints = ClientApi._endpoints.offers;
 
   public static getAll = async (_?: undefined, params?: GetAllOffersQuery): Promise<ApiResponse<OfferEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), {

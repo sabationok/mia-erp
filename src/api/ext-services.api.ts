@@ -1,4 +1,3 @@
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueries } from './index';
 import { ExternalServiceTypeEnum, ExtServiceBase } from '../types/integrations.types';
 import { ApiResponse } from '../redux/app-redux.types';
@@ -9,7 +8,7 @@ export interface GetIntegrationsListQuery extends Pick<AppQueries, 'warehouseId'
 }
 export default class ExtServicesApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.extServices;
+  private static endpoints = ClientApi._endpoints.extServices;
 
   public static getExtServicesList = (params?: {
     type?: ExternalServiceTypeEnum;

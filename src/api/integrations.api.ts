@@ -5,7 +5,6 @@ import {
   Integration,
   OutputIntegrationDto,
 } from '../types/integrations.types';
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 
 export namespace IntegrationsApi {
   export interface GetOneQuery {
@@ -20,7 +19,7 @@ export namespace IntegrationsApi {
 
   export class Client {
     private static api = ClientApi.clientRef;
-    private static endpoints = APP_CONFIGS.endpoints.integrations;
+    private static endpoints = ClientApi._endpoints.integrations;
 
     public static getAll = (
       _data?: unknown,

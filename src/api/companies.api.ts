@@ -1,12 +1,11 @@
 import { CompanyEntity, ICompanyDeletingRes, ICompanyReqData, ICompanyUpdatingRes } from '../types/companies.types';
-import APP_CONFIGS from 'redux/APP_CONFIGS';
 import { ApiResponse } from '../redux/app-redux.types';
 import { PermissionEntity } from '../types/permissions.types';
 import { ClientApi } from './client.api';
 
 export class CompaniesApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.companies;
+  private static endpoints = ClientApi._endpoints.companies;
 
   public static readonly getById = async ({
     _id,

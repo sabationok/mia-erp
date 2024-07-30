@@ -4,7 +4,6 @@ import {
   ITransactionReqData,
   ITransactionRes,
 } from 'types/finances/transactions.types';
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiQueryParams } from './index';
 import { ApiResponse } from '../redux/app-redux.types';
 import { BankAccountReqData, IBankAccount } from '../types/finances/bank-accounts.types';
@@ -12,7 +11,7 @@ import { ClientApi } from './client.api';
 
 export default class TransactionsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.finTransactions;
+  private static endpoints = ClientApi._endpoints.finTransactions;
 
   public static getAll = (params?: ApiQueryParams): Promise<IAllTransactionsRes> => {
     return this.api.get(this.endpoints.getAll(), {
@@ -38,7 +37,7 @@ export default class TransactionsApi {
 }
 export class BankAccountsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = APP_CONFIGS.endpoints.finTransactions.bankAccounts;
+  private static endpoints = ClientApi._endpoints.finTransactions.bankAccounts;
   public static create = (reqData?: BankAccountReqData): Promise<ApiResponse<IBankAccount>> => {
     return this.api.post(this.endpoints.create(), reqData?.data, { params: reqData?.params });
   };

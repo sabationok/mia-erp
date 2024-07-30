@@ -3,7 +3,6 @@ import { ApiHeaders } from './api.types';
 import { CreateTrackingLinkDto, TrackingLinkEntity } from '../types/tracking';
 import { ApiResponse } from 'redux/app-redux.types';
 import { ClientApi } from './client.api';
-import APP_CONFIGS from '../redux/APP_CONFIGS';
 
 export interface GetAllLinksQuery {
   offerId?: string;
@@ -16,7 +15,7 @@ class TrackingLinksApi {
   // @ts-ignore
   private static readonly _api = ClientApi.clientRef;
   // @ts-ignore
-  private static readonly _endpoints = APP_CONFIGS.endpoints.tracking.links;
+  private static readonly _endpoints = ClientApi._endpoints.tracking.links;
 
   static switchToCrmClient(headers: typeof this.headers) {
     this.headers = headers;
