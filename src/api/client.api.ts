@@ -120,13 +120,14 @@ export class ClientApi {
       [Api.Header.dnt]: 1,
     },
     baseURL:
-      ConfigService.getBaseApiUrl() || ConfigService.baseApiProviderIs.localhost
+      ConfigService.getBaseApiUrl() ||
+      (ConfigService.baseApiProviderIs.localhost
         ? this.BASE_URL_LOCALHOST
         : ConfigService.baseApiProviderIs.railway
           ? this.BASE_URL_RAILWAY
           : ConfigService.IS_DEV_MODE
             ? this.BASE_URL_LOCALHOST
-            : this.BASE_URL_RAILWAY,
+            : this.BASE_URL_RAILWAY),
   });
 
   static get clientRef(): AxiosInstance {

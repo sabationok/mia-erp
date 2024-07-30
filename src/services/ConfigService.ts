@@ -88,11 +88,11 @@ export default class ConfigService {
 
   public static _api_urls: Configs.ApiUrlsMap = {
     railway: {
-      [Configs.ApiStageType.production]: 'https://mia-erp.up.railway.app/',
-      [Configs.ApiStageType.development]: 'https://mia-erp-dev.up.railway.app/',
+      [Configs.ApiStageType.production]: 'https://mia-erp.up.railway.app/api/',
+      [Configs.ApiStageType.development]: 'https://mia-erp-dev.up.railway.app/api/',
     },
     localhost: {
-      [Configs.ApiStageType.development]: 'http://localhost:4500/',
+      [Configs.ApiStageType.development]: 'http://localhost:4500/api/',
     },
   };
 
