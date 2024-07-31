@@ -89,7 +89,7 @@ function createApiClient({
 
             return axios(error.config);
           } catch (err) {
-            if (onUnauthorized) onUnauthorized(error);
+            // if (onUnauthorized) onUnauthorized(error);
 
             queue.clear();
 

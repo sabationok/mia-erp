@@ -10,12 +10,14 @@ import { ClientApi } from './api';
 import { useAppDispatch } from './redux/store.store';
 import useAppAuthHook from './hooks/useAppAuth.hook';
 import { setAccessTokensAction } from 'redux/auth/auth.slice';
+import { useAppServiceProvider } from './hooks/useAppServices.hook';
 
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettingsSelector();
   const { access_token } = useAuthSelector();
   const dispatch = useAppDispatch();
   const { logOutUser } = useAppAuthHook();
+  const { permissions } = useAppServiceProvider();
   const hasAccess = useMemo(() => {
     return !!access_token;
   }, [access_token]);
@@ -28,12 +30,17 @@ const App: React.FC = () => {
 
       unsubscribers.push(
         ClientApi.onUnauthorized(error => {
-          console.error('onUnauthorized ==========================================', error);
+          console.error('[onUnauthorized] ==========================================', error);
           ClientApi.unsetToken();
           logOutUser();
         }),
+        ClientApi.onForbidden(error => {
+          console.error('[onForbidden] ==========================================', error);
+          ClientApi.unSetP_Token();
+          permissions.logOut();
+        }),
         ClientApi.onRefreshToken(data => {
-          console.log('onRefreshToken ==========================================');
+          console.log('[onRefreshToken] ==========================================');
 
           dispatch(setAccessTokensAction({ access_token: data.access_token }));
         })

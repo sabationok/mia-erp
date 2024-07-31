@@ -36,7 +36,8 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
   const preparedList = useMemo((): IAccordionOptionProps[] => {
     return integrationsList.map((opt: OutputIntegrationEntity): IAccordionOptionProps => {
       const get = () => state.dataMap[opt._id] || opt;
-
+      console.log(get().label, state.dataMap[opt._id]?.label, opt?.label);
+      console.log(get().label, state.dataMap[opt._id]?._id === opt?._id);
       return {
         title: opt.label ?? '',
         ChildrenComponent: () => <ApiKeyItem opt={get()} />,
@@ -143,13 +144,13 @@ const ApiKeyBox = ({
   onLoadApiKey?: () => Promise<void>;
   isLoading?: boolean;
 }) => {
-  const [isVis, setIsVis] = useState(false);
+  const [isVis, setIsVis] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyButtonLeave = () => {
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 750);
+    // setTimeout(() => {
+    setIsCopied(false);
+    // }, 750);
   };
 
   const handleCopy = () => {
@@ -178,9 +179,9 @@ const ApiKeyBox = ({
           }
         }}
         onMouseLeave={() => {
-          setTimeout(() => {
-            setIsVis(false);
-          }, 750);
+          // setTimeout(() => {
+          setIsVis(false);
+          // }, 750);
         }}
       ></ButtonIcon>
 
