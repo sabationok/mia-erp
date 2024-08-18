@@ -15,10 +15,10 @@ import {
   updatePermissionThunk,
 } from '../redux/permissions/permissions.thunk';
 import {
-  PermissionEntity,
   IPermissionForReq,
   IPermissionReqData,
   IPermissionsState,
+  PermissionEntity,
   PermissionRecipientEnum,
 } from '../types/permissions.types';
 import { useMemo } from 'react';
@@ -26,7 +26,7 @@ import { CompanyQueryType, ServiceDispatcherAsync } from 'redux/app-redux.types'
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { CompanyEntity, ICompanyForReq, ICompanyReqData } from '../types/companies.types';
-import { UserEntity } from '../types/auth.types';
+import { UserEntity } from '../types/auth/auth.types';
 
 export interface PermissionService {
   getAllByCompanyId: ServiceDispatcherAsync<

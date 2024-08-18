@@ -8,6 +8,7 @@ import {
   getAllIntegrationsByTypeThunk,
   getInputIntegrationByIdThunk,
   getOutputIntegrationByIdThunk,
+  updateOutputIntegrationThunk,
 } from './integrations.thunk';
 import { onUserLogout } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
@@ -73,6 +74,13 @@ export const integrationsSlice = createSlice({
       .addCase(createOutputIntegrationThunk.fulfilled, (s, a) => {
         s.output.dataMap[a.payload.data._id] = a.payload.data;
         s.output.list.push(a.payload.data);
+      })
+      .addCase(updateOutputIntegrationThunk.fulfilled, (s, a) => {
+        s.output.dataMap[a.payload.data._id] = a.payload.data;
+
+        s.output.list = s.output.list.map(item => {
+          return item._id === a.payload.data._id ? a.payload.data : item;
+        });
       })
       .addCase(getOutputIntegrationByIdThunk.fulfilled, (s, a) => {
         s.output.dataMap[a.payload.data._id] = a.payload.data;

@@ -1,5 +1,5 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import { ISystemRole, UserEntity } from 'types/auth.types';
+import { ISystemRole, UserEntity } from 'types/auth/auth.types';
 import { karina_avatar } from '../img';
 import { PermissionEntity } from '../types/permissions.types';
 import { t } from '../lang';

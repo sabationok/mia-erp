@@ -4,7 +4,7 @@ import { OfferEntity } from '../offers/offers.types';
 import { VariationEntity } from '../offers/variations.types';
 import { ApiQueryParams } from '../../api';
 import { ICompanyBase } from '../companies.types';
-import { IUserBase } from '../auth.types';
+import { IUserBase } from '../auth/auth.types';
 import {
   EntityPath,
   HasDescription,

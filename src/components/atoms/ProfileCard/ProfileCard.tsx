@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { UserEntity } from 'types/auth.types';
+import { UserEntity } from 'types/auth/auth.types';
 import { CompanyEntity } from '../../../types/companies.types';
 
 export interface ProfileCardProps {

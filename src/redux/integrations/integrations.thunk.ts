@@ -11,6 +11,7 @@ const IntegrationsThunkType = {
 
   output: {
     create: `${AppModuleName.integrations}/output/createThunk`,
+    update: `${AppModuleName.integrations}/output/updateThunk`,
     getOne: `${AppModuleName.integrations}/output/getOneThunk`,
     getById: `${AppModuleName.integrations}/output/getByIdThunk`,
   },
@@ -37,6 +38,10 @@ export const getAllIntegrationsByTypeThunk = createAppAsyncThunk(
 export const createOutputIntegrationThunk = createAppAsyncThunk(
   IntegrationsThunkType.output.create,
   IntegrationsApi.Client.output.create
+);
+export const updateOutputIntegrationThunk = createAppAsyncThunk(
+  IntegrationsThunkType.output.update,
+  IntegrationsApi.Client.output.update
 );
 export const getOutputIntegrationByIdThunk = createAppAsyncThunk(
   IntegrationsThunkType.output.getById,

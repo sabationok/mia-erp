@@ -1,5 +1,5 @@
 import { Action, createAction } from '@reduxjs/toolkit';
-import { UserEntity } from '../../types/auth.types';
+import { UserEntity } from '../../types/auth/auth.types';
 import { logOutUserThunk } from './auth.thunks';
 import { onPermissionLogout } from '../permissions/permissions.action';
 

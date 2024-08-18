@@ -1,6 +1,6 @@
 import { IFormDataValueWithID } from '../redux/app-redux.types';
 import { Permission } from './permissions.types';
-import { IUserBase } from './auth.types';
+import { IUserBase } from './auth/auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { WarehouseEntity } from './warehousing/warehouses.types';
 import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, IBase, MaybeNull, OnlyUUID, UUID, Values } from './utils.types';

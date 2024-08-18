@@ -31,6 +31,7 @@ const FormAccordionItem: React.FC<FormAccordeonItemProps> = ({
   contentContainerStyle,
   activeBackgroundColor = 'rgba(220, 220, 220, 1)',
   className,
+  title,
 }) => {
   const [isOpen, setIsOpen] = useState(!!disabled || open);
   function handleToggleOpen() {
@@ -63,7 +64,7 @@ const FormAccordionItem: React.FC<FormAccordeonItemProps> = ({
           disabled={!toggled || disabled || !children}
           isOpen={isOpen}
         >
-          {isOpen ? t('Close') : t('Open')}
+          {title || (isOpen ? t('Close') : t('Open'))}
         </StButton>
 
         {renderHeader}

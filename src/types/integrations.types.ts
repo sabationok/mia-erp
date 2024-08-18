@@ -18,6 +18,7 @@ import {
 } from './utils.types';
 import { IBankAccount } from './finances/bank-accounts.types';
 import { PermissionRecipientEnum } from './permissions.types';
+import { OAuth } from './auth/o-auth.namespace';
 
 export enum IntegrationTypeEnum {
   input = 'input',
@@ -167,6 +168,7 @@ export namespace Integration {
       corsPolicy?: {
         origins?: string[];
       };
+      oAuth?: OAuth.Consumer.Configs.Entity[];
     }
     export interface CreateDto extends BaseDto, Partial<Pick<Entity, 'chatIds' | 'redirectBaseUrl' | 'corsPolicy'>> {
       roleId?: UUID;

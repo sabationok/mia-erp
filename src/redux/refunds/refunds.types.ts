@@ -1,7 +1,7 @@
 import { ApiResponse, IBase, OnlyUUID } from '../app-redux.types';
 import { PriceEntity } from '../../types/price-management/price-management.types';
 import { CompanyEntity } from '../../types/companies.types';
-import { IManager } from '../../types/auth.types';
+import { IManager } from '../../types/auth/auth.types';
 import { SupplierDirEntity } from '../../types/dir.types';
 import { TabOption } from '../../components/atoms/TabSelector';
 import { WarehouseEntity } from '../../types/warehousing/warehouses.types';

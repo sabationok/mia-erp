@@ -2,31 +2,37 @@ import styled, { css, ExecutionContext } from 'styled-components';
 import { Property } from 'csstype';
 import { CSSProperties } from 'react';
 
-export interface FlexBaseProps
-  extends Pick<
-    CSSProperties,
-    | 'display'
-    | 'flex'
-    | 'flexWrap'
-    | 'alignItems'
-    | 'justifyContent'
-    | 'alignSelf'
-    | 'justifySelf'
-    | 'maxWidth'
-    | 'maxHeight'
-    | 'minWidth'
-    | 'minHeight'
-    | 'width'
-    | 'height'
-    | 'padding'
-    | 'margin'
-    | 'borderBottom'
-    | 'borderTop'
-    | 'borderRadius'
-    | 'border'
-    | 'overflow'
-    | 'background'
-  > {
+type PrefixKeys<T, Prefix extends string = '$'> = {
+  [K in keyof T as `${Prefix}${string & K}`]: T[K];
+};
+type FlexNativeStyles = Pick<
+  CSSProperties,
+  | 'display'
+  | 'flex'
+  | 'flexWrap'
+  | 'alignItems'
+  | 'justifyContent'
+  | 'alignSelf'
+  | 'justifySelf'
+  | 'maxWidth'
+  | 'maxHeight'
+  | 'minWidth'
+  | 'minHeight'
+  | 'width'
+  | 'height'
+  | 'padding'
+  | 'margin'
+  | 'borderBottom'
+  | 'borderTop'
+  | 'borderRadius'
+  | 'border'
+  | 'overflow'
+  | 'background'
+  | 'borderLeft'
+  | 'borderRight'
+>;
+
+export interface FlexCustomProps {
   fxDirection?: Property.FlexDirection;
   gap?: number;
 
@@ -34,35 +40,13 @@ export interface FlexBaseProps
   fillHeight?: boolean;
 
   isActive?: boolean;
-
-  $display?: Property.Display;
-  $flex?: Property.Flex;
-  $flexWrap?: Property.FlexWrap;
-  $fxDirection?: Property.FlexDirection;
-  $alignItems?: Property.AlignItems;
-  $justifyContent?: Property.JustifyContent;
-  $alignSelf?: Property.AlignSelf;
-  $gap?: number;
-
-  $maxWidth?: Property.Width;
-  $maxHeight?: Property.Width;
-  $minWidth?: Property.Width;
-  $minHeight?: Property.Width;
-  width?: Property.Width;
-  height?: Property.Height;
-  $padding?: Property.Padding;
-  margin?: Property.Margin;
-  $fillWidth?: boolean;
-  $fillHeight?: boolean;
-
-  $borderBottom?: Property.BorderBottom;
-  $borderRadius?: Property.BorderRadius;
-  $border?: Property.Border;
-  $background?: Property.Background;
-  overflow?: Property.Overflow;
-
-  $isActive?: boolean;
 }
+
+export interface FlexBaseProps
+  extends FlexNativeStyles,
+    FlexCustomProps,
+    PrefixKeys<FlexNativeStyles>,
+    PrefixKeys<FlexCustomProps> {}
 
 export interface FlexBoxProps extends FlexBaseProps {
   sStyles?: FlexBaseProps;
@@ -72,47 +56,55 @@ export interface FlexBoxProps extends FlexBaseProps {
 
 type MediaStylesKey = keyof Pick<FlexBoxProps, 'sStyles' | 'xsStyles' | 'xlStyles'>;
 
-function createFlexBoxStyles({ query, key }: { query: string; key: MediaStylesKey }) {
+function createFlexBoxStyles({ query, key }: { query?: string; key?: MediaStylesKey } = {}) {
   return css<FlexBoxProps>`
-    ${p => ''}
-    @media screen and (${query}) {
-      display: ${({ display = '', ...p }) => p[key]?.display || display};
-      flex-direction: ${({ fxDirection = 'column', ...p }) => p[key]?.fxDirection || fxDirection};
-      align-items: ${({ alignItems, ...p }) => p[key]?.alignItems || alignItems};
-      justify-content: ${({ justifyContent, ...p }) => p[key]?.justifyContent || justifyContent};
-      flex: ${({ flex = '', ...p }) => p[key]?.flex || flex};
-      flex-wrap: ${({ flexWrap = '', ...p }) => p[key]?.flexWrap || flexWrap};
+    ${query ? `@media screen and (${query}) {` : ''}
 
-      border-top: ${({ borderTop, ...p }) => p[key]?.borderTop || borderTop};
-      border-bottom: ${({ borderBottom, ...p }) => p[key]?.borderBottom || borderBottom};
-      border: ${({ border, ...p }) => p[key]?.border || border};
+    display: ${({ display = '', ...p }) => (key && p[key]?.display) || display};
+    flex-direction: ${({ fxDirection = 'column', ...p }) => (key && p[key]?.fxDirection) || fxDirection};
+    align-items: ${({ alignItems, ...p }) => (key && p[key]?.alignItems) || alignItems};
+    justify-content: ${({ justifyContent, ...p }) => (key && p[key]?.justifyContent) || justifyContent};
+    flex: ${({ flex = '', ...p }) => (key && p[key]?.flex) || flex};
+    flex-wrap: ${({ flexWrap = '', ...p }) => (key && p[key]?.flexWrap) || flexWrap};
 
-      gap: ${({ gap = 0, ...p }) => p[key]?.gap ?? gap}px;
-      stroke: ${p => []};
-      padding: ${({ padding = 0, ...p }) => p[key]?.padding ?? padding};
-      margin: ${({ margin = 0, ...p }) => p[key]?.margin ?? margin};
+    border-top: ${({ borderTop, ...p }) => (key && p[key]?.borderTop) || borderTop};
+    border-bottom: ${({ borderBottom, ...p }) => (key && p[key]?.borderBottom) || borderBottom};
 
-      align-self: ${({ alignSelf, ...p }) => p[key]?.alignSelf || alignSelf};
-      justify-self: ${({ justifySelf, ...p }) => p[key]?.justifySelf || justifySelf};
+    border-top: ${({ borderTop, ...p }) => (key && p[key]?.borderTop) || borderTop};
+    border-bottom: ${({ borderBottom, ...p }) => (key && p[key]?.borderBottom) || borderBottom};
 
-      max-width: ${({ maxWidth = null, ...p }) => p[key]?.maxWidth || maxWidth};
-      max-height: ${({ maxHeight = null, ...p }) => p[key]?.maxWidth || maxHeight};
+    border-left: ${({ borderTop, ...p }) => (key && p[key]?.borderLeft) || borderTop};
+    border-right: ${({ borderBottom, ...p }) => (key && p[key]?.borderRight) || borderBottom};
 
-      min-width: ${({ minWidth = null, ...p }) => p[key]?.minWidth || minWidth};
-      min-height: ${({ minHeight = null, ...p }) => p[key]?.minHeight || minHeight};
+    border: ${({ border, ...p }) => (key && p[key]?.border) || border};
 
-      width: ${({ width = 'auto', fillWidth, ...p }) =>
-        (p[key]?.fillWidth ? '100%' : p[key]?.width) || (fillWidth ? '100%' : width)};
-      height: ${({ height = 'auto', fillHeight, ...p }) =>
-        (p[key]?.fillHeight ? '100%' : p[key]?.height) || (fillHeight ? '100%' : height)};
+    gap: ${({ gap = 0, ...p }) => (key && p[key]?.gap) ?? gap}px;
+    stroke: ${p => []};
+    padding: ${({ padding = 0, ...p }) => (key && p[key]?.padding) ?? padding};
+    margin: ${({ margin = 0, ...p }) => (key && p[key]?.margin) ?? margin};
 
-      background: ${({ background, ...p }) => p[key]?.background || background};
+    align-self: ${({ alignSelf, ...p }) => (key && p[key]?.alignSelf) || alignSelf};
+    justify-self: ${({ justifySelf, ...p }) => (key && p[key]?.justifySelf) || justifySelf};
 
-      border-radius: ${({ borderRadius = 0, ...p }) => p[key]?.borderRadius ?? borderRadius};
-      overflow: ${({ overflow = '', ...p }) => p[key]?.overflow || overflow};
-    }
+    max-width: ${({ maxWidth = null, ...p }) => (key && p[key]?.maxWidth) || maxWidth};
+    max-height: ${({ maxHeight = null, ...p }) => (key && p[key]?.maxWidth) || maxHeight};
+
+    min-width: ${({ minWidth = null, ...p }) => (key && p[key]?.minWidth) || minWidth};
+    min-height: ${({ minHeight = null, ...p }) => (key && p[key]?.minHeight) || minHeight};
+
+    width: ${({ width = 'auto', fillWidth, ...p }) =>
+      (key && p[key]?.fillWidth ? '100%' : key && p[key]?.width) || (fillWidth ? '100%' : width)};
+    height: ${({ height = 'auto', fillHeight, ...p }) =>
+      (key && p[key]?.fillHeight ? '100%' : key && p[key]?.height) || (fillHeight ? '100%' : height)};
+
+    background: ${({ background, ...p }) => (key && p[key]?.background) || background};
+
+    border-radius: ${({ borderRadius = 0, ...p }) => (key && p[key]?.borderRadius) ?? borderRadius};
+    overflow: ${({ overflow = '', ...p }) => (key && p[key]?.overflow) || overflow};
+    ${query ? '}' : ''}
   `;
 }
+const def_Styles = createFlexBoxStyles();
 
 const S_Styles = createFlexBoxStyles({ query: 'max-width: 480px', key: 'sStyles' });
 
@@ -140,7 +132,7 @@ function getMediaStyles(key: MediaStylesKey) {
   }
 }
 
-export const FlexBoxCss = css<FlexBoxProps>`
+export const flexBoxCss = css<FlexBoxProps>`
   display: flex;
 
   flex-direction: ${({ fxDirection = 'column' }) => fxDirection};
@@ -183,23 +175,23 @@ export const FlexBoxCss = css<FlexBoxProps>`
   ${getMediaStyles('xlStyles')};
 `;
 export const FlexBox = styled.div<FlexBoxProps>`
-  ${FlexBoxCss}
+  ${flexBoxCss}
 `;
 
 export const FlexFooter = styled.footer<FlexBoxProps>`
-  ${FlexBoxCss}
+  ${flexBoxCss}
 `;
 export const FlexHeader = styled.header<FlexBoxProps>`
-  ${FlexBoxCss}
+  ${flexBoxCss}
 `;
 export const FlexMain = styled.main<FlexBoxProps>`
-  ${FlexBoxCss}
+  ${flexBoxCss}
 `;
 
 export const FlexFieldSet = styled.fieldset<FlexBoxProps>`
   min-inline-size: unset;
 
-  ${FlexBoxCss};
+  ${flexBoxCss};
   border: 0;
   &[disabled] {
     & input,
@@ -213,17 +205,17 @@ export const FlexFieldSet = styled.fieldset<FlexBoxProps>`
 `;
 
 export const FlexLabel = styled.label<FlexBoxProps>`
-  ${FlexBoxCss};
+  ${flexBoxCss};
 `;
 export const FlexUl = styled.ul<FlexBoxProps>`
-  ${FlexBoxCss}
+  ${flexBoxCss}
 `;
 export const FlexLi = styled.li<FlexBoxProps>`
-  ${FlexBoxCss}
+  ${flexBoxCss}
 `;
 
 export const FlexForm = styled.form<FlexBoxProps>`
-  ${FlexBoxCss}
+  ${flexBoxCss}
 `;
 
 export const PrimaryBox = styled(FlexBox)`
@@ -276,7 +268,7 @@ export interface GridBoxProps extends FlexBoxProps {
   $autoRows?: string[] | Property.GridAutoRows;
 }
 export const SimpleGridBox = styled.div<GridBoxProps>`
-  ${FlexBoxCss};
+  ${flexBoxCss};
   display: grid;
   grid-template-columns: ${p => (Array.isArray(p.$columns) ? p.$columns?.join(' ') : p.$columns)};
   grid-template-rows: ${p => (Array.isArray(p.$rows) ? p.$rows?.join(' ') : p.$rows)};

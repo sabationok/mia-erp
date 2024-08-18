@@ -168,9 +168,11 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
 };
 
 const FilterBox = styled(FlexBox)`
-  &::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+  @media screen and (max-width: 480px) {
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
   }
 `;
 const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: boolean } }>`
@@ -188,6 +190,13 @@ const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: b
   background-color: ${({ theme }) => theme.modalBackgroundColor};
 
   border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
+
+  @media screen and (max-width: 480px) {
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+  }
 
   &::-webkit-scrollbar {
     width: 0;

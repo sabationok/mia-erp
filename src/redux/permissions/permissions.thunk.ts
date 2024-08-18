@@ -10,7 +10,7 @@ import { axiosErrorCheck } from 'utils';
 import { CompaniesApi, PermissionsApi } from '../../api';
 import { ICompanyForReq } from '../../types/companies.types';
 import { buildUpdateCompanyThunk } from '../companies/companies.thunks';
-import { UserEntity } from '../../types/auth.types';
+import { UserEntity } from '../../types/auth/auth.types';
 import { CompanyQueryType } from '../app-redux.types';
 
 enum PermissionsThunkType {

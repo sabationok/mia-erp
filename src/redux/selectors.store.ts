@@ -1,6 +1,6 @@
 import { RootState } from './store.store';
 import { useSelector } from 'react-redux';
-import { IAuthState } from '../types/auth.types';
+import { IAuthState } from '../types/auth/auth.types';
 import { IFinTransactionsState } from './finances/finances.slice';
 import { ICustomRolesState } from './customRoles/customRoles.slice';
 import { IUsersState } from './users/users.types';

@@ -4,7 +4,7 @@ import styled, { css, DefaultTheme, RuleSet } from 'styled-components';
 import { Property } from 'csstype';
 import { AppLoaderSpiner } from './AppLoaderSpiner';
 import { Keys } from '../../types/utils.types';
-import FlexBox, { FlexBoxCss, FlexBoxProps } from './FlexBox';
+import FlexBox, { flexBoxCss, FlexBoxProps } from './FlexBox';
 import SvgIcon from './SvgIcon';
 import { ActionColorName, IAccentColor } from '../../theme';
 import { ObjectFromEntries } from '../../utils';
@@ -158,7 +158,7 @@ const ButtonIsLoadingCss = css`
 `;
 
 const StButton = styled.button<ButtonIconProps>`
-  ${FlexBoxCss};
+  ${flexBoxCss};
 
   position: relative;
 

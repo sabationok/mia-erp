@@ -8,7 +8,7 @@ import {
   PermissionStatus,
 } from '../types/permissions.types';
 import { ApiResponse, CompanyQueryType } from '../redux/app-redux.types';
-import { UserEntity } from '../types/auth.types';
+import { UserEntity } from '../types/auth/auth.types';
 import { ClientApi } from './client.api';
 
 export default class PermissionsApi {

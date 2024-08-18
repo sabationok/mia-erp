@@ -1,8 +1,8 @@
-import { ApiResponse, IBase } from '../redux/app-redux.types';
-import { PermissionEntity } from './permissions.types';
-import { AppDate, HasEmbeddedLabel, HasEmbeddedName, HasEmbeddedReference } from './utils.types';
-import { BusinessSubjectTypeEnum } from './companies.types';
-import { AuthState } from '../redux/auth/auth.slice';
+import { ApiResponse, IBase } from '../../redux/app-redux.types';
+import { PermissionEntity } from '../permissions.types';
+import { AppDate, HasEmbeddedLabel, HasEmbeddedName, HasEmbeddedReference } from '../utils.types';
+import { BusinessSubjectTypeEnum } from '../companies.types';
+import { AuthState } from '../../redux/auth/auth.slice';
 
 export type IAuthState = AuthState;
 

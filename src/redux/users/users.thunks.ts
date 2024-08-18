@@ -1,4 +1,4 @@
-import { UserEntity } from 'types/auth.types';
+import { UserEntity } from 'types/auth/auth.types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { AsyncThunkConfig } from 'redux/reduxTypes.types';

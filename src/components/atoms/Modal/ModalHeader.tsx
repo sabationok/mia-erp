@@ -19,7 +19,7 @@ export interface ModalHeaderProps {
   canSubmit?: boolean;
   onBackPress?: () => void;
   onClose?: () => void;
-  title?: string;
+  title?: string | null;
   hasOkButton?: boolean;
   renderTitle?: React.ReactNode;
   children?: React.ReactNode;

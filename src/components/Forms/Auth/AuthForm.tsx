@@ -11,7 +11,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import SecurityInputControlHOC from '../../atoms/Inputs/SecurityInputControlHOC';
 import { ToastService } from '../../../services';
-import { HasRegisterCompanyDtoFields, HasRegisterUserDtoFields } from '../../../types/auth.types';
+import { HasRegisterCompanyDtoFields, HasRegisterUserDtoFields } from '../../../types/auth/auth.types';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import { omit } from 'lodash';
 import { useAppRouter } from '../../../hooks';

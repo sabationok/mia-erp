@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { getCurrentUserThunk, logInUserThunk, logOutUserThunk, registerUserThunk } from './auth.thunks';
-import { UserEntity } from '../../types/auth.types';
+import { UserEntity } from '../../types/auth/auth.types';
 import { SetLoggedUserAction } from './auth.actions';
 import { isString } from 'lodash';
 import { PermissionEntity } from '../../types/permissions.types';

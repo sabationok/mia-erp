@@ -1,13 +1,23 @@
-import { Endpoints } from '../redux/APP_CONFIGS';
-import { ILoggedUserInfoRes, IRegisteredUserInfoRes, LoginUserDto, RegisterDto, UserEntity } from '../types/auth.types';
-import { ClientApi } from './client.api';
-import { ApiResponse } from '../redux/app-redux.types';
+import { Endpoints } from '../../redux/APP_CONFIGS';
+import {
+  ILoggedUserInfoRes,
+  IRegisteredUserInfoRes,
+  LoginUserDto,
+  RegisterDto,
+  UserEntity,
+} from '../../types/auth/auth.types';
+import { ClientApi } from '../client.api';
+import { ApiResponse } from '../api.types';
+import { Device } from './Devices.api';
+import { OAuthApi } from './OAuth.api';
+import { IBase } from '../../types/utils.types';
 
 type LogoutResponse = Pick<LoginUserDto, 'email'> & { result: boolean };
 export default class AuthApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.auth;
-
+  public static devices = Device.Api;
+  public static oAuth = OAuthApi;
   public static register = (data?: RegisterDto): Promise<IRegisteredUserInfoRes> => {
     return this.api.post(this.endpoints[Endpoints.register](), data);
   };
@@ -30,4 +40,18 @@ export default class AuthApi {
   public static getCurrentUser = (): Promise<ApiResponse<UserEntity>> => {
     return this.api.get(this.endpoints.getCurrent());
   };
+}
+
+export namespace Auth {
+  export namespace Session {
+    export interface Entity extends IBase {
+      access_token: string;
+      refresh_token?: string;
+      user?: UserEntity;
+      permission?: IBase;
+      device?: Device.Entity;
+    }
+  }
+
+  export class Api extends AuthApi {}
 }

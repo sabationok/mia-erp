@@ -4,6 +4,10 @@ import { Keys } from '../types/utils.types';
 export enum API_BASE_ROUTES {
   APP = 'APP',
   AUTH = '/auth',
+  AUTH_DEVICES = '/auth/devices',
+  AUTH_O_AUTH = '/auth/o-auth',
+  AUTH_O_AUTH_CONFIGS = '/auth/o-auth/configs',
+
   PERMISSIONS = '/permissions',
   COMPANIES = '/companies',
   DIRECTORIES = '/directories',
@@ -155,6 +159,28 @@ const auth = {
   logOut: () => `${API_BASE_ROUTES.AUTH}/logOut`,
   deleteById: (id?: string) => `${API_BASE_ROUTES.AUTH}/deleteById`,
   getCurrent: (id?: string) => `${API_BASE_ROUTES.AUTH}/getCurrent`,
+  refreshTokens: () => `${API_BASE_ROUTES.AUTH}/refresh-token`,
+
+  devices: {
+    register: () => `${API_BASE_ROUTES.AUTH_DEVICES}/register`,
+    attach: () => `${API_BASE_ROUTES.AUTH_DEVICES}/attach`,
+  },
+
+  o_auth: {
+    logOut: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/logOut`,
+    logIn: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/logIn`,
+    getAuthUrl: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/auth-url`,
+    callback: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/callback`,
+    refresh: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/refresh`,
+    current: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/current`,
+    save_tokens: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/save-tokens`,
+
+    configs: {
+      getAll: () => `${API_BASE_ROUTES.AUTH_O_AUTH_CONFIGS}/getAll`,
+      create: () => `${API_BASE_ROUTES.AUTH_O_AUTH_CONFIGS}/create`,
+      update: () => `${API_BASE_ROUTES.AUTH_O_AUTH_CONFIGS}/update`,
+    },
+  },
 };
 const permissions: ApiEndpointsMap = {
   updateById: (permissionId?: string) => `${API_BASE_ROUTES.PERMISSIONS}/delete/${permissionId}`,

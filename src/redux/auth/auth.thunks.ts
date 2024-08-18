@@ -8,9 +8,9 @@ import {
   IRegisteredUser,
   LoginUserDto,
   RegisterDto,
-} from '../../types/auth.types';
+} from '../../types/auth/auth.types';
 import { ThunkArgs } from '../store.store';
-import AuthApi from '../../api/auth.api';
+import AuthApi from '../../api/auth/auth.api';
 import { createAppAsyncThunk } from '../createAppAsynkThunk';
 
 export enum AuthThunkTypeEnum {

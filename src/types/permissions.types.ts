@@ -1,7 +1,7 @@
 import { ICustomRole } from '../redux/customRoles/customRoles.types';
 import { ApiResponse, IBase, OnlyUUID } from '../redux/app-redux.types';
 import { CompanyEntity } from './companies.types';
-import { IUserBase, UserEntity } from './auth.types';
+import { IUserBase, UserEntity } from './auth/auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { Integration } from './integrations.types';
 import { AppDate } from './utils.types';
