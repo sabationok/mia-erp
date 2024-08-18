@@ -29,12 +29,13 @@ export class OAuthApi {
     update: (data?: OAuth.Consumer.Configs.CreateDto): Promise<ApiResponse<OAuth.Consumer.Configs.Entity>> => {
       return this._api.patch(this._endps.configs.update(), data);
     },
-    getAll: (input?: {
+    getAll: (
+      _?: undefined,
       params?: {
         connectionId?: string;
-      };
-    }): Promise<ApiResponse<OAuth.Consumer.Configs.Entity>> => {
-      return this._api.get(this._endps.configs.getAll(), input);
+      }
+    ): Promise<ApiResponse<OAuth.Consumer.Configs.Entity[]>> => {
+      return this._api.get(this._endps.configs.getAll(), { params });
     },
   };
 }

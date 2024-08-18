@@ -6,40 +6,46 @@ import { Button } from '../../../atoms/Button';
 export const ApiKeyItem = ({
   apiKey,
   keyMask,
-  onLoadApiKey,
+  onLoad,
 }: {
   apiKey?: string;
   keyMask?: string;
-  onLoadApiKey?: () => Promise<void>;
+  onLoad?: () => Promise<void>;
   isLoading?: boolean;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isVis, setIsVis] = useState(true);
+  const [isVis, setIsVis] = useState(false);
+
+  const masked =
+    keyMask ||
+    (apiKey
+      ? apiKey?.slice(0, 4).padEnd((apiKey?.length ?? 0) - 4, '*') + apiKey?.slice(apiKey.length - 4, apiKey.length)
+      : '****');
 
   return (
     <FlexBox fillWidth fxDirection={'row'} alignItems={'center'} gap={10}>
       <ButtonIcon
         variant={'onlyIcon'}
-        icon={isVis ? 'visibilityOn' : 'visibilityOff'}
+        icon={!isVis ? 'visibilityOn' : 'visibilityOff'}
         iconSize={'100%'}
         size={'18px'}
         isLoading={isLoading}
         onClick={async () => {
-          if (!apiKey && onLoadApiKey) {
+          if (!apiKey && onLoad) {
             setIsLoading(true);
-            onLoadApiKey()
+            onLoad()
               .then(apiKey => {
                 setIsVis(true);
               })
               .finally(() => setIsLoading(false));
           } else {
-            setIsVis(true);
+            setIsVis(p => !p);
           }
         }}
-      ></ButtonIcon>
+      />
 
       <Button.CopyIcon text={apiKey} />
-      <Button.Copy text={apiKey} label={isVis && apiKey ? apiKey : keyMask} />
+      <Button.Copy text={apiKey} label={isVis && apiKey ? apiKey : masked} />
     </FlexBox>
   );
 };

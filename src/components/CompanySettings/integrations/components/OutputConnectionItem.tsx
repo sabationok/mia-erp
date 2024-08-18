@@ -9,7 +9,6 @@ import { isNumber } from 'lodash';
 import { Tag } from 'antd';
 import ButtonIcon from '../../../atoms/ButtonIcon';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
-import { OutputConnOverview } from './OutputConnOverview';
 import styled, { useTheme } from 'styled-components';
 import FormCreateOutputIntegration from '../../../Forms/integrations/FormCreateOutputIntegration';
 import { ApiKeyItem } from './ApiKeyItem';
@@ -26,12 +25,12 @@ export const OutputConnectionItem = ({ conn }: { conn: Integration.Output.Entity
       <Text $size={12} $weight={600}>
         {t('Public key')}
       </Text>
-      <ApiKeyItem apiKey={conn.publicKey} keyMask={conn.publicKeyMask} onLoadApiKey={onLoadHandler} />
+      <ApiKeyItem apiKey={conn.publicKey} keyMask={conn.publicKeyMask} onLoad={onLoadHandler} />
 
       <Text $size={12} $weight={600}>
         {t('Private key')}
       </Text>
-      <ApiKeyItem apiKey={conn.privateKey} keyMask={conn.privateKeyMask} onLoadApiKey={onLoadHandler} />
+      <ApiKeyItem apiKey={conn.privateKey} keyMask={conn.privateKeyMask} onLoad={onLoadHandler} />
 
       <Text $size={12} $weight={600}>
         {t('Redirect base url')}
@@ -99,11 +98,7 @@ const ActionsList = ({ conn }: { conn: OutputIntegrationEntity }) => {
       </ListItem>
 
       <ListItem>
-        <StButton
-          onClick={() => modalS.create(OutputConnOverview, { conn })}
-          endIcon={'arrowRight'}
-          endIconSize={'16px'}
-        >
+        <StButton onClick={() => {}} endIcon={'arrowRight'} endIconSize={'16px'} danger>
           <Text color={theme.globals.colors.error}>{t('Delete')}</Text>
         </StButton>
       </ListItem>
