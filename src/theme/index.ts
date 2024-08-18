@@ -37,11 +37,17 @@ export const globals = {
     light: '#fff',
     dark: '#121212',
     default: 'rgb(154, 154, 154)',
+    defaultLight: 'rgb(200, 200, 200)', // Лайтовий
     info: '#3498db',
+    infoLight: '#85c1e9', // Лайтовий
     success: '#07bc0c',
+    successLight: '#7dff70', // Лайтовий
     warning: '#f1c40f',
+    warningLight: '#f7d774', // Лайтовий
     error: '#e74c3c',
+    errorLight: '#f1948a', // Лайтовий
     primary: '#cdcdcd',
+    primaryLight: '#e6e6e6', // Лайтовий
   },
 };
 export type IThemeGlobals = typeof globals;

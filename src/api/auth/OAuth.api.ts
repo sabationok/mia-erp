@@ -23,10 +23,10 @@ export class OAuthApi {
     return res;
   };
   public static configs = {
-    create: (data?: OAuth.Consumer.Configs.Dto): Promise<ApiResponse<OAuth.Consumer.Configs.Entity>> => {
+    create: (data?: OAuth.Consumer.Configs.CreateDto): Promise<ApiResponse<OAuth.Consumer.Configs.Entity>> => {
       return this._api.post(this._endps.configs.create(), data);
     },
-    update: (data?: OAuth.Consumer.Configs.Dto): Promise<ApiResponse<OAuth.Consumer.Configs.Entity>> => {
+    update: (data?: OAuth.Consumer.Configs.CreateDto): Promise<ApiResponse<OAuth.Consumer.Configs.Entity>> => {
       return this._api.patch(this._endps.configs.update(), data);
     },
     getAll: (input?: {

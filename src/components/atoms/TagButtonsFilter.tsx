@@ -5,6 +5,7 @@ import FlexBox from './FlexBox';
 import { Text } from './Text';
 import { isUndefined } from 'lodash';
 import { MaybeNull } from '../../types/utils.types';
+import { t } from 'lang';
 
 export type TagFilterOnSelectValue<Value = any> = FilterSelectValueHandler<Value>;
 
@@ -50,6 +51,7 @@ export interface TagButtonsFilterProps<
   numColumns?: number;
   gap?: number;
   name?: string;
+  placeholder?: string;
   resetButtonPosition?: 'start' | 'end';
   resetButtonLabel?: string;
   getButtonStyles?: (option: Option) => CSSProperties;
@@ -75,6 +77,7 @@ const TagButtonsFilter = <
   disabledCheck,
   getButtonStyles,
   getButtonProps,
+  placeholder,
 }: TagButtonsFilterProps<Value, Option>) => {
   const [selectedValues, setSelectedValues] = useState<(Value | string)[]>([]);
 
@@ -162,7 +165,15 @@ const TagButtonsFilter = <
     >
       {resetButtonPosition === 'start' && renderResetButton}
 
-      {renderOptions}
+      {renderOptions?.length ? (
+        renderOptions
+      ) : (
+        <FlexBox padding={'16px'} margin={'auto'}>
+          <Text $align={'center'} $weight={600}>
+            {placeholder ?? t('Not found options')}
+          </Text>
+        </FlexBox>
+      )}
 
       {resetButtonPosition === 'end' && renderResetButton}
     </FlexBox>

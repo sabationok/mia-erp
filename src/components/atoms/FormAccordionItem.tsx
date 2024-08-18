@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import FlexBox, { FlexBoxProps } from './FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from './ButtonIcon';
-import { isBoolean } from 'lodash';
 import { t } from '../../lang';
+import { Text } from './Text';
 
 export interface FormAccordeonItemProps {
   children?: React.ReactNode;
@@ -12,7 +12,7 @@ export interface FormAccordeonItemProps {
   title?: React.ReactNode;
   renderHeader?: React.ReactNode;
   renderFooter?: React.ReactNode;
-  toggled?: boolean;
+  expandable?: boolean;
   open?: boolean;
   disabled?: boolean;
   contentContainerStyle?: FlexBoxProps;
@@ -25,7 +25,7 @@ const FormAccordionItem: React.FC<FormAccordeonItemProps> = ({
   maxHeight = '32px',
   renderHeader,
   renderFooter,
-  toggled = true,
+  expandable = true,
   open = false,
   disabled,
   contentContainerStyle,
@@ -35,12 +35,12 @@ const FormAccordionItem: React.FC<FormAccordeonItemProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(!!disabled || open);
   function handleToggleOpen() {
-    if (!toggled) return;
+    if (!expandable) return;
     setIsOpen(prev => !prev);
   }
 
   useEffect(() => {
-    if (isBoolean(disabled) && disabled) {
+    if (disabled) {
       setIsOpen(false);
     }
   }, [disabled]);
@@ -57,20 +57,34 @@ const FormAccordionItem: React.FC<FormAccordeonItemProps> = ({
         activeBackgroundColor={activeBackgroundColor}
       >
         <StButton
-          icon={toggled ? (isOpen ? 'SmallArrowDown' : 'SmallArrowRight') : undefined}
-          iconSize={'24px'}
+          endIcon={expandable ? (isOpen ? 'SmallArrowDown' : 'SmallArrowLeft') : undefined}
+          endIconSize={'24px'}
+          justifyContent={'space-between'}
+          padding={'0 0 0 16px'}
           variant={'def'}
-          onClick={handleToggleOpen}
-          disabled={!toggled || disabled || !children}
+          onClick={expandable ? handleToggleOpen : undefined}
+          disabled={!expandable || disabled || !children}
           isOpen={isOpen}
         >
-          {title || (isOpen ? t('Close') : t('Open'))}
+          {title ? (
+            typeof title === 'string' ? (
+              <Text $weight={600} $size={15}>
+                {title}
+              </Text>
+            ) : (
+              title
+            )
+          ) : isOpen ? (
+            t('Close')
+          ) : (
+            t('Open')
+          )}
         </StButton>
 
         {renderHeader}
       </Header>
 
-      <ContentBox padding={'0 8px'} overflow={'hidden'} {...contentContainerStyle} className={'content'}>
+      <ContentBox padding={'0 8px 8px'} overflow={'hidden'} {...contentContainerStyle} className={'content'}>
         {children}
       </ContentBox>
 
@@ -115,9 +129,9 @@ const ContentBox = styled(FlexBox)`
 `;
 
 const StButton = styled(ButtonIcon)<{ isOpen?: boolean; activeBackgroundColor?: string }>`
-  justify-content: flex-start;
+  justify-content: space-between;
 
-  padding: 0 8px 0 0;
+  //padding: 0 8px 0 0;
 
   min-width: min-content;
 

@@ -1,10 +1,8 @@
 import styled, { css, ExecutionContext } from 'styled-components';
 import { Property } from 'csstype';
 import { CSSProperties } from 'react';
+import { PrefixKeys } from '../../types/utils.types';
 
-type PrefixKeys<T, Prefix extends string = '$'> = {
-  [K in keyof T as `${Prefix}${string & K}`]: T[K];
-};
 type FlexNativeStyles = Pick<
   CSSProperties,
   | 'display'

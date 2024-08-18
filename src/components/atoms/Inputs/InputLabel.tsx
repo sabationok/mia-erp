@@ -5,16 +5,33 @@ import FlexBox, { FlexBoxProps, FlexFieldSet } from '../FlexBox';
 import { Property } from 'csstype';
 import { Text } from '../Text';
 import { LangTextKey, t } from '../../../lang';
+import { PartialRecord, PrefixKeys } from '../../../types/utils.types';
 
-export interface InputLabelProps extends Omit<React.HTMLAttributes<HTMLFieldSetElement>, 'onSelect'>, FlexBoxProps {
+export type InputStateIs = PrefixKeys<PartialRecord<'error' | 'success' | 'loading', boolean>>;
+
+export interface InputLabelCustomProps {
   label?: LangTextKey;
+
   direction?: 'horizontal' | 'vertical' | 'row' | 'column';
+
   uppercase?: boolean;
+  textTransform?: Property.TextTransform;
+  align?: Property.AlignItems;
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
+
   success?: string;
   loading?: boolean;
+  stateIs?: InputStateIs;
+
   helperText?: string;
-  align?: Property.AlignItems;
+}
+
+type PrefixedCustomProps = PrefixKeys<InputLabelCustomProps>;
+export interface InputLabelProps
+  extends Omit<React.HTMLAttributes<HTMLFieldSetElement>, 'onSelect'>,
+    FlexBoxProps,
+    InputLabelCustomProps,
+    PrefixKeys<InputLabelCustomProps> {
   disabled?: boolean;
   required?: boolean;
 }
@@ -34,17 +51,25 @@ const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabel
     align,
     id,
     required,
+    textTransform,
     ...props
   },
   ref
 ) => {
   return (
     <Box className={className} disabled={disabled} {...props} ref={ref} gap={8}>
-      <Wrapper isLabel={!!label} direction={direction}>
+      <Wrapper $isLabel={!!label} $direction={direction}>
         {label && (
-          <Label htmlFor={id} uppercase={uppercase} align={align} direction={direction} className="label">
+          <Label
+            htmlFor={id}
+            $textTransform={textTransform}
+            $uppercase={uppercase}
+            $align={align}
+            $direction={direction}
+            className="label"
+          >
             {t(label)}
-            {required && <Text color={'tomato'}>{' *'}</Text>}
+            {required && <Text color={'tomato'}>{` *`}</Text>}
           </Label>
         )}
 
@@ -52,7 +77,7 @@ const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabel
       </Wrapper>
 
       {(helperText || error?.message || success || loading) && (
-        <HelperText error={!!error} success={!!success} loading={loading}>
+        <HelperText $error={!!error} $success={!!success} $loading={loading}>
           {(typeof error?.message === 'string' && error?.message) || success || (loading && 'Loading...') || helperText}
         </HelperText>
       )}
@@ -60,11 +85,7 @@ const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabel
   );
 };
 
-const Box = styled(FlexFieldSet)<{
-  disabled?: boolean;
-  error?: boolean;
-  success?: boolean;
-}>`
+const Box = styled(FlexFieldSet)<PrefixedCustomProps>`
   display: flex;
   flex-direction: column;
 
@@ -72,33 +93,37 @@ const Box = styled(FlexFieldSet)<{
 
   width: ${p => (p.width ? p.width : '100%')};
 
-  opacity: ${({ disabled }) => (disabled ? 0.75 : 1)};
-  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
+  &[disabled] {
+    opacity: 0.75;
+    pointer-events: none;
+  }
 `;
-const Label = styled.label<Pick<InputLabelProps, 'align' | 'direction' | 'uppercase'>>`
+const Label = styled.label<PrefixedCustomProps>`
   //display: flex;
 
-  align-items: ${({ align = 'center' }) => align};
+  align-items: ${({ $align = 'center' }) => $align};
 
   padding: 8px 8px 4px;
 
   font-size: 13px;
   line-height: 1.3;
   font-weight: 500;
-  text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : 'none')};
+  text-transform: ${({ $uppercase, $textTransform }) => $textTransform || ($uppercase ? 'uppercase' : 'none')};
 
   width: 100%;
-  max-width: ${({ direction = 'horizontal' }) => (direction === 'horizontal' ? '100px' : '100%')};
+  max-width: ${({ $direction = 'horizontal' }) => ($direction === 'horizontal' ? '100px' : '100%')};
 `;
 
 const Wrapper = styled(FlexBox)<
-  Pick<InputLabelProps, 'direction'> & {
-    isLabel: boolean;
-  }
+  PrefixKeys<
+    Pick<InputLabelProps, 'direction'> & {
+      isLabel: boolean;
+    }
+  >
 >`
   width: 100%;
-  ${({ direction }) =>
-    direction === 'vertical' || direction === 'column'
+  ${({ $direction }) =>
+    $direction === 'vertical' || $direction === 'column'
       ? css`
           flex-direction: column;
         `
@@ -115,24 +140,31 @@ const InputBox = styled.div`
   position: relative;
 `;
 
-const HelperText = styled.div<{
-  error?: boolean;
-  success?: boolean;
-  loading?: boolean;
-}>`
-  padding: 4px 8px;
+const HelperText = styled.div<InputStateIs>`
+  padding: 2px 6px;
   min-height: 13px;
 
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.5;
   margin: 0 0 6px;
-
-  border: 1px solid;
   border-radius: 4px;
 
-  color: ${({ error, success }) => (error && 'tomato') || (success && 'lightgreen') || 'inherit'};
-  border-color: ${({ theme, error, success }) =>
-    (error && 'tomato') || (success && 'lightgreen') || theme.modalBorderColor};
+  border: 1px solid
+    ${({ theme, $error, $success }) =>
+      ($error && theme.globals.colors.error) ||
+      ($success && theme.globals.colors.success) ||
+      theme.globals.colors.default};
+
+  color: ${({ theme, $error, $success }) =>
+    ($error && theme.globals.colors.error) ||
+    ($success && theme.globals.colors.success) ||
+    theme.globals.colors.default};
+
+  background-color: ${({ theme, $error, $success }) =>
+    ($error && theme.globals.colors.errorLight) ||
+    ($success && theme.globals.colors.successLight) ||
+    theme.globals.colors.defaultLight};
+
   cursor: default;
 `;
 

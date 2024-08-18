@@ -1,12 +1,12 @@
 import * as yup from 'yup';
-import { isDynamicValue, isString255, isUrl, isUUID } from '../../../../validations';
+import { isDynamicValue, isEmail, isString255, isUaMobilePhone, isUrl, isUUID } from '../../../../validations';
 import { OAuth } from '../../../../types/auth/o-auth.namespace';
 import { Integration } from '../../../../types/integrations.types';
 import { useAppDispatch } from '../../../../redux/store.store';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createOAuthConfigsThunk, updateOAuthConfigsThunk } from '../../../../redux/auth/o-auth.thunks';
-import { enumToFilterOptions, ObjectValues, toReqData } from '../../../../utils';
+import { arrayToFilterOptions, enumToArray, enumToFilterOptions, ObjectValues, toReqData } from '../../../../utils';
 import ModalBase from '../../../atoms/Modal';
 import FlexBox, { FlexForm } from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
@@ -16,25 +16,42 @@ import TagButtonsFilter from '../../../atoms/TagButtonsFilter';
 import FormAccordionItem from '../../../atoms/FormAccordionItem';
 import ModalFooter from '../../../atoms/Modal/ModalFooter';
 import { omit, pick } from 'lodash';
+import { useEffect, useMemo } from 'react';
+import { debounceCallback } from '../../../../utils/lodash.utils';
+import { StorageService } from '../../../../services';
+import ProviderEnum = OAuth.ProviderEnum;
 
+const enpointNames = enumToArray(OAuth.Consumer.Configs.EndpointName);
 const requiredEndpoints = ObjectValues(pick(OAuth.Consumer.Configs.EndpointName, ['auth', 'terms', 'privacyPolicy']));
 const optionalEndpoints = ObjectValues(omit(OAuth.Consumer.Configs.EndpointName, requiredEndpoints));
 const providersList = enumToFilterOptions(OAuth.ProviderEnum);
 
-const schema = yup.object().shape({
-  label: isString255,
-  connectionId: isUUID.required(),
+const formSchema = yup.object().shape({
+  label: isString255.required(),
+  connectionId: isUUID.optional(),
   domain: isUrl({ require_protocol: true }).required(),
+  supportInfo: yup.object().shape({
+    email: isEmail().optional(),
+    phone: isUaMobilePhone(),
+  }),
+
+  publicKey: isString255.when('provider', ([value], schema) => {
+    return value === 'mia' ? schema.strip() : schema.required();
+  }),
+  privateKey: isString255.when('provider', ([value], schema) => {
+    return value === 'mia' ? schema.strip() : schema.required();
+  }),
+
   endpoints: yup
     .object()
     .shape(
       Object.assign(
         {},
-        ...requiredEndpoints.map(key => ({ [key]: isUrl().required() })),
+        ...requiredEndpoints.map(key => ({ [key]: isUrl().optional() })),
         ...optionalEndpoints.map(key => ({ [key]: isUrl().optional() }))
       )
     ),
-  scopes: isDynamicValue('provider', OAuth.ScopesByProvider),
+  scopes: isDynamicValue('provider', OAuth.ScopesByProvider).required(),
 });
 
 export const ModalOAuthConfigsForm = ({
@@ -46,89 +63,133 @@ export const ModalOAuthConfigsForm = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  const form = useForm<OAuth.Consumer.Configs.Dto>({
-    defaultValues: config,
-    resolver: yupResolver(schema),
+  const {
+    formState: { errors },
+    ...form
+  } = useForm<OAuth.Consumer.Configs.CreateDto>({
+    defaultValues: { provider: ProviderEnum.mia, ...config, connectionId: conn._id },
+    resolver: yupResolver(formSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onSubmit',
   });
 
   const FV = form.watch();
-  const onValid = (fData: OAuth.Consumer.Configs.Dto) => {
+  const onValid = (fData: OAuth.Consumer.Configs.CreateDto) => {
     const thunk = config ? updateOAuthConfigsThunk : createOAuthConfigsThunk;
+
+    StorageService.setToLocal('created_oauth_config', toReqData(fData));
 
     dispatch(
       thunk({
-        data: { data: toReqData(fData) as OAuth.Consumer.Configs.Dto },
+        data: { data: toReqData(fData) as OAuth.Consumer.Configs.CreateDto },
+        onSuccess: ({ data }) => {
+          StorageService.setToLocal('prepared_oauth_config', data);
+        },
       })
     );
   };
 
-  const scopes = FV.provider
-    ? OAuth.ScopesByProvider[FV.provider]?.map(key => {
-        return { value: key, label: key };
-      })
-    : [];
+  const scopes = useMemo(() => {
+    const array = FV.provider && OAuth.ScopesByProvider[FV.provider] ? OAuth.ScopesByProvider[FV.provider] || [] : [];
+
+    return arrayToFilterOptions(array);
+  }, [FV.provider]);
+
+  useEffect(() => {
+    if (!config && FV.domain) {
+      debounceCallback(() => {
+        enpointNames.forEach(key => {
+          !form.getValues(`endpoints.${key}`) && form.setValue(`endpoints.${key}`, FV.domain);
+        });
+      });
+    }
+  }, [FV.domain, config, form]);
+
+  const renderApiKeysInputs = useMemo(() => {
+    if (FV.provider === ProviderEnum.mia) {
+      return null;
+    }
+    return (
+      <FormAccordionItem title={'Api keys'} expandable={false} open>
+        <InputLabel label={t('Public key')} error={form.getFieldState('publicKey').error} required>
+          <InputText placeholder={t('Public key')} {...form.register('publicKey', { required: true })} />
+        </InputLabel>
+
+        <InputLabel label={t('Private key')} error={form.getFieldState('privateKey').error} required>
+          <InputText placeholder={t('Private key')} {...form.register('privateKey', { required: true })} />
+        </InputLabel>
+      </FormAccordionItem>
+    );
+  }, [FV.provider, form]);
 
   return (
     <ModalBase title={'OAuth configs'} fillHeight>
       <FlexForm
-        padding={'0 8px'}
         gap={12}
         flex={1}
         onSubmit={form.handleSubmit(onValid, errors => {
-          console.log('[OAuth configs]', errors);
+          console.warn('[OAuth configs]', errors);
         })}
       >
         <FlexBox flex={1} overflow={'auto'}>
-          <FlexBox>
-            <InputLabel label={t('Label')}>
-              <InputText placeholder={t('Label')} {...form.register('label')} />
-            </InputLabel>
+          <FormAccordionItem title={t('Main')} expandable={false} open>
+            <FlexBox padding={'0 0 16px'}>
+              <InputLabel label={'Provider'} error={errors.provider}>
+                <TagButtonsFilter
+                  options={providersList}
+                  placeholder={t('Please select provider')}
+                  value={FV.provider}
+                  onSelectValue={({ value }) => {
+                    form.setValue('provider', value as never, { shouldDirty: true, shouldTouch: true });
+                    form.setValue('scopes', []);
+                  }}
+                />
+              </InputLabel>
 
-            <InputLabel label={t('Domain')}>
-              <InputText placeholder={t('Domain')} {...form.register('domain')} />
-            </InputLabel>
+              <InputLabel label={'Permissions'} error={errors.scopes?.root}>
+                <TagButtonsFilter
+                  options={scopes}
+                  multiple
+                  value={FV.scopes}
+                  onChangeIds={({ value }) => {
+                    form.setValue('scopes', value as never, { shouldDirty: true, shouldTouch: true });
+                  }}
+                />
+              </InputLabel>
 
-            <InputLabel label={t('Support email')}>
-              <InputText placeholder={t('Support email')} {...form.register('supportInfo.email')} />
-            </InputLabel>
-          </FlexBox>
+              <InputLabel label={t('Label')} error={errors.label}>
+                <InputText placeholder={t('Label')} {...form.register('label')} />
+              </InputLabel>
 
-          <InputLabel label={'Provider'}>
-            <TagButtonsFilter
-              options={providersList}
-              value={FV.provider}
-              onSelectValue={({ value }) => {
-                form.setValue('provider', value as never);
-              }}
-            />
-          </InputLabel>
+              <InputLabel label={t('Domain')} error={errors.domain}>
+                <InputText placeholder={t('Domain')} {...form.register('domain')} />
+              </InputLabel>
 
-          <InputLabel label={'Permissions'}>
-            <TagButtonsFilter
-              options={scopes}
-              multiple
-              value={form.getValues('scopes')}
-              onChangeIds={({ value }) => {
-                form.setValue('scopes', value as never);
-              }}
-            />
-          </InputLabel>
+              <InputLabel label={t('Support email')} error={errors.supportInfo?.email}>
+                <InputText placeholder={t('Support email')} {...form.register('supportInfo.email')} />
+              </InputLabel>
+            </FlexBox>
+          </FormAccordionItem>
 
-          <FormAccordionItem title={'Endpoints'}>
-            {requiredEndpoints.map(name => {
-              return (
-                <InputLabel label={t(name)} required>
-                  <InputText placeholder={t(name)} {...form.register(`endpoints.${name}`, { required: true })} />
-                </InputLabel>
-              );
-            })}
-            {optionalEndpoints.map(name => {
-              return (
-                <InputLabel label={t(name)}>
-                  <InputText placeholder={t(name)} {...form.register(`endpoints.${name}`)} />
-                </InputLabel>
-              );
-            })}
+          {renderApiKeysInputs}
+
+          <FormAccordionItem title={'Endpoints'} expandable={false} open>
+            <FlexBox padding={'8px 0'}>
+              {requiredEndpoints.map(name => {
+                return (
+                  <InputLabel textTransform={'capitalize'} label={t(name)} required error={errors.endpoints?.[name]}>
+                    <InputText placeholder={t(name)} {...form.register(`endpoints.${name}`, { required: false })} />
+                  </InputLabel>
+                );
+              })}
+              {optionalEndpoints.map(name => {
+                return (
+                  <InputLabel textTransform={'capitalize'} label={t(name)} error={errors.endpoints?.[name]}>
+                    <InputText placeholder={t(name)} {...form.register(`endpoints.${name}`)} />
+                  </InputLabel>
+                );
+              })}
+            </FlexBox>
           </FormAccordionItem>
         </FlexBox>
 

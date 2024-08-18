@@ -11,6 +11,12 @@ export const throttleCallback = _.throttle(<T extends AnyFn>(fn: T) => {
   fn();
 }, 3000);
 
+export const debounceCallback = _.debounce(<T extends AnyFn>(fn: T) => {
+  console.log(debounceCallback.name);
+
+  fn();
+}, 3000);
+
 export const throttledCallback = <Fn extends AnyFn>(fn: Fn, wait: number = 3000) => {
   console.log('throttledCallback return');
   return _.throttle(fn, wait);

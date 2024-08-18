@@ -1,4 +1,4 @@
-import { IBase, PartialRecord } from 'types/utils.types';
+import { IBase, OnlyUUID, PartialRecord } from 'types/utils.types';
 import { AppAuth } from './auth.namespace';
 import { UserEntity } from './auth.types';
 
@@ -32,16 +32,34 @@ export namespace OAuth {
           email?: string;
         };
       }
-      export interface Entity extends IBase, Base {
-        privateKey: string;
+
+      interface BaseMia extends Base {
+        provider?: OAuth.ProviderEnum.mia;
+        // publicKey: string;
+        // privateKey: string;
+      }
+      interface BaseOther extends Base {
+        provider?: Exclude<OAuth.ProviderEnum, 'mia'>;
+
         publicKey: string;
+        privateKey: string;
+      }
+      export interface Entity extends IBase, Base {
+        publicKey: string;
+        privateKey: string;
 
         isActive?: boolean;
         status?: string;
       }
-      export interface Dto extends Base {
+      interface _CreateDto {
         connectionId: string;
       }
+
+      export type CreateDto = _CreateDto & (BaseMia | BaseOther);
+
+      export interface _UpdateDto extends OnlyUUID {}
+
+      export type UpdateDto = _UpdateDto & (BaseMia | BaseOther);
     }
     export type ExtraDataByType = {
       [key in ProviderEnum]: Record<string, any>;
@@ -68,6 +86,7 @@ export namespace OAuth {
   }
   export const ScopesByProvider: PartialRecord<ProviderEnum, string[]> = {
     [ProviderEnum.google]: ['email', 'profile', 'openID'],
+    [ProviderEnum.facebook]: ['email', 'profile', 'openID'],
     [ProviderEnum.refme]: ['email', 'reference', 'openID', 'wallets', 'profile'],
     [ProviderEnum.mia]: ['email', 'reference', 'openID', 'profile'],
   };

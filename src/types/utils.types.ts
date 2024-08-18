@@ -21,7 +21,9 @@ export type FieldValues = Record<string, any>;
 
 export type Values<T extends any> = T extends (infer U)[] ? U : T[keyof T];
 export type Keys<T extends any> = keyof T;
-
+export type PrefixKeys<T, Prefix extends string = '$'> = {
+  [K in keyof T as `${Prefix}${string & K}`]: T[K];
+};
 export type TruthType = 1 | 'true' | true;
 export type FalseType = 0 | 'false' | false;
 export type BooleanType = TruthType | FalseType;
