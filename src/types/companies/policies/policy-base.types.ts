@@ -1,4 +1,4 @@
-import { PartialRecord } from '../../utils.types';
+import { MaybeNull, PartialRecord } from '../../utils.types';
 
 export class PolicyBoolValuesJsonData implements PartialRecord<PolicyJsonDataBooleanishKeys, boolean> {
   selectByClient?: boolean = false;
@@ -9,7 +9,7 @@ export class PolicyBoolValuesJsonData implements PartialRecord<PolicyJsonDataBoo
 export type PolicyJsonDataBooleanishKeys = 'selectByClient' | 'autoCreate' | 'autoPublish';
 
 export class PolicyJsonDataBase extends PolicyBoolValuesJsonData {
-  methodId?: string;
+  methodId?: MaybeNull<string>;
 
   constructor(payload: PolicyJsonDataBase) {
     super();

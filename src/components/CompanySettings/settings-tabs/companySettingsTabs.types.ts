@@ -27,4 +27,6 @@ export interface CompanySettingsTabBaseProps<PName extends Keys<CompanyPoliciesF
     name: PName;
     data: CompanyPoliciesFormDataMap[PName];
   }>;
+  onValidSubmit?: AppSubmitHandler<CompanyPoliciesFormDataMap[PName]>;
+  onErrorSubmit?: (errors?: any) => void;
 }

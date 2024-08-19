@@ -19,19 +19,26 @@ export interface DeliveryPolicyTabProps extends CompanySettingsTabBaseProps<'del
 
 const tabs = _enumToTabs(DeliveryPolicy.TypeEnum);
 
-const DeliveryPolicyTab = ({ onSubmit, company, policyFormKey }: DeliveryPolicyTabProps) => {
+const DeliveryPolicyTab = ({
+  onSubmit,
+  company,
+  policyFormKey,
+  onValidSubmit,
+  onErrorSubmit,
+}: DeliveryPolicyTabProps) => {
   const methods = useTranslatedMethodsList(useDeliveriesSelector().methods, { withFullLabel: true });
   const [current, setCurrent] = useState<DeliveryPolicy.TypeEnum>(DeliveryPolicy.TypeEnum.sales);
 
-  const {
-    formValues,
-    formState: { errors },
-    ...form
-  } = useAppForm<DeliveryPolicy.FormData>({
+  const formMethods = useAppForm<DeliveryPolicy.FormData>({
     defaultValues: company?.deliveryPolicy ?? {},
     resolver: yupResolver(delivery_policy_json_data_schema, { stripUnknown: true }),
     reValidateMode: 'onSubmit',
   });
+  const {
+    formState: { errors },
+    formValues,
+    ...form
+  } = formMethods;
 
   const registerSwitch = (name: keyof DeliveryPolicy.JsonDataBoolValues | 'insurance.allowed') => {
     return {
@@ -61,14 +68,19 @@ const DeliveryPolicyTab = ({ onSubmit, company, policyFormKey }: DeliveryPolicyT
         }}
       />
 
-      <FlexForm flex={1} overflow={'hidden'} id={policyFormKey} onSubmit={form.handleSubmit(onValid)}>
+      <FlexForm
+        flex={1}
+        overflow={'hidden'}
+        id={policyFormKey}
+        onSubmit={form.handleSubmit(onValidSubmit ?? onValid, onErrorSubmit)}
+      >
         <FlexBox overflow={'auto'} flex={1} fillWidth padding={'0 8px 16px'}>
           <CustomSelect
             onSelect={option => {
               const v = option._id;
               if (v) form.setValue(`${current}.methodId`, v);
             }}
-            defaultValue={formValues[current]?.methodId}
+            defaultValue={formValues[current]?.methodId ?? ''}
             options={methods}
             {...{
               label: t('Default method'),
@@ -76,7 +88,7 @@ const DeliveryPolicyTab = ({ onSubmit, company, policyFormKey }: DeliveryPolicyT
             }}
           />
 
-          <InputLabel label={t(`Auto creating delivery for ${current.toUpperCase()}`)}>
+          <InputLabel label={t(`Auto creating delivery for ${current.toUpperCase()}`)} inputName={'autoCreate'}>
             <ButtonSwitch {...registerSwitch('autoCreate')} />
           </InputLabel>
 
@@ -94,17 +106,14 @@ const DeliveryPolicyTab = ({ onSubmit, company, policyFormKey }: DeliveryPolicyT
 
           {formValues?.[current]?.insurance?.allowed && (
             <FlexBox fxDirection={'row'} gap={8} alignItems={'flex-end'}>
-              <InputLabel label={t(`Minimum amount`)} error={form.getFieldState(`${current}.insurance.amount`).error}>
+              <InputLabel label={t(`Amount`)} error={form.getFieldState(`${current}.insurance.amount`).error}>
                 <InputText
                   $align={'center'}
                   {...form.register(`${current}.insurance.amount`, { valueAsNumber: true })}
                 />
               </InputLabel>
 
-              <InputLabel
-                label={t(`Minimum percentage`)}
-                error={form.getFieldState(`${current}.insurance.percentage`).error}
-              >
+              <InputLabel label={t(`Percentage`)} error={form.getFieldState(`${current}.insurance.percentage`).error}>
                 <InputText
                   $align={'center'}
                   {...form.register(`${current}.insurance.percentage`, { valueAsNumber: true })}

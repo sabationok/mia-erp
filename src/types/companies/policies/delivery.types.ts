@@ -17,8 +17,8 @@ export interface JsonData extends PolicyJsonDataBase {
 
   insurance?: {
     allowed?: boolean;
-    percentage?: string;
-    amount?: string;
+    percentage?: number | string;
+    amount?: number | string;
   };
 }
 export type JsonDataBoolValues = Pick<JsonData, PolicyJsonDataBooleanishKeys>;

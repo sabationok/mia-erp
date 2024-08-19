@@ -2,9 +2,10 @@ import { DeliveryPolicy, PaymentPolicy } from 'types/companies/policies';
 import * as YUP from 'yup';
 import { isUUID } from '../schemas';
 import { ObjectFromEntries } from '../../utils';
+import Decimal from 'decimal.js';
 
 const baseFields = {
-  methodId: isUUID.optional(),
+  methodId: isUUID.nullable().optional(),
   selectByClient: YUP.boolean().optional(),
   autoCreate: YUP.boolean().optional(),
   autoPublish: YUP.boolean().optional(),
@@ -20,15 +21,14 @@ export const delivery_policy_sales_json_data_schema: YUP.ObjectSchema<DeliveryPo
       percentage: YUP.string()
         .min(0)
         .max(100)
-        .optional()
         .transform((value: string) => {
-          return Number(value ? value : '0').toFixed(2);
+          return new Decimal(value ? value : '0').toFixed(2);
+          // return Number(Number(value ? value : '0').toFixed(2));
         }),
       amount: YUP.string()
         .min(0)
-        .optional()
         .transform((value: string) => {
-          return Number(value ? value : '0').toFixed(2);
+          return new Decimal(value ? value : '0').toFixed(2);
         }),
     }),
   });

@@ -70,6 +70,9 @@ const CompanySettingsModal: React.FC<CompanySettingsProps> = ({ onClose, ...prop
     [current]
   );
 
+  useEffect(() => {
+    console.log({ currentCompany });
+  }, [currentCompany]);
   return (
     <ModalBase fillHeight title={'Company settings'}>
       <TabSelector
@@ -88,6 +91,13 @@ const CompanySettingsModal: React.FC<CompanySettingsProps> = ({ onClose, ...prop
         policyFormKey={current}
         isInFocus={true}
         isSubmitting={loaders.isLoading[current]}
+        onErrorSubmit={errors => {
+          console.error(errors);
+        }}
+        onValidSubmit={data => {
+          console.log(data);
+          onSubmit({ name: current, data });
+        }}
       />
 
       <ModalFooter hasOnSubmit formId={current} isLoading={loaders.isLoading[current]}></ModalFooter>

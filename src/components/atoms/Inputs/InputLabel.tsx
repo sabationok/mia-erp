@@ -34,6 +34,7 @@ export interface InputLabelProps
     PrefixKeys<InputLabelCustomProps> {
   disabled?: boolean;
   required?: boolean;
+  inputName?: string;
 }
 
 const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabelProps> = (
@@ -52,10 +53,14 @@ const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabel
     id,
     required,
     textTransform,
+    inputName,
     ...props
   },
   ref
 ) => {
+  // const form = useFormContext() as Partial<UseFormReturn>;
+  // const field = form?.getFieldState && inputName ? form?.getFieldState(inputName) : undefined;
+  const myError = error;
   return (
     <Box className={className} disabled={disabled} {...props} ref={ref} gap={8}>
       <Wrapper $isLabel={!!label} $direction={direction}>
@@ -76,9 +81,12 @@ const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabel
         <InputBox>{children}</InputBox>
       </Wrapper>
 
-      {(helperText || error?.message || success || loading) && (
-        <HelperText $error={!!error} $success={!!success} $loading={loading}>
-          {(typeof error?.message === 'string' && error?.message) || success || (loading && 'Loading...') || helperText}
+      {(helperText || myError?.message || success || loading) && (
+        <HelperText $error={!!myError} $success={!!success} $loading={loading}>
+          {(typeof myError?.message === 'string' && myError?.message) ||
+            success ||
+            (loading && 'Loading...') ||
+            helperText}
         </HelperText>
       )}
     </Box>
