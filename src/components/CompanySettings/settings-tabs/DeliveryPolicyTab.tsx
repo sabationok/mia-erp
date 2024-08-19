@@ -1,86 +1,74 @@
 import { CompanySettingsTabBaseProps } from './companySettingsTabs.types';
-import { DeliveryPolicyJsonData, ICompanyDeliveryPolicyFormData } from '../../../types/companies.types';
-import { useCompaniesSelector, useDeliveriesSelector } from '../../../redux/selectors.store';
+import { useDeliveriesSelector } from '../../../redux/selectors.store';
 import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { t } from '../../../lang';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsList.hook';
 import { useState } from 'react';
-import ModalFooter from '../../atoms/Modal/ModalFooter';
 import { _enumToTabs } from '../../../utils';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import TabSelector from '../../atoms/TabSelector';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useAppForm } from '../../../hooks';
 import InputText from '../../atoms/Inputs/InputText';
+import { DeliveryPolicy } from 'types/companies/policies';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { delivery_policy_json_data_schema } from '../../../validations/companies';
 
-export interface DeliveryPolicyTabProps extends CompanySettingsTabBaseProps {
-  onSubmit?: AppSubmitHandler<{
-    data: ICompanyDeliveryPolicyFormData[keyof ICompanyDeliveryPolicyFormData];
-    tab: keyof ICompanyDeliveryPolicyFormData;
-  }>;
-}
-export type DeliverySalesPolicyBooleanFieldKeys = keyof Omit<
-  DeliveryPolicyJsonData,
-  'method' | 'minInsuranceAmount' | 'insurancePercentage'
->;
+export interface DeliveryPolicyTabProps extends CompanySettingsTabBaseProps<'delivery'> {}
 
-export enum DeliveryPolicyTabs {
-  sales = 'sales',
-  returns = 'returns',
-}
+const tabs = _enumToTabs(DeliveryPolicy.TypeEnum);
 
-const tabs = _enumToTabs(DeliveryPolicyTabs);
-const DeliveryPolicyTab = ({ onClose, onSubmit }: DeliveryPolicyTabProps) => {
-  const service = useAppServiceProvider()[AppModuleName.companies];
-  const company = useCompaniesSelector().current;
+const DeliveryPolicyTab = ({ onSubmit, company, policyFormKey }: DeliveryPolicyTabProps) => {
   const methods = useTranslatedMethodsList(useDeliveriesSelector().methods, { withFullLabel: true });
-  const [current, setCurrent] = useState<DeliveryPolicyTabs>(DeliveryPolicyTabs.sales);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [current, setCurrent] = useState<DeliveryPolicy.TypeEnum>(DeliveryPolicy.TypeEnum.sales);
 
-  const form = useAppForm<ICompanyDeliveryPolicyFormData>({
-    defaultValues: company?.deliveryPolicy as ICompanyDeliveryPolicyFormData,
+  const {
+    formValues,
+    formState: { errors },
+    ...form
+  } = useAppForm<DeliveryPolicy.FormData>({
+    defaultValues: company?.deliveryPolicy ?? {},
+    resolver: yupResolver(delivery_policy_json_data_schema, { stripUnknown: true }),
+    reValidateMode: 'onSubmit',
   });
 
-  const formValues = form.watch();
-
-  const registerSwitch = (name: DeliverySalesPolicyBooleanFieldKeys) => {
-    const value = formValues[current];
+  const registerSwitch = (name: keyof DeliveryPolicy.JsonDataBoolValues | 'insurance.allowed') => {
     return {
       name: name,
       onChange(v: boolean) {
         form.setValue(`${current}.${name}`, v, { shouldTouch: true });
       },
-      value: value && value[name],
+      value: form.getValues(`${current}.${name}`),
     };
   };
 
-  const onValid = (fData: ICompanyDeliveryPolicyFormData) => {
-    // onSubmit && onSubmit({ data: fData, tab: current });
+  const onValid = (fData: DeliveryPolicy.FormData) => {
+    console.log('DeliveryPolicy.FormData', fData);
 
-    if (company?._id) {
-      service.update({
-        data: { _id: company?._id, data: { deliveryPolicy: { [current]: fData[current] } } },
-        onLoading: setLoading,
-        onSuccess: () => {
-          onClose && onClose();
-        },
-      });
+    if (onSubmit) {
+      return onSubmit({ name: policyFormKey, data: fData });
     }
   };
 
   return (
     <>
-      <TabSelector options={tabs} onChangeIndex={index => setCurrent(tabs[index].value)} />
+      <TabSelector
+        options={tabs}
+        onChangeIndex={index => {
+          const v = tabs[index].value;
+          if (v) setCurrent(v);
+        }}
+      />
 
-      <FlexForm flex={1} overflow={'hidden'} onSubmit={form.handleSubmit(onValid)}>
-        <FlexBox overflow={'auto'} flex={1} fillWidth padding={'0 8px 8px'}>
+      <FlexForm flex={1} overflow={'hidden'} id={policyFormKey} onSubmit={form.handleSubmit(onValid)}>
+        <FlexBox overflow={'auto'} flex={1} fillWidth padding={'0 8px 16px'}>
           <CustomSelect
-            onSelect={option => form.setValue(`${current}.method`, option.value)}
-            defaultValue={formValues[current]?.method}
+            onSelect={option => {
+              const v = option._id;
+              if (v) form.setValue(`${current}.methodId`, v);
+            }}
+            defaultValue={formValues[current]?.methodId}
             options={methods}
             {...{
               label: t('Default method'),
@@ -100,24 +88,31 @@ const DeliveryPolicyTab = ({ onClose, onSubmit }: DeliveryPolicyTabProps) => {
             <ButtonSwitch {...registerSwitch('autoPublish')} />
           </InputLabel>
 
-          <InputLabel label={t(`Has insurance amount`)}>
-            <ButtonSwitch {...registerSwitch('hasInsurance')} />
+          <InputLabel label={t(`Has insurance`)}>
+            <ButtonSwitch {...registerSwitch('insurance.allowed')} />
           </InputLabel>
 
-          {formValues?.sales?.hasInsurance && (
-            <FlexBox fxDirection={'row'} gap={8}>
-              <InputLabel label={t(`Minimum insurance amount`)}>
-                <InputText {...form.register('sales.minInsuranceAmount')} />
+          {formValues?.[current]?.insurance?.allowed && (
+            <FlexBox fxDirection={'row'} gap={8} alignItems={'flex-end'}>
+              <InputLabel label={t(`Minimum amount`)} error={form.getFieldState(`${current}.insurance.amount`).error}>
+                <InputText
+                  $align={'center'}
+                  {...form.register(`${current}.insurance.amount`, { valueAsNumber: true })}
+                />
               </InputLabel>
 
-              <InputLabel label={t(`Insurance percentage total amount`)}>
-                <InputText {...form.register('sales.insurancePercentage')} />
+              <InputLabel
+                label={t(`Minimum percentage`)}
+                error={form.getFieldState(`${current}.insurance.percentage`).error}
+              >
+                <InputText
+                  $align={'center'}
+                  {...form.register(`${current}.insurance.percentage`, { valueAsNumber: true })}
+                />
               </InputLabel>
             </FlexBox>
           )}
         </FlexBox>
-
-        <ModalFooter hasOnSubmit isLoading={loading} />
       </FlexForm>
     </>
   );

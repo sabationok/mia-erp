@@ -94,13 +94,6 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
     [onChangeIndex, onFilterValueSelect, name, onOptSelect, onSelect]
   );
 
-  const handleReset = () => {
-    if (onResetPress) {
-      setCurrent(-1);
-      onResetPress();
-    }
-  };
-
   useEffect(() => {
     if (onResetPress || preventDefault) return;
     if (!isUndefined(currentIndex)) {
@@ -130,7 +123,7 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
   }, []);
 
   const renderOptions = useMemo(() => {
-    return options?.map((opt, idx) => (
+    const _options = options?.map((opt, idx) => (
       <StButtonIcon
         key={idx}
         id={`filter-opt_${opt?.value || idx}`}
@@ -151,16 +144,27 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
         )}
       </StButtonIcon>
     ));
-  }, [asStepper, current, options, handleSelectOpt, renderLabel]);
+
+    if (onResetPress) {
+      const handleReset = () => {
+        if (onResetPress) {
+          setCurrent(-1);
+          onResetPress();
+        }
+      };
+      _options?.unshift(
+        <StButtonIcon key={'onResetPress'} variant="def" onClick={handleReset} isActive={current === -1}>
+          <span className={'inner'}>{t('All')}</span>
+        </StButtonIcon>
+      );
+    }
+
+    return _options;
+  }, [options, onResetPress, asStepper, handleSelectOpt, current, renderLabel]);
 
   return (
     <FilterBox className="filter" overflow={'hidden'} fillWidth maxWidth={'100%'} {...props}>
-      <Filter optionProps={optionProps} gridRepeat={(options?.length ?? 0) + (onResetPress ? 1 : 0)}>
-        {onResetPress && (
-          <StButtonIcon variant="def" onClick={handleReset} isActive={current === -1}>
-            <span className={'inner'}>{t('All')}</span>
-          </StButtonIcon>
-        )}
+      <Filter $optionProps={optionProps} $gridRepeat={(options?.length ?? 0) + (onResetPress ? 1 : 0)}>
         {renderOptions}
       </Filter>
     </FilterBox>
@@ -175,11 +179,12 @@ const FilterBox = styled(FlexBox)`
     }
   }
 `;
-const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: boolean } }>`
+type FilerGridBoxProps = { $gridRepeat?: number; $optionProps?: { fitContentH?: boolean } };
+const Filter = styled.div<FilerGridBoxProps>`
   display: grid;
   align-items: center;
-  grid-template-columns: ${({ gridRepeat, optionProps }) =>
-    `repeat(${gridRepeat || 1}, minmax(${(optionProps?.fitContentH && 'min-content') || '150px'} ,1fr))`};
+  grid-template-columns: ${({ $gridRepeat, $optionProps }) =>
+    `repeat(${$gridRepeat || 1}, minmax(${($optionProps?.fitContentH && 'min-content') || '150px'} ,1fr))`};
 
   height: max-content;
   min-height: 32px;

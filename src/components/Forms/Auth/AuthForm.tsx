@@ -15,7 +15,7 @@ import { HasRegisterCompanyDtoFields, HasRegisterUserDtoFields } from '../../../
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import { omit } from 'lodash';
 import { useAppRouter } from '../../../hooks';
-import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
+import { BusinessSubjectTypeEnum } from '../../../types/companies/companies.types';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { ObjectValues } from '../../../utils';

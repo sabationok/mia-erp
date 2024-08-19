@@ -1,5 +1,6 @@
 import { RootState } from './store.store';
 import { useSelector } from 'react-redux';
+import { ApiDirType } from './APP_CONFIGS';
 import { IAuthState } from '../types/auth/auth.types';
 import { IFinTransactionsState } from './finances/finances.slice';
 import { ICustomRolesState } from './customRoles/customRoles.slice';
@@ -7,7 +8,6 @@ import { IUsersState } from './users/users.types';
 import { AppSettingsState } from './appSettings/appSettings.slice';
 import { OffersState } from './products/offers.slice';
 import { PricesState } from './priceManagement/priceManagement.slice';
-import { ApiDirType } from './APP_CONFIGS';
 import { IDirItemBase } from '../types/dir.types';
 import { DirectoriesState } from './directories/directories.slice';
 import { OrdersState } from './orders/orders.slice';
@@ -20,12 +20,12 @@ import { InvoicesState } from './invoices/invoices.slice';
 import { ShipmentsState } from './shipments/shipments.slice';
 import { IntegrationsState } from './integrations/integrations.slice';
 import { DeliveriesState } from './deliveries/deliveries.slice';
-import { CompaniesState } from '../types/companies.types';
 import { DiscountsState } from './priceManagement/discounts/discounts.slice';
 import { CartState } from './cart/cart.slice';
 import { TagsState } from './tags/tags.slice';
 import { LinksState } from './tracking/links/links.slice';
 import { ChatState } from './chat/chat.slice';
+import { CompaniesState } from './companies/companies.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);

@@ -1,29 +1,43 @@
 import styled, { css } from 'styled-components';
 import { Property } from 'csstype';
+import { CSSProperties } from 'react';
+import { PrefixKeys } from '../../../types/utils.types';
 
-export interface TextInputProps {
+export interface TextInputProps
+  extends PrefixKeys<
+    Pick<
+      CSSProperties,
+      | 'minWidth'
+      | 'maxWidth'
+      | 'height'
+      | 'width'
+      | 'maxHeight'
+      | 'minHeight'
+      | 'padding'
+      | 'fontWeight'
+      | 'fontSize'
+      | 'textAlign'
+    >
+  > {
   $isError?: boolean;
   $isSuccess?: boolean;
+  $isWarn?: boolean;
+
+  $stateIs?: {
+    error?: boolean;
+    success?: boolean;
+    warn?: boolean;
+  };
+
   $align?: Property.TextAlign;
-  $width?: Property.Width;
-  $minWidth?: Property.MinWidth;
-  $maxWidth?: Property.MaxWidth;
-
-  $height?: Property.Height;
-  $maxHeight?: Property.MinHeight;
-  $minHeight?: Property.MaxHeight;
-
-  $padding?: Property.Padding;
-
   $weight?: Property.FontWeight;
-  $fontSize?: Property.FontWeight;
 }
 export const inputCssStyles = css<TextInputProps>`
   padding: ${p => p.$padding ?? '5px 8px'};
 
   height: ${p => p.$height ?? '28px'};
   width: ${p => p.$width ?? '100%'};
-  font-weight: ${p => p.$weight ?? 500};
+  font-weight: ${p => p.$weight ?? p.$fontWeight ?? 500};
 
   text-align: ${({ $align = 'left' }) => $align};
 
@@ -34,9 +48,10 @@ export const inputCssStyles = css<TextInputProps>`
   border-radius: 4px;
 
   border: 1px solid
-    ${({ $isError, $isSuccess, theme }) =>
-      ($isError && theme.globals.colors.error) ||
-      ($isSuccess && theme.globals.colors.success) ||
+    ${({ theme, ...p }) =>
+      (p.$isError && theme.globals.colors.error) ||
+      (p.$isSuccess && theme.globals.colors.success) ||
+      (p.$isWarn && theme.globals.colors.warning) ||
       theme.globals.inputBorder};
 
   &:hover {
@@ -69,11 +84,11 @@ export const inputCssStyles = css<TextInputProps>`
   }
 `;
 
-export const InputField = styled.fieldset<TextInputProps>`
+export const InputText = styled.input<TextInputProps>`
   ${inputCssStyles};
 `;
 
-export const InputText = styled.input<TextInputProps>`
+export const Textarea = styled.input<TextInputProps>`
   ${inputCssStyles};
 `;
 

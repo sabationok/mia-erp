@@ -1,7 +1,7 @@
 import { AppDate, ArrayOfUUID, Keys, OnlyUUID, PartialRecord, UUID, Values } from '../types/utils.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { TableSortOrderEnum } from '../components/TableList/tableTypes.types';
-import { CompanyQueryTypeEnum } from '../types/companies.types';
+import { CompanyQueryTypeEnum } from '../types/companies/companies.types';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
 import { AxiosResponse } from 'axios';
 import { AppResponseType } from '../redux/app-redux.types';

@@ -1,19 +1,20 @@
-import { CompanyEntity, ICompanyReqData } from '../types/companies.types';
+import { ICompanyReqData } from '../types/companies/companies.types';
 import { PermissionEntity } from '../types/permissions.types';
 import { useMemo } from 'react';
 import { CompaniesApi, createApiCall } from '../api';
 import { defaultApiCallPayload, defaultThunkPayload } from '../utils';
-import { ServiceApiCaller, ServiceDispatcherAsync } from '../redux/app-redux.types';
 import { useAppDispatch } from '../redux/store.store';
-import { getCompanyByIdThunk, updateCompanyByIdThunk } from '../redux/companies/companies.thunks';
+import { __ServiceDispatcherAsync, ServiceApiCaller } from '../redux/app-redux.types';
+import { getOneCompanyThunk, updateCompanyByIdThunk } from '../redux/companies/companies.thunks';
 
 export interface CompaniesService {
   delete: ServiceApiCaller<string, Partial<PermissionEntity>>;
-  getById: ServiceDispatcherAsync<{ _id?: string; params?: { fullInfo?: boolean; configs?: boolean } }, CompanyEntity>;
   create: ServiceApiCaller<ICompanyReqData, PermissionEntity>;
-  update: ServiceDispatcherAsync<ICompanyReqData, PermissionEntity>;
+
+  getOne: __ServiceDispatcherAsync<typeof getOneCompanyThunk>;
+  update: __ServiceDispatcherAsync<typeof updateCompanyByIdThunk>;
 }
-const { create, deleteById } = CompaniesApi;
+const { create, delete: delOne } = CompaniesApi;
 const useCompaniesServiceHook = (): CompaniesService => {
   const dispatch = useAppDispatch();
 
@@ -21,8 +22,8 @@ const useCompaniesServiceHook = (): CompaniesService => {
     return {
       create: args => createApiCall(defaultApiCallPayload(args), create),
       update: args => dispatch(updateCompanyByIdThunk(defaultThunkPayload(args))),
-      delete: args => createApiCall(defaultApiCallPayload(args), deleteById),
-      getById: args => dispatch(getCompanyByIdThunk(defaultThunkPayload(args))),
+      getOne: args => dispatch(getOneCompanyThunk(args)),
+      delete: args => createApiCall(defaultApiCallPayload(args), delOne),
     };
   }, [dispatch]);
 };

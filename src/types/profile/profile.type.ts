@@ -1,6 +1,6 @@
 import { IBase } from '../../redux/app-redux.types';
 import { AppDate, HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, MaybeNull } from '../utils.types';
-import { BusinessSubjectTypeEnum } from '../companies.types';
+import { BusinessSubjectTypeEnum } from '../companies/companies.types';
 import { CustomerTypeEnum, EngagementSource } from '../customers.types';
 import { TagEntity } from '../tags.types';
 import { AddressEntity } from '../addresses/addresses.types';

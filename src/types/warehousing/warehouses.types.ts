@@ -1,6 +1,6 @@
 import { IFormDataValueWithID } from '../../redux/app-redux.types';
 import { OfferEntity } from '../offers/offers.types';
-import { CompanyEntity } from '../companies.types';
+import { CompanyEntity } from '../companies/companies.types';
 import { PriceEntity } from '../price-management/price-management.types';
 import { VariationEntity } from '../offers/variations.types';
 import { ApiQueryParams } from '../../api';

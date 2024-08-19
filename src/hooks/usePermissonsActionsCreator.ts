@@ -9,7 +9,7 @@ import { AppModuleName } from '../redux/reduxTypes.types';
 import { TableActionsBuilder } from '../utils/tables';
 import { t } from '../lang';
 import { useAuthSelector } from '../redux/selectors.store';
-import { CompanyQueryType, CompanyQueryTypeEnum } from '../types/companies.types';
+import { CompanyQueryType, CompanyQueryTypeEnum } from '../types/companies/companies.types';
 import { ToastService } from '../services';
 import { AppRouter, useAppRouter } from './useRouter.hook';
 

@@ -25,7 +25,7 @@ import { useMemo } from 'react';
 import { CompanyQueryType, ServiceDispatcherAsync } from 'redux/app-redux.types';
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
 import { defaultThunkPayload } from '../utils/fabrics';
-import { CompanyEntity, ICompanyForReq, ICompanyReqData } from '../types/companies.types';
+import { CompanyDto, CompanyEntity, ICompanyReqData } from '../types/companies/companies.types';
 import { UserEntity } from '../types/auth/auth.types';
 
 export interface PermissionService {
@@ -50,7 +50,7 @@ export interface PermissionService {
   acceptInvitation?: ServiceDispatcherAsync<IPermissionForReq, PermissionEntity>;
   deleteInvitation?: ServiceDispatcherAsync<IPermissionForReq, PermissionEntity>;
 
-  createCompany: ServiceDispatcherAsync<ICompanyForReq>;
+  createCompany: ServiceDispatcherAsync<CompanyDto>;
   deleteCompany: ServiceDispatcherAsync<{ _id: string }>;
 
   updateCurrentCompany: ServiceDispatcherAsync<ICompanyReqData, CompanyEntity>;

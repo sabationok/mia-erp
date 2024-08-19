@@ -1,5 +1,5 @@
 import { IBase } from '../app-redux.types';
-import { ICompanyBase } from '../../types/companies.types';
+import { ICompanyBase } from '../../types/companies/companies.types';
 import { LangPack } from '../../lang';
 
 export enum ModuleName {

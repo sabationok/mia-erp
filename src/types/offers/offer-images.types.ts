@@ -1,4 +1,4 @@
-import { IBase } from '../../redux/app-redux.types';
+import { IBase } from '../global.types';
 
 export enum ImageSetSrcType {
   img_preview = 'img_preview',
@@ -13,4 +13,6 @@ export interface OfferImageSlotEntity extends Partial<IBase> {
   img_2x?: string;
   webp?: string;
   order: number;
+
+  mimeType?: string;
 }

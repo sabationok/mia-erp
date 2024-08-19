@@ -1,6 +1,6 @@
 import { ApiDirType } from '../APP_CONFIGS';
 import { IDirItemBase } from '../../types/dir.types';
-import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../../types/companies.types';
+import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../../types/companies/companies.types';
 import { HasLabel, HasName } from '../../types/utils.types';
 
 export interface ICounterpartyBase extends HasLabel, HasName {

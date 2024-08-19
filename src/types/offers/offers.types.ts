@@ -13,6 +13,7 @@ import {
   HasDescription,
   HasDimensions,
   HasEditor,
+  HasFlags,
   HasImgPreview,
   HasIsVisibleFlag,
   HasLabel,
@@ -80,7 +81,8 @@ export interface IOfferBase
     HasImgPreview,
     HasBarCode,
     HasSku,
-    HasIsVisibleFlag {
+    HasIsVisibleFlag,
+    HasFlags<'hasVariations' | 'hasInventories'> {
   qrCode?: string;
 
   propsKey?: string;

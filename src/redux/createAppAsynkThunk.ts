@@ -1,4 +1,4 @@
-import { ApiResponse } from './app-redux.types';
+import { ApiResponse } from '../api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ActionPayload, ThunkArgs } from './store.store';
 import { axiosErrorCheck } from '../utils';

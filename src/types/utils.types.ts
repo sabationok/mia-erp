@@ -1,5 +1,5 @@
 import { ServiceMethodBase } from './integrations.types';
-import { CompanyEntity } from './companies.types';
+import { CompanyEntity } from './companies/companies.types';
 import { LangPack } from '../lang';
 import { Path } from 'react-hook-form';
 import { MeasurementUnit } from './enums.types';
@@ -24,6 +24,11 @@ export type Keys<T extends any> = keyof T;
 export type PrefixKeys<T, Prefix extends string = '$'> = {
   [K in keyof T as `${Prefix}${string & K}`]: T[K];
 };
+
+export type SuffixKeys<T, Suffix extends string = '$'> = {
+  [K in keyof T as `${string & K}${Suffix}`]: T[K];
+};
+
 export type TruthType = 1 | 'true' | true;
 export type FalseType = 0 | 'false' | false;
 export type BooleanType = TruthType | FalseType;

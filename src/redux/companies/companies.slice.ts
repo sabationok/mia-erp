@@ -1,8 +1,15 @@
-import { CompaniesState, CompanyEntity } from '../../types/companies.types';
+import { CompanyEntity } from '../../types/companies/companies.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { testUserKarina } from '../../data/usersDir.data';
-import { getCompanyByIdThunk, updateCompanyByIdThunk } from './companies.thunks';
+import { getOneCompanyThunk, updateCompanyByIdThunk } from './companies.thunks';
+import { StateDataMap, StateErrorType } from '../reduxTypes.types';
+import { createDefaultDataMap } from '../createDefauldDataMap.helper';
 
+export interface CompaniesState extends StateDataMap<CompanyEntity> {
+  current?: CompanyEntity;
+  isLoading: boolean;
+  error: StateErrorType;
+}
 export const initialCompany: CompanyEntity = {
   _id: 'companyId',
   name: { first: 'Initial Comp' },
@@ -13,9 +20,8 @@ export const initialCompany: CompanyEntity = {
 };
 
 const initialCompState: CompaniesState = {
-  currentRoot: undefined,
-  // companies: [initialCompany, { ...initialCompany, _id: 'dfbsdfgbd13f5g13bdg1', name: 'Roga & Copyta' }],
-  companies: [],
+  ...createDefaultDataMap(),
+  current: undefined,
   isLoading: false,
   error: null,
 };
@@ -25,10 +31,12 @@ export const companiesSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getCompanyByIdThunk.fulfilled, (s, a) => {
-        s.current = a.payload;
+      .addCase(getOneCompanyThunk.fulfilled, (s, a) => {
+        s.current = a.payload.data;
+        s.dataMap[a.payload.data._id] = a.payload.data;
       })
       .addCase(updateCompanyByIdThunk.fulfilled, (s, a) => {
-        s.current = a.payload;
+        s.current = a.payload.data;
+        s.dataMap[a.payload.data._id] = a.payload.data;
       }),
 });

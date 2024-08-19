@@ -1,5 +1,7 @@
-import { AppDispatch, RootState } from './store.store';
-import { AxiosError } from 'axios';
+import type { AppDispatch, RootState } from './store.store';
+import type { AxiosError } from 'axios';
+import type { PartialRecord, UUID } from '../types/utils.types';
+import type { CompaniesState } from './companies/companies.slice';
 import type { AppSettingsState } from './appSettings/appSettings.slice';
 import type { DirectoriesState } from './directories/directories.slice';
 import type { OffersState } from './products/offers.slice';
@@ -12,11 +14,11 @@ import type { CustomersState } from './customers/customers.slice';
 import type { CounterpartiesState } from './counterparties/counterparties.slice';
 import type { WarehousingState } from './warehouses/warehouses.slice';
 import type { DiscountsState } from './priceManagement/discounts/discounts.slice';
-import type { CompaniesState } from '../types/companies.types';
 import type { AuthState } from './auth/auth.slice';
 
 export type AppRootState = {
   auth: AuthState;
+  companies: CompaniesState;
   appSettings: AppSettingsState;
   permissions: PermissionState;
   directories: DirectoriesState;
@@ -30,7 +32,6 @@ export type AppRootState = {
   counterparty: CounterpartiesState;
   warehouses: WarehousingState;
   discounts: DiscountsState;
-  companies: CompaniesState;
 };
 
 export enum AppModuleName {
@@ -71,6 +72,13 @@ export type AsyncThunkConfig = {
 
 export type AuthErrorType = AxiosError | Error | unknown;
 export type StateErrorType = AxiosError | Error | unknown;
+
+export type StateDataMap<Entity = any, KeyType extends string = any> = {
+  dataMap: PartialRecord<UUID, Entity>;
+  list: Entity[];
+  keysMap: PartialRecord<KeyType, UUID[]>;
+};
+
 // const createAppAsyncThunk = createAsyncThunk.withTypes<{
 //   state: RootState;
 //   dispatch: AppDispatch;

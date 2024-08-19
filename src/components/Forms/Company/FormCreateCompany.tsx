@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { BusinessSubjectTypeEnum, ICompanyFormData } from '../../../types/companies.types';
+import { BusinessSubjectTypeEnum, ICompanyFormData } from '../../../types/companies/companies.types';
 import { ModalFormProps } from '../../ModalForm';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';

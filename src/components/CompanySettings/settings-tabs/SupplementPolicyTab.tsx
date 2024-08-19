@@ -1,18 +1,16 @@
 import { CompanySettingsTabBaseProps } from './companySettingsTabs.types';
 import { useAppForm } from '../../../hooks';
-import { ICompanyConfigsFormData } from '../../../types/companies.types';
 import { useWarehousesSelector } from '../../../redux/selectors.store';
 import { useMemo } from 'react';
 import { FilterOption } from '../../atoms/TabSelector';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { t } from '../../../lang';
-import ModalFooter from '../../atoms/Modal/ModalFooter';
 
-export interface SupplementPolicyTabProps extends CompanySettingsTabBaseProps {}
+export interface SupplementPolicyTabProps extends CompanySettingsTabBaseProps<'supplement'> {}
 
-const SupplementPolicyTab = ({ onClose }: SupplementPolicyTabProps) => {
-  const form = useAppForm<ICompanyConfigsFormData>();
+const SupplementPolicyTab = ({ onClose, onSubmit, policyFormKey }: SupplementPolicyTabProps) => {
+  const form = useAppForm<any>();
 
   const warehouses = useWarehousesSelector().list;
   const warehousesSelectOptions = useMemo(
@@ -20,21 +18,24 @@ const SupplementPolicyTab = ({ onClose }: SupplementPolicyTabProps) => {
     [warehouses]
   );
 
-  // const onValid = (data: ICompanyConfigsFormData) => {};
+  const onValid = (data: SupplementPolicyTabProps['formDefaultValues']) => {
+    console.log('SupplementPolicyTabProps', data);
+    if (onSubmit && data) {
+      return onSubmit({ name: policyFormKey, data });
+    }
+  };
 
   return (
-    <FlexForm flex={1} overflow={'hidden'}>
+    <FlexForm flex={1} overflow={'hidden'} id={policyFormKey} onSubmit={form.handleSubmit(onValid)}>
       <FlexBox overflow={'auto'} flex={1} fillWidth padding={'0 4px 8px'}>
         <CustomSelect
-          {...form.registerSelect('warehouse', {
+          {...form.registerSelect('supplier', {
             options: warehousesSelectOptions,
             label: t('warehouse'),
             placeholder: t('Select warehouse'),
           })}
         />
       </FlexBox>
-
-      <ModalFooter hasOnSubmit isLoading={false}></ModalFooter>
     </FlexForm>
   );
 };

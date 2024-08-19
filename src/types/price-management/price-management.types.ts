@@ -3,7 +3,7 @@ import { TabOption } from '../../components/atoms/TabSelector';
 import { OfferEntity } from '../offers/offers.types';
 import { VariationEntity } from '../offers/variations.types';
 import { ApiQueryParams } from '../../api';
-import { ICompanyBase } from '../companies.types';
+import { ICompanyBase } from '../companies/companies.types';
 import { IUserBase } from '../auth/auth.types';
 import {
   EntityPath,

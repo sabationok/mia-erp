@@ -8,7 +8,7 @@ import {
 import { ThunkArgs } from '../store.store';
 import { axiosErrorCheck } from 'utils';
 import { CompaniesApi, PermissionsApi } from '../../api';
-import { ICompanyForReq } from '../../types/companies.types';
+import { CompanyDto } from '../../types/companies/companies.types';
 import { buildUpdateCompanyThunk } from '../companies/companies.thunks';
 import { UserEntity } from '../../types/auth/auth.types';
 import { CompanyQueryType } from '../app-redux.types';
@@ -196,12 +196,12 @@ export const inviteUserThunk = createAsyncThunk<PermissionEntity, ThunkArgs<IPer
     }
   }
 );
-export const createCompanyWithPermissionThunk = createAsyncThunk<PermissionEntity, ThunkArgs<ICompanyForReq>>(
+export const createCompanyWithPermissionThunk = createAsyncThunk<PermissionEntity, ThunkArgs<CompanyDto>>(
   PermissionsThunkType.createCompanyWithPermission,
   async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
     onLoading && onLoading(true);
     try {
-      const response = await CompaniesApi.create({ data: data as ICompanyForReq });
+      const response = await CompaniesApi.create({ data: data as CompanyDto });
 
       if (response) {
         onSuccess && onSuccess(response.data.data);
@@ -224,7 +224,7 @@ export const deleteCompanyWithPermissionThunk = createAsyncThunk<
 >(PermissionsThunkType.deleteCompanyWithPermission, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
   try {
-    const response = await CompaniesApi.deleteById(data?._id as string);
+    const response = await CompaniesApi.delete(data?._id as string);
 
     if (response) {
       onSuccess && onSuccess(response.data.data);

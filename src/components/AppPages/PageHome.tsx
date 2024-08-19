@@ -18,7 +18,7 @@ import { enumToFilterOptions } from '../../utils';
 import { useAppRouter } from '../../hooks';
 import TabSelector from '../atoms/TabSelector';
 import FlexBox from '../atoms/FlexBox';
-import { CompanyQueryTypeEnum } from 'types/companies.types';
+import { CompanyQueryTypeEnum } from 'types/companies/companies.types';
 
 const companyFilterOptions = enumToFilterOptions(CompanyQueryTypeEnum);
 

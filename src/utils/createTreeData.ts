@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { CompanyEntity } from '../types/companies.types';
+import { CompanyEntity } from '../types/companies/companies.types';
 
 export interface IBaseFields<T = any> {
   _id?: string;

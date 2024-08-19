@@ -10,6 +10,7 @@ export interface IModalFooterProps {
   extraFooter?: React.ReactNode;
   canSubmit?: boolean;
   isLoading?: boolean;
+  formId?: string;
 }
 
 const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
@@ -17,6 +18,7 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
   extraFooter,
   canSubmit = true,
   isLoading = false,
+  formId,
   ...props
 }) => {
   const modal = useModal();
@@ -29,13 +31,14 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
       )}
 
       <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'space-between'} padding={'8px'}>
-        <ButtonIcon type="reset" variant={'defaultMiddle'} disabled={isLoading} onClick={modal.onClose}>
+        <ButtonIcon form={formId} type="reset" variant={'defaultMiddle'} disabled={isLoading} onClick={modal.onClose}>
           {t('Close')}
         </ButtonIcon>
 
         {hasOnSubmit && (
           <ButtonIcon
             type={!isUndefined(canSubmit) || hasOnSubmit ? 'submit' : 'button'}
+            form={formId}
             variant={'filledMiddle'}
             isLoading={isLoading}
             disabled={!hasOnSubmit || !canSubmit}

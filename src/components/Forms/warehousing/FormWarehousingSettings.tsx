@@ -9,7 +9,7 @@ import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import { WarehouseEntity, WarehousingSettingsFormData } from '../../../types/warehousing/warehouses.types';
 import { t } from 'lang';
-import { CompanyEntity, ICompanyDto, ICompanyForReq, ICompanyWithConfigs } from 'types/companies.types';
+import { CompanyDto, CompanyEntity, ICompanyWithConfigs } from 'types/companies/companies.types';
 import { Text } from '../../atoms/Text';
 import Switch from '../../atoms/Switch';
 import { getIdRef } from '../../../utils/data-transform';
@@ -19,7 +19,7 @@ import { ToastService } from '../../../services';
 
 export interface FormWarehousingSettingsProps
   extends Omit<ModalFormProps<any, any, CompanyEntity>, 'onSubmit' | 'onSelect'> {
-  onSubmit?: AppSubmitHandler<ICompanyForReq>;
+  onSubmit?: AppSubmitHandler<CompanyDto>;
 }
 export function createWarehousingSettingsFormData(
   company?: Partial<ICompanyWithConfigs>
@@ -29,7 +29,7 @@ export function createWarehousingSettingsFormData(
     warehouse: company?.warehouse,
   };
 }
-export function createWarehousingSettingsReqData(fData?: WarehousingSettingsFormData): ICompanyDto | undefined {
+export function createWarehousingSettingsReqData(fData?: WarehousingSettingsFormData): CompanyDto | undefined {
   if (!fData) return;
   if (!fData?.warehouse) return;
   return {

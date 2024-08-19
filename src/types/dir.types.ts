@@ -3,7 +3,7 @@ import { FinTransactionTypeEnum, ITrCategory, ITrCategoryFormData, TagTypeEnum }
 import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
 import { TabOption } from '../components/atoms/TabSelector';
 import { IBase } from '../redux/app-redux.types';
-import { CompanyEntity } from './companies.types';
+import { CompanyEntity } from './companies/companies.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { IModalProviderContext, ModalService } from '../Providers/ModalProvider/ModalProvider';
 import { DirectoriesService } from '../hooks/useDirService.hook';

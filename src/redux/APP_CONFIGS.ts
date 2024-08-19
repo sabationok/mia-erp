@@ -167,21 +167,24 @@ const auth = {
   },
 
   o_auth: {
-    logOut: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/logOut`,
-    logIn: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/logIn`,
-    getAuthUrl: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/auth-url`,
-    callback: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/callback`,
-    refresh: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/refresh`,
-    current: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/current`,
-    save_tokens: () => `${API_BASE_ROUTES.AUTH_O_AUTH}/save-tokens`,
+    ...createEndpoints('AUTH_O_AUTH', {
+      logOut: 'logOut',
+      logIn: 'logIn',
+      callback: 'callback',
+      refresh: 'refresh',
+      current: 'current',
+      getAuthUrl: 'auth-url',
+      save_tokens: 'save-tokens',
+    }),
 
-    configs: {
-      getAll: () => `${API_BASE_ROUTES.AUTH_O_AUTH_CONFIGS}/getAll`,
-      create: () => `${API_BASE_ROUTES.AUTH_O_AUTH_CONFIGS}/create`,
-      update: () => `${API_BASE_ROUTES.AUTH_O_AUTH_CONFIGS}/update`,
-    },
+    configs: createEndpoints('AUTH_O_AUTH_CONFIGS', {
+      getAll: 'getAll',
+      create: 'create',
+      update: 'update',
+    }),
   },
 };
+
 const permissions: ApiEndpointsMap = {
   updateById: (permissionId?: string) => `${API_BASE_ROUTES.PERMISSIONS}/delete/${permissionId}`,
   deleteById: (permissionId?: string) => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.deleteById}/${permissionId}`,
@@ -238,11 +241,11 @@ const offers = {
 };
 
 const companies = {
-  deleteById: (permissionId?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.deleteById}/${permissionId}`,
+  delete: () => `${API_BASE_ROUTES.COMPANIES}/delete`,
   create: () => `${API_BASE_ROUTES.COMPANIES}/create`,
-  getById: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/getById/${id}`,
-  getAllByOwnerId: (ownerId?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getAllByOwnerId}/${ownerId}`,
-  updateById: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.updateById}/${id || ''}`,
+  update: () => `${API_BASE_ROUTES.COMPANIES}/update`,
+  getOne: () => `${API_BASE_ROUTES.COMPANIES}/one`,
+  getAll: () => `${API_BASE_ROUTES.COMPANIES}/all`,
 };
 
 const directories: ApiEndpointsMap = {
@@ -470,11 +473,11 @@ const chat = {
   },
 };
 
-const createEndpoints = <Endpoints extends Record<string, string>>(
+function createEndpoints<Endpoints extends Record<string, string>>(
   entryPoint: Keys<typeof API_BASE_ROUTES>,
   enpoints: Endpoints
-) => {
-  const baseUr = API_BASE_ROUTES[entryPoint];
+) {
+  const baseUr = entryPoint;
   type KeyType = Keys<Endpoints>;
 
   return Object.assign(
@@ -485,7 +488,7 @@ const createEndpoints = <Endpoints extends Record<string, string>>(
       };
     })
   ) as Record<KeyType, () => string>;
-};
+}
 
 const APP_CONFIGS = {
   endpoints: {

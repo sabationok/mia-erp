@@ -6,7 +6,7 @@ import { FlexForm } from '../../atoms/FlexBox';
 import InputText from '../../atoms/Inputs/InputText';
 import { ChatWs } from '../../../socket';
 import ButtonIcon from '../../atoms/ButtonIcon';
-import { yup } from 'validations';
+import { YUP } from 'validations';
 import { sendChatMessageThunk } from '../../../redux/chat/chat.thunks';
 
 interface ChatFormData {
@@ -14,9 +14,9 @@ interface ChatFormData {
   text: string;
 }
 
-const validation = yup.object().shape({
-  text: yup.string().required(),
-  chatId: yup.string().uuid().required(),
+const validation = YUP.object().shape({
+  text: YUP.string().required(),
+  chatId: YUP.string().uuid().required(),
 });
 const ChatForm = ({ chatId, onSubmit }: { chatId?: string; onSubmit?: (data: ChatFormData) => void }) => {
   const { watch, resetField, register, setValue, handleSubmit } = useForm<ChatFormData>({

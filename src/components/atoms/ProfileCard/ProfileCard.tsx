@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { UserEntity } from 'types/auth/auth.types';
-import { CompanyEntity } from '../../../types/companies.types';
+import { CompanyEntity } from '../../../types/companies/companies.types';
 
 export interface ProfileCardProps {
   profile?: Partial<UserEntity & CompanyEntity>;

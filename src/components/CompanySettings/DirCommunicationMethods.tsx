@@ -86,18 +86,15 @@ const actionsCreatorForDirCommunicationMethods: DirInTreeActionsCreatorType<
 > = ({ service, modalService: mS }) => {
   return {
     onUpdate: (_id, data, o) => {
-      const m = mS.open({
-        ModalChildren: FormCreateMethod,
-        modalChildrenProps: {
-          defaultState: data,
-          onSubmit: (data, o) => {
-            service.updateMethod({
-              data: { _id, data },
-              onSuccess: () => {
-                m?.onClose && m?.onClose();
-              },
-            });
-          },
+      const m = mS.create(FormCreateMethod, {
+        defaultState: data,
+        onSubmit: (data, o) => {
+          service.updateMethod({
+            data: { _id, data: { ...data, _id } },
+            onSuccess: () => {
+              m?.onClose && m?.onClose();
+            },
+          });
         },
       });
     },

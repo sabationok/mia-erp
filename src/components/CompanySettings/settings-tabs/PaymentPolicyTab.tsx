@@ -1,6 +1,6 @@
 import { CompanySettingsTabBaseProps } from './companySettingsTabs.types';
 import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsList.hook';
-import { useInvoicesSelector } from '../../../redux/selectors.store';
+import { usePaymentsSelector } from '../../../redux/selectors.store';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
@@ -10,31 +10,31 @@ import { _enumToTabs } from '../../../utils';
 import { useCallback, useState } from 'react';
 import TabSelector from '../../atoms/TabSelector';
 import { useForm } from 'react-hook-form';
-import { InvoicingPolicy } from 'types/companies/policies';
+import { PaymentPolicy } from 'types/companies/policies';
 
-export interface InvoicingPolicyTabProps extends CompanySettingsTabBaseProps<'invoicing'> {}
+export interface PaymentPolicyTabProps extends CompanySettingsTabBaseProps<'payment'> {}
 
-const tabs = _enumToTabs(InvoicingPolicy.TypeEnum);
+const tabs = _enumToTabs(PaymentPolicy.TypeEnum);
 
-const InvoicingPolicyTab = ({ policyFormKey, isSubmitting, onSubmit, company }: InvoicingPolicyTabProps) => {
-  const methods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
+const PaymentPolicyTab = ({ policyFormKey, isSubmitting, onSubmit, company }: PaymentPolicyTabProps) => {
+  const methods = useTranslatedMethodsList(usePaymentsSelector().methods, { withFullLabel: true });
 
-  const [current, setCurrent] = useState<InvoicingPolicy.TypeEnum>(InvoicingPolicy.TypeEnum.sales);
+  const [current, setCurrent] = useState<PaymentPolicy.TypeEnum>(PaymentPolicy.TypeEnum.sales);
 
-  const form = useForm<InvoicingPolicy.FormData>({
-    defaultValues: company?.invoicingPolicy ?? {},
+  const form = useForm<PaymentPolicy.FormData>({
+    defaultValues: company?.paymentPolicy ?? {},
   });
 
   const formValues = form.watch();
 
   const registerSwitch = useCallback(
-    (name: keyof Omit<InvoicingPolicy.JsonData, 'methodId'>) => {
+    (name: keyof Omit<PaymentPolicy.JsonData, 'methodId'>) => {
       const value = formValues[current];
 
       return {
         name: name,
         onChange(v: boolean) {
-          form.setValue(`${current}.${name}`, v as never, { shouldDirty: true });
+          form.setValue(`${current}.${name}`, v, { shouldTouch: true });
         },
         value: value && value[name],
       };
@@ -42,7 +42,7 @@ const InvoicingPolicyTab = ({ policyFormKey, isSubmitting, onSubmit, company }: 
     [current, form, formValues]
   );
 
-  const onValid = (fData: InvoicingPolicy.FormData) => {
+  const onValid = (fData: PaymentPolicy.FormData) => {
     if (onSubmit) {
       return onSubmit({ name: policyFormKey, data: fData });
     }
@@ -72,7 +72,7 @@ const InvoicingPolicyTab = ({ policyFormKey, isSubmitting, onSubmit, company }: 
             }}
           />
 
-          <InputLabel label={t(`Auto creating invoice for ${current.toUpperCase()}`)}>
+          <InputLabel label={t(`Auto creating payment for ${current.toUpperCase()}`)}>
             <ButtonSwitch {...registerSwitch('autoCreate')} />
           </InputLabel>
 
@@ -80,7 +80,7 @@ const InvoicingPolicyTab = ({ policyFormKey, isSubmitting, onSubmit, company }: 
             <ButtonSwitch {...registerSwitch('selectByClient')} />
           </InputLabel>
 
-          <InputLabel label={t(`Auto publishing invoice for ${current.toUpperCase()}`)}>
+          <InputLabel label={t(`Auto publishing payment for ${current.toUpperCase()}`)}>
             <ButtonSwitch {...registerSwitch('autoPublish')} />
           </InputLabel>
         </FlexBox>
@@ -89,4 +89,4 @@ const InvoicingPolicyTab = ({ policyFormKey, isSubmitting, onSubmit, company }: 
   );
 };
 
-export default InvoicingPolicyTab;
+export default PaymentPolicyTab;

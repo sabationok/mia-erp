@@ -14,7 +14,7 @@ import CheckboxesListSelector from '../../atoms/CheckboxesListSelector';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { useMemo } from 'react';
 import { ConfigService } from '../../../services';
-import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
+import { BusinessSubjectTypeEnum } from '../../../types/companies/companies.types';
 import _ from 'lodash';
 import { UseFormReturn } from 'react-hook-form/dist/types';
 import { IEmbeddedLabel, IEmbeddedName } from '../../../types/utils.types';

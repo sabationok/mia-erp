@@ -16,7 +16,7 @@ import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useDirectorySelector } from '../../../redux/selectors.store';
-import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
+import { BusinessSubjectTypeEnum } from '../../../types/companies/companies.types';
 import { businessSubjectTypeFilterOptions } from '../../../data/companies.data';
 import { FormInputs } from '../components/atoms';
 import { counterpartyFilterOptions } from '../../../data/modalFilterOptions.data';
