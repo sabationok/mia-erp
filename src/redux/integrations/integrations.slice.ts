@@ -103,7 +103,7 @@ export const integrationsSlice = createSlice({
         })
         .addCase(getAllOAuthConfigsThunk.fulfilled, (st, a) => {
           st.output.list = st.output.list.map(item => {
-            if (item._id === a.payload.params?.connectionId) {
+            if (item._id === a.payload.params?.consumerId) {
               item.oAuth = a.payload.data;
             }
 

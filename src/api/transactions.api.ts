@@ -46,7 +46,7 @@ export class BankAccountsApi {
     return this.api.patch(this.endpoints.update(reqData?.data?._id), reqData?.data);
   };
   public static getAll = (reqData?: { params?: ApiQueryParams }): Promise<ApiResponse<IBankAccount[]>> => {
-    return this.api.get(this.endpoints.getList(), { params: reqData?.params });
+    return this.api.get(this.endpoints.getAll(), { params: reqData?.params });
   };
 }
 

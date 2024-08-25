@@ -1,17 +1,12 @@
-import * as React from 'react';
 import { useModalProvider } from '../../Providers/ModalProvider/ModalProvider';
 import { IDirectoryListItem } from './Directories';
 import { Text } from '../atoms/Text';
 import { Container, ListItem, Trigger } from './styles';
 
-export interface IDirectoriesProps {
+export interface CompanySettingsProps {
   options: IDirectoryListItem[];
 }
-
-export interface Props {
-  options: IDirectoryListItem[];
-}
-const CompanySettings: React.FC<Props> = ({ options }) => {
+const CompanySettings: React.FC<CompanySettingsProps> = ({ options }) => {
   const modal = useModalProvider();
 
   return (
@@ -21,7 +16,7 @@ const CompanySettings: React.FC<Props> = ({ options }) => {
           <Trigger
             variant="def"
             onClick={() => {
-              modal.open({ ModalChildren, modalChildrenProps });
+              ModalChildren && modal.create(ModalChildren, modalChildrenProps);
             }}
           >
             <Text $align={'left'} $weight={500} $size={13}>

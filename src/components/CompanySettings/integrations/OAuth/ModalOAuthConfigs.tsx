@@ -16,12 +16,12 @@ import { useTheme } from 'styled-components';
 export const ModalOAuthConfigs = ({ conn }: { conn: Integration.Output.Entity }) => {
   return (
     <ModalBase title={conn.label} fillHeight>
-      <OutputConnOAuth conn={conn} />
+      <OAuthConnection conn={conn} />
     </ModalBase>
   );
 };
 
-export const OutputConnOAuth = ({ conn }: { conn: Integration.Output.Entity }) => {
+export const OAuthConnection = ({ conn }: { conn: Integration.Output.Entity }) => {
   const modalS = useModalService();
   const dispatch = useAppDispatch();
   const theme = useTheme();
@@ -30,7 +30,7 @@ export const OutputConnOAuth = ({ conn }: { conn: Integration.Output.Entity }) =
   useEffect(() => {
     dispatch(
       getAllOAuthConfigsThunk({
-        params: { connectionId: conn._id },
+        params: { consumerId: conn._id },
         onLoading: loaders.onLoading('list'),
       })
     );
@@ -39,8 +39,9 @@ export const OutputConnOAuth = ({ conn }: { conn: Integration.Output.Entity }) =
   }, [conn._id, dispatch]);
   return (
     <FlexBox flex={1} gap={8} padding={'8px'} overflow={'hidden'}>
-      <FlexBox flex={1} gap={8} padding={'8px'} overflow={'auto'}>
+      <FlexBox flex={1} gap={8} overflow={'auto'}>
         {conn.oAuth?.map(config => {
+          console.log(config);
           return (
             <FlexBox
               key={config._id}
@@ -49,20 +50,61 @@ export const OutputConnOAuth = ({ conn }: { conn: Integration.Output.Entity }) =
               gap={8}
               padding={'8px'}
             >
-              <Text $size={13}>{t('Label')}</Text>
-              <Text $weight={600}>{config.label}</Text>
-              <Text $size={13}>{t('Domain')}</Text>
-              <Text $weight={600}>{config.domain}</Text>
-              <Text $size={13}>{t('Permissions')}</Text>
-              <Text $weight={600}>{config.scopes?.join(', ')}</Text>
+              <FlexBox fxDirection={'row'} gap={12}>
+                <FlexBox gap={8}>
+                  {(
+                    [
+                      { label: t('Label'), value: config.label },
+                      { label: t('Domain'), value: config.domain },
+                      { label: t('Permissions'), value: config.scopes?.join(', ') },
+                    ] as { label: string; value: string }[]
+                  ).map(item => {
+                    return (
+                      <FlexBox key={item.label} gap={8}>
+                        <Text $size={13}>{item.label}</Text>
+                        <Text $weight={600}>{item.value ?? '---'}</Text>
+                      </FlexBox>
+                    );
+                  })}
+                </FlexBox>
+                <FlexBox>
+                  <FlexBox gap={8}>
+                    <Text $size={13}>{t('Provider')}</Text>
+                    <Text $weight={600}>{config.provider}</Text>
+                  </FlexBox>
+                </FlexBox>
+              </FlexBox>
 
-              {/*<Text $size={13}>{t('Domain')}</Text>*/}
-              {/*<Text $weight={600}>{config.domain}</Text>*/}
+              <FlexBox
+                padding={'8px 0'}
+                gap={8}
+                borderTop={`1px solid ${theme.modalBorderColor}`}
+                borderBottom={`1px solid ${theme.modalBorderColor}`}
+              >
+                <FlexBox gap={8}>
+                  <Text $size={13}>{t('Public key')}</Text>
+                  <ApiKeyItem apiKey={config.publicKey} />
+                </FlexBox>
+                <FlexBox gap={8}>
+                  <Text $size={13}>{t('Private key')}</Text>
+                  <ApiKeyItem apiKey={config.privateKey} />
+                </FlexBox>
+              </FlexBox>
 
-              <Text $size={13}>{t('Public key')}</Text>
-              <ApiKeyItem apiKey={config.publicKey} />
-              <Text $size={13}>{t('Private key')}</Text>
-              <ApiKeyItem apiKey={config.privateKey} />
+              <FlexBox gap={12}>
+                {Object.entries(config.endpoints ?? {}).map(([key, value]) => {
+                  return !value ? null : (
+                    <FlexBox key={key} gap={6}>
+                      <Text $size={11} $weight={300}>
+                        {key}
+                      </Text>
+                      <Text $size={12} $weight={500}>
+                        {value}
+                      </Text>
+                    </FlexBox>
+                  );
+                })}
+              </FlexBox>
             </FlexBox>
           );
         })}

@@ -1,4 +1,6 @@
-export type FontWeight = 400 | 500 | 600 | 700 | 800 | 900;
+import { Property } from 'csstype';
+
+export type FontWeight = 300 | 400 | 500 | 600 | 700 | 800 | 900 | Property.FontWeight;
 
 enum FontFamilyNames {
   Comfortaa = 'Comfortaa',

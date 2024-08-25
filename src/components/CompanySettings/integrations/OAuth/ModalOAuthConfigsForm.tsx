@@ -21,13 +21,13 @@ import { debounceCallback } from '../../../../utils/lodash.utils';
 import { StorageService } from '../../../../services';
 import ProviderEnum = OAuth.ProviderEnum;
 
-const enpointNames = enumToArray(OAuth.Consumer.Configs.EndpointName);
-const requiredEndpoints = ObjectValues(pick(OAuth.Consumer.Configs.EndpointName, ['auth', 'terms', 'privacyPolicy']));
-const optionalEndpoints = ObjectValues(omit(OAuth.Consumer.Configs.EndpointName, requiredEndpoints));
+const enpointNames = enumToArray(OAuth.Consumer.EndpointName);
+const requiredEndpoints = ObjectValues(pick(OAuth.Consumer.EndpointName, ['auth', 'terms', 'privacyPolicy']));
+const optionalEndpoints = ObjectValues(omit(OAuth.Consumer.EndpointName, requiredEndpoints));
 const providersList = enumToFilterOptions(OAuth.ProviderEnum);
 
 const formSchema = yup.object().shape({
-  label: isString255.required(),
+  label: isString255().required(),
   connectionId: isUUID.optional(),
   domain: isUrl({ require_protocol: true }).required(),
   supportInfo: yup.object().shape({
@@ -35,10 +35,10 @@ const formSchema = yup.object().shape({
     phone: isUaMobilePhone(),
   }),
 
-  publicKey: isString255.when('provider', ([value], schema) => {
+  publicKey: isString255().when('provider', ([value], schema) => {
     return value === 'mia' ? schema.strip() : schema.required();
   }),
-  privateKey: isString255.when('provider', ([value], schema) => {
+  privateKey: isString255().when('provider', ([value], schema) => {
     return value === 'mia' ? schema.strip() : schema.required();
   }),
 
@@ -59,14 +59,14 @@ export const ModalOAuthConfigsForm = ({
   config,
 }: {
   conn: Integration.Output.Entity;
-  config?: OAuth.Consumer.Configs.Entity;
+  config?: OAuth.Consumer.Entity;
 }) => {
   const dispatch = useAppDispatch();
 
   const {
     formState: { errors },
     ...form
-  } = useForm<OAuth.Consumer.Configs.CreateDto>({
+  } = useForm<OAuth.Consumer.CreateDto>({
     defaultValues: { provider: ProviderEnum.mia, ...config, connectionId: conn._id },
     resolver: yupResolver(formSchema),
     mode: 'onBlur',
@@ -74,14 +74,14 @@ export const ModalOAuthConfigsForm = ({
   });
 
   const FV = form.watch();
-  const onValid = (fData: OAuth.Consumer.Configs.CreateDto) => {
+  const onValid = (fData: OAuth.Consumer.CreateDto) => {
     const thunk = config ? updateOAuthConfigsThunk : createOAuthConfigsThunk;
 
     StorageService.setToLocal('created_oauth_config', toReqData(fData));
 
     dispatch(
       thunk({
-        data: { data: toReqData(fData) as OAuth.Consumer.Configs.CreateDto },
+        data: { data: toReqData(fData) as OAuth.Consumer.CreateDto },
         onSuccess: ({ data }) => {
           StorageService.setToLocal('prepared_oauth_config', data);
         },

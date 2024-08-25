@@ -50,7 +50,7 @@ export const authSlice = createSlice({
     builder
       .addCase(SetLoggedUserAction, (s, a) => {
         s.user = a.payload;
-        s.access_token = a.payload.acces_token;
+        s.access_token = a.payload.access_token;
         s.isLoggedIn = true;
         s.user = {
           ...a.payload,
@@ -60,10 +60,10 @@ export const authSlice = createSlice({
       })
       .addCase(logInUserThunk.fulfilled, (s, { payload }) => {
         s.isLoading = false;
-        s.access_token = payload.access_token;
+        s.access_token = payload.data.access_token;
         s.isLoggedIn = true;
         s.user = {
-          ...payload,
+          ...payload.data,
           avatarURL:
             'https://www.google.com/url?sa=i&url=https%3A%2F%2Fuk.wikipedia.org%2Fwiki%2F%25D0%259F%25D1%2596%25D0%25B4%25D0%25B4%25D1%2583%25D0%25B1%25D0%25BD%25D0%25B8%25D0%25B9_%25D0%2586%25D0%25B2%25D0%25B0%25D0%25BD_%25D0%259C%25D0%25B0%25D0%25BA%25D1%2581%25D0%25B8%25D0%25BC%25D0%25BE%25D0%25B2%25D0%25B8%25D1%2587&psig=AOvVaw1bKwdWzf52CXjh_Q27FYn5&ust=1692433465292000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLjq9I7k5YADFQAAAAAdAAAAABAQ',
         };

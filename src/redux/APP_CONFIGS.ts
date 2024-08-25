@@ -16,6 +16,7 @@ export enum API_BASE_ROUTES {
   FINANCES_BANK_ACCOUNTS = '/finances/bank-accounts',
   FINANCES_FIN_ACCOUNTS = '/finances/fin-counts',
   CUSTOM_ROLES = '/roles',
+  CUSTOM_ROLES_ACTIONS = '/roles/actions',
   FILES = '/files',
   PRODUCTS = '/products',
   PROPERTIES = '/products/properties',
@@ -29,6 +30,9 @@ export enum API_BASE_ROUTES {
   REFUNDS = '/refunds',
   PRICE_MANAGEMENT = '/priceManagement',
   WAREHOUSES = '/warehouses',
+  WAREHOUSES_INVENTORIES = '/warehouses/inventories',
+  WAREHOUSES_DOCUMENTS = '/warehouses/documents',
+
   PAYMENTS = '/payments',
   TAGS = '/tags',
   INVOICES = '/invoices',
@@ -47,14 +51,10 @@ export enum API_BASE_ROUTES {
 export enum Endpoints {
   getAll = 'getAll',
   getAllByProductId = 'getAllByProductId',
-  getAllByWarehouseId = 'getAllByWarehouseId',
   getAllByType = 'getAllByType',
   getAllGrouped = 'getAllGrouped',
   create = 'create',
-  createDocument = 'createDocument',
   update = 'update',
-  updateDocument = 'updateDocument',
-  documents = 'documents',
   delete = 'delete',
   deleteById = 'deleteById',
   updateById = 'updateById',
@@ -67,53 +67,57 @@ export enum Endpoints {
   logIn = 'logIn',
   getAllByUserId = 'getAllByUserId',
   getAllByCompanyId = 'getAllByCompanyId',
-  getAllByOwnerId = 'getAllByOwnerId',
-  rejectById = 'rejectById',
   configs = 'configs',
-  acceptById = 'acceptById',
   changeArchiveStatus = 'changeArchiveStatusById',
   createList = 'createList',
-  softDeleteItemFromList = 'softDeleteItemFromList',
-  addItemToList = 'addItemToList',
-  updateListItem = 'updateListItem',
-  insert = 'insert',
   getAllPrices = 'getAllPrices',
   getDefaultDirectories = 'getDefaultDirectories',
   updateList = 'updateList',
   inviteUser = 'inviteUser',
   prices = 'prices',
-  getAllOrderSlots = 'getAllOrderSlots',
-  addSlotToOrder = 'addSlotToOrder',
-  getDataForNewOrderSlot = 'getDataForNewOrderSlot',
-  removeSlotFromOrder = 'removeSlotFromOrder',
-  softDeleteOrderSlot = 'softDeleteOrderSlot',
-  addItemToOrderSlot = 'addItemToOrderSlot',
-  removeItemFromOrderSlot = 'removeItemFromOrderSlot',
-  softDeleteOrderSlotItem = 'softDeleteOrderSlotItem',
-  createPrice = 'createPrice',
-  updatePrice = 'updatePrice',
-  deletePrice = 'deletePrice',
   methods = 'methods',
   integrations = 'integrations',
 }
 
-function createMethodsEndpoints(routeBaseUrl: string): {
-  getAll: () => string;
-  getList: () => string;
-  create: () => string;
-  update: () => string;
-} {
-  return {
-    getAll: () => `${routeBaseUrl}/methods/getAll`,
-    getList: () => `${routeBaseUrl}/methods/getAll`,
-    create: () => `${routeBaseUrl}/methods/create`,
-    update: () => `${routeBaseUrl}/methods/update`,
-  };
+enum EndpointsCRUD {
+  create = 'create',
+  update = 'update',
+  delete = 'delete',
+  remove = 'remove',
+  one = 'one',
+  all = 'all',
+  getOne = 'getOne',
+  getAll = 'getAll',
+  getList = 'getList',
 }
 
-export type EndpointCreator = (...args: any[]) => string;
+function createEndpoints<Endpoints extends Record<string, string>>(
+  entryPoint: Keys<typeof API_BASE_ROUTES>,
+  enpoints: Endpoints
+) {
+  const baseUr = API_BASE_ROUTES[entryPoint] ?? entryPoint;
+  type KeyType = Keys<Endpoints>;
 
-export interface ApiEndpointsMap extends Record<Endpoints | string, EndpointCreator> {}
+  return Object.assign(
+    {},
+    ...Object.entries(enpoints).map(([key, value]) => {
+      return {
+        [key]: () => baseUr + (value.startsWith('/') ? value : '/' + value),
+      };
+    })
+  ) as Record<KeyType, () => string>;
+}
+
+function createMethodsEndpoints(routeBaseUrl: string) {
+  return {
+    ...createEndpoints(routeBaseUrl as never, {
+      getAll: 'methods/getAll',
+      getList: 'methods/getAll',
+      create: 'methods/create',
+      update: 'methods/update',
+    }),
+  };
+}
 
 export enum ApiDirType {
   CATEGORIES_TR = 'categories_tr',
@@ -185,29 +189,33 @@ const auth = {
   },
 };
 
-const permissions: ApiEndpointsMap = {
+const permissions = {
   updateById: (permissionId?: string) => `${API_BASE_ROUTES.PERMISSIONS}/delete/${permissionId}`,
-  deleteById: (permissionId?: string) => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.deleteById}/${permissionId}`,
-  create: () => `${API_BASE_ROUTES.PERMISSIONS}/create`,
-  getAllByUserId: (userId?: string) => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getAllByUserId}/${userId}`,
-  getAllByCompanyId: (companyId?: string) =>
-    `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getAllByCompanyId}/${companyId}`,
-  getCurrent: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getCurrent}`,
-  logIn: (id?: string) => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logIn}/${id}`,
-  logOut: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logOut}`,
-  inviteUser: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.inviteUser}`,
+  deleteById: (permissionId?: string) => `${API_BASE_ROUTES.PERMISSIONS}/deleteById/${permissionId}`,
+  getAllByUserId: (userId?: string) => `${API_BASE_ROUTES.PERMISSIONS}/getAllByUserId/${userId}`,
+  logIn: (id?: string) => `${API_BASE_ROUTES.PERMISSIONS}/logIn/${id}`,
+  ...createEndpoints('PERMISSIONS', {
+    getAll: 'getAll',
+    create: 'create',
+    logOut: 'logOut',
+    inviteUser: 'inviteUser',
+    getCurrent: 'getCurrent',
+  }),
 };
 const finances = {
-  getAll: (): string => `${API_BASE_ROUTES.FINANCES_TRANSACTIONS}/getAll`,
-  create: (): string => `${API_BASE_ROUTES.FINANCES_TRANSACTIONS}/create`,
   deleteById: (id?: string): string => `${API_BASE_ROUTES.FINANCES_TRANSACTIONS}/${Endpoints.deleteById}/${id}`,
   updateById: (id?: string): string => `${API_BASE_ROUTES.FINANCES_TRANSACTIONS}/${Endpoints.updateById}/${id}`,
   getById: (id?: string): string => `${API_BASE_ROUTES.FINANCES_TRANSACTIONS}/getById/${id}`,
-
+  ...createEndpoints('FINANCES_TRANSACTIONS', {
+    getAll: 'getAll',
+    create: 'create',
+  }),
   bankAccounts: {
-    create: () => `${API_BASE_ROUTES.FINANCES_BANK_ACCOUNTS}/create`,
     update: (id?: string) => `${API_BASE_ROUTES.FINANCES_BANK_ACCOUNTS}/update/${id}`,
-    getList: () => `${API_BASE_ROUTES.FINANCES_BANK_ACCOUNTS}/getAll`,
+    ...createEndpoints('FINANCES_BANK_ACCOUNTS', {
+      getAll: 'getAll',
+      create: 'create',
+    }),
   },
 };
 const variationsApiEndpoints = {
@@ -218,7 +226,7 @@ const variationsApiEndpoints = {
   updateById: (id?: string): string => `${API_BASE_ROUTES.VARIATIONS}/${Endpoints.updateById}/${id}`,
   getById: (id?: string): string => `${API_BASE_ROUTES.VARIATIONS}/getById/${id}`,
 };
-const propertiesApiEndpoints: ApiEndpointsMap = {
+const propertiesApiEndpoints = {
   getAll: (): string => `${API_BASE_ROUTES.PROPERTIES}/getAll`,
   create: (): string => `${API_BASE_ROUTES.PROPERTIES}/create`,
   deleteById: (id?: string): string => `${API_BASE_ROUTES.PROPERTIES}/${Endpoints.deleteById}/${id}`,
@@ -240,15 +248,9 @@ const offers = {
   variationsApiEndpoints,
 };
 
-const companies = {
-  delete: () => `${API_BASE_ROUTES.COMPANIES}/delete`,
-  create: () => `${API_BASE_ROUTES.COMPANIES}/create`,
-  update: () => `${API_BASE_ROUTES.COMPANIES}/update`,
-  getOne: () => `${API_BASE_ROUTES.COMPANIES}/one`,
-  getAll: () => `${API_BASE_ROUTES.COMPANIES}/all`,
-};
+const companies = createEndpoints('COMPANIES', EndpointsCRUD);
 
-const directories: ApiEndpointsMap = {
+const directories = {
   getAllByType: (dirType?: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllByType}/${dirType || '_'}`,
   getAllGrouped: (dirType?: string) => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllGrouped}`,
   create: (dirType?: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/create/${dirType}`,
@@ -263,10 +265,12 @@ const directories: ApiEndpointsMap = {
 };
 
 const customRoles = {
+  ...createEndpoints('CUSTOM_ROLES', EndpointsCRUD),
   getAllActions: () => `${API_BASE_ROUTES.CUSTOM_ROLES}/v2/getAllActions`,
+  actions: createEndpoints('CUSTOM_ROLES_ACTIONS', { getAll: 'getAll' }),
 };
 
-const appSettings: ApiEndpointsMap = {
+const appSettings = {
   getAllActions: () => `${API_BASE_ROUTES.APP}/getAllActions`,
 };
 const priceManagementEndpoints = {
@@ -283,39 +287,26 @@ const priceManagementEndpoints = {
 };
 
 const ordersEndpoints = {
-  getAll: () => `${API_BASE_ROUTES.ORDERS}/getAll`,
-  create: () => `${API_BASE_ROUTES.ORDERS}/create`,
-  getOne: () => `${API_BASE_ROUTES.ORDERS}/one`,
+  ...createEndpoints('ORDERS', EndpointsCRUD),
 
-  slots: {
-    getAll: () => `${API_BASE_ROUTES.ORDERS_SLOTS}/getAll`,
-    update: () => `${API_BASE_ROUTES.ORDERS_SLOTS}/update`,
-    create: () => `${API_BASE_ROUTES.ORDERS_SLOTS}/create`,
-    remove: () => `${API_BASE_ROUTES.ORDERS_SLOTS}/remove`,
-  },
+  slots: createEndpoints('ORDERS_SLOTS', EndpointsCRUD),
 
   updateById: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateById}/${orderId}`,
   createGroupedByWarehouse: () => `${API_BASE_ROUTES.ORDERS}/create/group/byWarehouses`,
 
   sales: {
-    getAll: () => `${API_BASE_ROUTES.ORDERS_SALES}/getAll`,
-    create: () => `${API_BASE_ROUTES.ORDERS_SALES}/create`,
-    getOne: () => `${API_BASE_ROUTES.ORDERS_SALES}/one`,
+    ...createEndpoints('ORDERS_SALES', EndpointsCRUD),
+
     groups: {
       createByWarehouse: () => `${API_BASE_ROUTES.ORDERS}/create/group/byWarehouses`,
     },
-    slots: {
-      getAll: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/getAll`,
-      update: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/update`,
-      create: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/create`,
-      remove: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/remove`,
-    },
-    reject: {
-      request: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/reject/request`,
-      confirm: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/reject/confirm`,
-      abort: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/reject/abort`,
-      getWithCode: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/reject/getWithCode`,
-    },
+    slots: createEndpoints('ORDERS_SALES_SLOTS', EndpointsCRUD),
+    reject: createEndpoints('ORDERS_SALES', {
+      request: 'reject/request',
+      confirm: 'reject/confirm',
+      abort: 'reject/abort',
+      getWithCode: 'reject/getWithCode',
+    }),
   },
   purchase: {
     getAll: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/getAll`,
@@ -353,26 +344,18 @@ const refunds = {
 };
 
 const warehousing = {
-  create: () => `${API_BASE_ROUTES.WAREHOUSES}/create`,
-  delete: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/delete/${id}`,
-  update: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/update/${id}`,
   getById: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/getById/${id}`,
-  getAll: () => `${API_BASE_ROUTES.WAREHOUSES}/getAll`,
+  ...createEndpoints('WAREHOUSES', EndpointsCRUD),
 
   inventories: {
-    getAll: () => `${API_BASE_ROUTES.WAREHOUSES}/inventories/getAll`,
-    getOne: () => `${API_BASE_ROUTES.WAREHOUSES}/inventories/one`,
-    update: () => `${API_BASE_ROUTES.WAREHOUSES}/inventories/update`,
+    ...createEndpoints('WAREHOUSES_INVENTORIES', EndpointsCRUD),
   },
   documents: {
-    getAll: () => `${API_BASE_ROUTES.WAREHOUSES}/documents/getAll`,
-    getOne: () => `${API_BASE_ROUTES.WAREHOUSES}/documents/one`,
-    create: () => `${API_BASE_ROUTES.WAREHOUSES}/documents/create`,
+    ...createEndpoints('WAREHOUSES_DOCUMENTS', EndpointsCRUD),
   },
 };
 const payments = {
-  create: () => `${API_BASE_ROUTES.PAYMENTS}/create`,
-  getAll: () => `${API_BASE_ROUTES.PAYMENTS}/getAll`,
+  ...createEndpoints('PAYMENTS', EndpointsCRUD),
 
   methods: createMethodsEndpoints(API_BASE_ROUTES.PAYMENTS),
 };
@@ -472,23 +455,6 @@ const chat = {
     getAll: () => `${API_BASE_ROUTES.CHAT_MESSAGES}/getAll`,
   },
 };
-
-function createEndpoints<Endpoints extends Record<string, string>>(
-  entryPoint: Keys<typeof API_BASE_ROUTES>,
-  enpoints: Endpoints
-) {
-  const baseUr = entryPoint;
-  type KeyType = Keys<Endpoints>;
-
-  return Object.assign(
-    {},
-    ...Object.entries(enpoints).map(([key, value]) => {
-      return {
-        [key]: () => baseUr + (value.startsWith('/') ? value : '/' + value),
-      };
-    })
-  ) as Record<KeyType, () => string>;
-}
 
 const APP_CONFIGS = {
   endpoints: {

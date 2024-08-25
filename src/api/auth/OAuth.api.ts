@@ -23,18 +23,13 @@ export class OAuthApi {
     return res;
   };
   public static configs = {
-    create: (data?: OAuth.Consumer.Configs.CreateDto): Promise<ApiResponse<OAuth.Consumer.Configs.Entity>> => {
+    create: (data?: OAuth.Consumer.CreateDto): Promise<ApiResponse<OAuth.Consumer.Entity>> => {
       return this._api.post(this._endps.configs.create(), data);
     },
-    update: (data?: OAuth.Consumer.Configs.CreateDto): Promise<ApiResponse<OAuth.Consumer.Configs.Entity>> => {
+    update: (data?: OAuth.Consumer.CreateDto): Promise<ApiResponse<OAuth.Consumer.Entity>> => {
       return this._api.patch(this._endps.configs.update(), data);
     },
-    getAll: (
-      _?: undefined,
-      params?: {
-        connectionId?: string;
-      }
-    ): Promise<ApiResponse<OAuth.Consumer.Configs.Entity[]>> => {
+    getAll: (_?: undefined, params?: OAuth.Consumer.GetAllQuery): Promise<ApiResponse<OAuth.Consumer.Entity[]>> => {
       return this._api.get(this._endps.configs.getAll(), { params });
     },
   };

@@ -18,7 +18,7 @@ import { useAppRouter } from '../../../hooks';
 import { BusinessSubjectTypeEnum } from '../../../types/companies/companies.types';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { ObjectValues } from '../../../utils';
+import { isEnum, isLabelSchema, isNameSchema, passwordFields } from '../../../validations';
 
 export interface Props {
   helloTitle?: string;
@@ -29,28 +29,19 @@ export interface Props {
 
 export interface IRegistrationFormData extends HasRegisterUserDtoFields, HasRegisterCompanyDtoFields {
   email: string;
-  current_password: string;
-  approvePassword: string;
+  password: string;
+  passwordCheck: string;
   businessType?: BusinessSubjectTypeEnum;
 }
 
-const registerSchema = yup.object().shape({
-  name: yup.object().shape({
-    first: yup.string().optional(),
-    second: yup.string().optional(),
-  }),
+const registerSchema: yup.ObjectSchema<IRegistrationFormData> = yup.object().shape({
+  label: isLabelSchema(),
+  name: isNameSchema(),
   email: yup.string().required(),
-  current_password: yup.string().required(),
-  approvePassword: yup.string(),
-  businessType: yup.string().oneOf(ObjectValues(BusinessSubjectTypeEnum)).required(),
-  // approvePassword: yup
-  //   .string()
-  //   .when('password', { is: val => !!val, then: yup.string().required(), otherwise: yup.string().required() }),
+  businessType: isEnum(BusinessSubjectTypeEnum),
+  ...passwordFields,
 });
-const logInSchema = yup.object().shape({
-  email: yup.string().required(),
-  current_password: yup.string().required(),
-});
+const logInSchema = registerSchema.pick(['email', 'password']);
 
 export type AuthFormProps = Props & React.HTMLAttributes<HTMLFormElement>;
 
@@ -63,13 +54,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
     register,
     formState: { errors },
     handleSubmit,
-    setError,
-    clearErrors,
     watch,
   } = useForm<IRegistrationFormData>({
     defaultValues: {},
     reValidateMode: 'onSubmit',
-    resolver: yupResolver(login ? logInSchema : registerSchema),
+    resolver: yupResolver(login ? logInSchema : registerSchema, { stripUnknown: true }),
     shouldUnregister: true,
   });
   const formValues = watch();
@@ -79,22 +68,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
   //   [formValues.approvePassword, formValues.password, isValid, registration]
   // );
 
-  function onFormSubmit({ approvePassword, ...fData }: IRegistrationFormData) {
-    if (approvePassword) {
-      if (approvePassword !== fData.current_password) {
-        setError('approvePassword', { message: 'паролі не співпадають' });
-        return;
-      } else {
-        clearErrors();
-      }
-    }
-
+  function onFormSubmit({ passwordCheck, ...fData }: IRegistrationFormData) {
     login &&
       authService.loginUser({
-        data: {
-          password: fData.current_password,
-          email: fData.email,
-        },
+        data: { data: { password: fData.password, email: fData.email } },
         onSuccess() {
           ToastService.success('Login success');
         },
@@ -105,7 +82,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
       });
     registration &&
       authService.register({
-        data: omit({ ...fData, password: fData.current_password }, ['approvePassword', 'current_password']),
+        data: omit({ ...fData, password: fData.password }, ['approvePassword', 'current_password']),
         onLoading: loaders.onLoading('register'),
         onSuccess() {
           router.push({ pathname: '/auth/logIn' });
@@ -151,31 +128,26 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
               <InputText placeholder={'Електронна адреса'} {...register('email')} />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="lock_O" error={errors.current_password}>
+            <AuthInputLabel icon="lock_O" error={errors.password}>
               <SecurityInputControlHOC
                 renderInput={props => (
-                  <InputText
-                    {...props}
-                    key={'regster_password'}
-                    placeholder="Пароль"
-                    {...register('current_password')}
-                  />
+                  <InputText {...props} key={'regster_password'} placeholder="Пароль" {...register('password')} />
                 )}
               />
             </AuthInputLabel>
 
             <AuthInputLabel
               icon="lock_O"
-              error={errors.approvePassword}
+              error={errors.passwordCheck}
               success={
-                !!formValues.current_password && formValues.current_password === formValues.approvePassword
+                !!formValues.password && formValues.password === formValues.passwordCheck
                   ? { message: 'Passwords are equals' }
                   : undefined
               }
             >
               <SecurityInputControlHOC
                 renderInput={props => (
-                  <InputText {...props} placeholder={'Повторіть пароль'} {...register('approvePassword')} />
+                  <InputText {...props} placeholder={'Повторіть пароль'} {...register('passwordCheck')} />
                 )}
               />
             </AuthInputLabel>
@@ -188,10 +160,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
               <InputText placeholder="Електронна адреса" {...register('email')} />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="lock_O" error={errors.current_password}>
+            <AuthInputLabel icon="lock_O" error={errors.password}>
               <SecurityInputControlHOC
                 renderInput={props => (
-                  <InputText {...props} key={'login_password'} placeholder="Пароль" {...register('current_password')} />
+                  <InputText {...props} key={'login_password'} placeholder="Пароль" {...register('password')} />
                 )}
               />
             </AuthInputLabel>

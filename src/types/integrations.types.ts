@@ -168,7 +168,7 @@ export namespace Integration {
       corsPolicy?: {
         origins?: string[];
       };
-      oAuth?: OAuth.Consumer.Configs.Entity[];
+      oAuth?: OAuth.Consumer.Entity[];
     }
     export interface CreateDto extends BaseDto, Partial<Pick<Entity, 'chatIds' | 'redirectBaseUrl' | 'corsPolicy'>> {
       roleId?: UUID;

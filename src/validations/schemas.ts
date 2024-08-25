@@ -2,6 +2,7 @@ import * as yup from 'yup';
 import { t } from '../lang';
 import { PartialRecord, Values } from '../types/utils.types';
 import { isValidURL } from '../utils/validators/isValidUrl.validator';
+import { ObjectEntries, ObjectFromEntries } from '../utils';
 
 export const validationErrorMsgs = {
   name: {
@@ -39,9 +40,9 @@ export const validationErrorMsgs = {
 export const isUUID = yup.string().uuid();
 export const isEnum = <T extends object | string[]>(objOrArr: T) =>
   yup.string().oneOf<Values<T>>(Object.values(objOrArr), `Available values: ${Object.values(objOrArr).join(', ')}`);
-export const isString64 = yup.string().max(64);
-export const isString255 = yup.string().max(255);
-export const isString500 = yup.string().max(500);
+export const isString64 = () => yup.string().max(64);
+export const isString255 = () => yup.string().max(255);
+export const isString500 = () => yup.string().max(500);
 
 export const isUrl = (params?: Parameters<typeof isValidURL>[1]) => {
   return yup.string().test('isValidUrl', 'Is not valid url', (value, context) => {
@@ -133,11 +134,26 @@ export function isNameFields({
 }: {
   required?: (keyof typeof nameFields)[];
 } = {}) {
-  for (const key of required) {
-    nameFields[key] = nameFields[key].required(validationErrorMsgs.isRequiredField);
-  }
-
-  return nameFields;
+  return ObjectFromEntries(
+    ObjectEntries(nameFields).map(([key, value]) => {
+      return [key, required.includes(key) ? value().required() : value()] as const;
+    })
+  );
+}
+const labelFields = {
+  base: isString255,
+  print: isString255,
+};
+export function isLabelFields({
+  required = ['base'],
+}: {
+  required?: (keyof typeof labelFields)[];
+} = {}) {
+  return ObjectFromEntries(
+    ObjectEntries(labelFields).map(([key, value]) => {
+      return [key, required.includes(key) ? value().required() : value()] as const;
+    })
+  );
 }
 
 export const isDynamicValue = <T extends PartialRecord<string, string[]>>(
@@ -164,7 +180,8 @@ export const isDynamicValue = <T extends PartialRecord<string, string[]>>(
       }
     });
 };
-export const nameSchema = yup.object().shape(isNameFields());
+export const isNameSchema = () => yup.object().shape(isNameFields());
+export const isLabelSchema = () => yup.object().shape(isLabelFields());
 export const passwordFields = {
   password: isPassword().required(validationErrorMsgs.isRequiredField),
   passwordCheck: isPassword()

@@ -8,5 +8,9 @@ export const updatePermissionsWithDelete = createAction<{ id: string }>('permiss
 export const setMockPermissionData = createAction<PermissionEntity>('permissions/setMockPermissionData');
 
 export function onPermissionLogout(a: Action) {
-  return a.type === clearCurrentPermission.type || a.type === logOutPermissionThunk.fulfilled;
+  return (
+    clearCurrentPermission.type === a.type ||
+    logOutPermissionThunk.fulfilled.type === a.type ||
+    logOutPermissionThunk.rejected.type === a.type
+  );
 }

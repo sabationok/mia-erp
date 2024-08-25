@@ -1,4 +1,4 @@
-import { IBase, OnlyUUID, PartialRecord } from 'types/utils.types';
+import { IBase, OnlyUUID, PartialRecord, UUID } from 'types/utils.types';
 import { AppAuth } from './auth.namespace';
 import { UserEntity } from './auth.types';
 import { Integration } from '../integrations.types';
@@ -12,58 +12,62 @@ export namespace OAuth {
   }
 
   export namespace Consumer {
-    export namespace Configs {
-      export enum EndpointName {
-        token = 'token',
-        auth = 'auth',
-        redirect = 'redirect',
-        support = 'support',
-        terms = 'terms',
-        privacyPolicy = 'privacyPolicy',
-      }
-      export interface EndpointsMap extends PartialRecord<EndpointName | string, string> {}
-
-      interface Base {
-        label?: string;
-        provider?: OAuth.ProviderEnum;
-        endpoints?: EndpointsMap;
-        scopes?: string[];
-        domain?: string;
-        supportInfo?: {
-          email?: string;
-        };
-      }
-
-      interface BaseMia extends Base {
-        provider?: OAuth.ProviderEnum.mia;
-        // publicKey: string;
-        // privateKey: string;
-      }
-      interface BaseOther extends Base {
-        provider?: Exclude<OAuth.ProviderEnum, 'mia'>;
-
-        publicKey: string;
-        privateKey: string;
-      }
-      export interface Entity extends IBase, Base {
-        publicKey: string;
-        privateKey: string;
-
-        isActive?: boolean;
-        status?: string;
-
-        outputConnection?: Integration.Output.Entity;
-      }
-      interface _CreateDto {
-        connectionId: string;
-      }
-
-      export type CreateDto = _CreateDto & (BaseMia | BaseOther);
-
-      export interface _UpdateDto extends OnlyUUID {}
-
-      export type UpdateDto = _UpdateDto & (BaseMia | BaseOther);
+    export enum EndpointName {
+      token = 'token',
+      auth = 'auth',
+      redirect = 'redirect',
+      support = 'support',
+      terms = 'terms',
+      privacyPolicy = 'privacyPolicy',
     }
+    export interface EndpointsMap extends PartialRecord<EndpointName | string, string> {}
+
+    interface Base {
+      label?: string;
+      provider?: OAuth.ProviderEnum;
+      endpoints?: EndpointsMap;
+      scopes?: string[];
+      domain?: string;
+      supportInfo?: {
+        email?: string;
+      };
+    }
+
+    interface BaseMia extends Base {
+      provider?: OAuth.ProviderEnum.mia;
+      // publicKey: string;
+      // privateKey: string;
+    }
+    interface BaseOther extends Base {
+      provider?: Exclude<OAuth.ProviderEnum, 'mia'>;
+
+      publicKey: string;
+      privateKey: string;
+    }
+    export interface Entity extends IBase, Base {
+      publicKey: string;
+      privateKey: string;
+
+      isActive?: boolean;
+      status?: string;
+
+      outputConnection?: Integration.Output.Entity;
+    }
+    interface _CreateDto {
+      connectionId: string;
+    }
+
+    export type CreateDto = _CreateDto & (BaseMia | BaseOther);
+
+    export interface _UpdateDto extends OnlyUUID {}
+
+    export type UpdateDto = _UpdateDto & (BaseMia | BaseOther);
+
+    export interface GetAllQuery {
+      consumerId?: UUID;
+      ids?: UUID[];
+    }
+
     export type ExtraDataByType = {
       [key in ProviderEnum]: Record<string, any>;
     } & {
