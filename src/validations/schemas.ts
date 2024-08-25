@@ -140,6 +140,9 @@ export function isNameFields({
     })
   );
 }
+
+export const isNameSchema = (required?: (keyof typeof nameFields)[]) => yup.object().shape(isNameFields({ required }));
+
 const labelFields = {
   base: isString255,
   print: isString255,
@@ -155,6 +158,8 @@ export function isLabelFields({
     })
   );
 }
+export const isLabelSchema = (required?: (keyof typeof labelFields)[]) =>
+  yup.object().shape(isLabelFields({ required }));
 
 export const isDynamicValue = <T extends PartialRecord<string, string[]>>(
   dataKey: string,
@@ -180,8 +185,6 @@ export const isDynamicValue = <T extends PartialRecord<string, string[]>>(
       }
     });
 };
-export const isNameSchema = () => yup.object().shape(isNameFields());
-export const isLabelSchema = () => yup.object().shape(isLabelFields());
 export const passwordFields = {
   password: isPassword().required(validationErrorMsgs.isRequiredField),
   passwordCheck: isPassword()
