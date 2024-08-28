@@ -169,11 +169,11 @@ export function isValidURL(url: string, options: IsURLOptions = {}): boolean {
         const res = check.exec(key as keyof IsURLOptions, options, parsedUrl, url);
 
         if (!res) {
-          throw {
+          new Error({
             statusCode: HttpStatusCode.BadRequest,
             message: 'Url validation error',
             reason: key,
-          };
+          });
         }
       }
     }

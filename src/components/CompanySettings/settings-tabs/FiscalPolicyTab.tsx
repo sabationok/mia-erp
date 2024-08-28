@@ -9,8 +9,8 @@ export interface FiscalPolicyTabProps extends CompanySettingsTabBaseProps<'fisca
 // const tabs = enumToTabs(InvoicingPolicyTypeEnum);
 
 const FiscalPolicyTab = ({ onClose, onSubmit, company, policyFormKey }: FiscalPolicyTabProps) => {
-  const [current] = useState<FiscalPolicy.TypeEnum>(FiscalPolicy.TypeEnum.sales);
-
+  const [_current] = useState<FiscalPolicy.TypeEnum>(FiscalPolicy.TypeEnum.sales);
+  console.log('FiscalPolicyTab', { _current });
   const form = useForm<FiscalPolicy.FormData>({
     defaultValues: company?.fiscalPolicy ?? {},
   });

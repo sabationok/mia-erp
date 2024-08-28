@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { isDynamicValue, isEmail, isString255, isUaMobilePhone, isUrl, isUUID } from '../../../../validations';
+import { IsDynamicValue, IsEmail, IsString255, IsUaMobilePhone, IsUrl, IsUUID } from '../../../../validations';
 import { OAuth } from '../../../../types/auth/o-auth.namespace';
 import { Integration } from '../../../../types/integrations.types';
 import { useAppDispatch } from '../../../../redux/store.store';
@@ -21,24 +21,24 @@ import { debounceCallback } from '../../../../utils/lodash.utils';
 import { StorageService } from '../../../../services';
 import ProviderEnum = OAuth.ProviderEnum;
 
-const enpointNames = enumToArray(OAuth.Consumer.EndpointName);
+const endpointNames = enumToArray(OAuth.Consumer.EndpointName);
 const requiredEndpoints = ObjectValues(pick(OAuth.Consumer.EndpointName, ['auth', 'terms', 'privacyPolicy']));
 const optionalEndpoints = ObjectValues(omit(OAuth.Consumer.EndpointName, requiredEndpoints));
 const providersList = enumToFilterOptions(OAuth.ProviderEnum);
 
 const formSchema = yup.object().shape({
-  label: isString255().required(),
-  connectionId: isUUID.optional(),
-  domain: isUrl({ require_protocol: true }).required(),
+  label: IsString255().required(),
+  connectionId: IsUUID().optional(),
+  domain: IsUrl({ require_protocol: true }).required(),
   supportInfo: yup.object().shape({
-    email: isEmail().optional(),
-    phone: isUaMobilePhone(),
+    email: IsEmail().optional(),
+    phone: IsUaMobilePhone(),
   }),
 
-  publicKey: isString255().when('provider', ([value], schema) => {
+  publicKey: IsString255().when('provider', ([value], schema) => {
     return value === 'mia' ? schema.strip() : schema.required();
   }),
-  privateKey: isString255().when('provider', ([value], schema) => {
+  privateKey: IsString255().when('provider', ([value], schema) => {
     return value === 'mia' ? schema.strip() : schema.required();
   }),
 
@@ -47,11 +47,11 @@ const formSchema = yup.object().shape({
     .shape(
       Object.assign(
         {},
-        ...requiredEndpoints.map(key => ({ [key]: isUrl().optional() })),
-        ...optionalEndpoints.map(key => ({ [key]: isUrl().optional() }))
+        ...requiredEndpoints.map(key => ({ [key]: IsUrl().optional() })),
+        ...optionalEndpoints.map(key => ({ [key]: IsUrl().optional() }))
       )
     ),
-  scopes: isDynamicValue('provider', OAuth.ScopesByProvider).required(),
+  scopes: IsDynamicValue('provider', OAuth.ScopesByProvider).required(),
 });
 
 export const ModalOAuthConfigsForm = ({
@@ -98,7 +98,7 @@ export const ModalOAuthConfigsForm = ({
   useEffect(() => {
     if (!config && FV.domain) {
       debounceCallback(() => {
-        enpointNames.forEach(key => {
+        endpointNames.forEach(key => {
           !form.getValues(`endpoints.${key}`) && form.setValue(`endpoints.${key}`, FV.domain);
         });
       });

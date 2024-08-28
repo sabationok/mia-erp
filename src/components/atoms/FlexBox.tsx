@@ -102,7 +102,6 @@ function createFlexBoxStyles({ query, key }: { query?: string; key?: MediaStyles
     ${query ? '}' : ''}
   `;
 }
-const def_Styles = createFlexBoxStyles();
 
 const S_Styles = createFlexBoxStyles({ query: 'max-width: 480px', key: 'sStyles' });
 

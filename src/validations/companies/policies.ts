@@ -1,11 +1,11 @@
 import { DeliveryPolicy, PaymentPolicy } from 'types/companies/policies';
 import * as YUP from 'yup';
-import { isUUID } from '../schemas';
+import { IsUUID } from '../schemas';
 import { ObjectFromEntries } from '../../utils';
 import Decimal from 'decimal.js';
 
 const baseFields = {
-  methodId: isUUID.nullable().optional(),
+  methodId: IsUUID().nullable().optional(),
   selectByClient: YUP.boolean().optional(),
   autoCreate: YUP.boolean().optional(),
   autoPublish: YUP.boolean().optional(),

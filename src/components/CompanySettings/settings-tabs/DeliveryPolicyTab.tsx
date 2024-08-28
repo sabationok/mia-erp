@@ -34,11 +34,7 @@ const DeliveryPolicyTab = ({
     resolver: yupResolver(delivery_policy_json_data_schema, { stripUnknown: true }),
     reValidateMode: 'onSubmit',
   });
-  const {
-    formState: { errors },
-    formValues,
-    ...form
-  } = formMethods;
+  const { formValues, ...form } = formMethods;
 
   const registerSwitch = (name: keyof DeliveryPolicy.JsonDataBoolValues | 'insurance.allowed') => {
     return {

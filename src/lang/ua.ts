@@ -450,6 +450,22 @@ export const langUa = {
   Properties: 'Характеристики',
   Measurement: 'Вимірювання',
 
+  'First name is required': 'Імʼя є обовʼязковим',
+  'Second name is required': 'Прізвище є обовʼязковим',
+  'Email is required': 'Електронна пошта є обовʼязковою',
+  'Invalid email': 'Неправильний формат електронної пошти',
+  'Phone number is required': 'Номер телефону є обовʼязковим',
+  'Phone number is not valid': 'Номер телефону є неправильним',
+  'Delivery method is required': 'Необхідно вибрати метод доставки',
+  'Method ID is required': 'Необхідно вказати ідентифікатор методу',
+  'Password length should be at least {{length}} characters': 'Довжина пароля має бути не менше {{length}} символів',
+  'Password is invalid': 'Пароль є неправильним',
+  'Passwords do not match': 'Паролі не збігаються',
+  'Destination info is required': 'Необхідно вказати інформацію про місце призначення',
+  'City is required': 'Місто є обовʼязковим',
+  'Warehouse is required': 'Склад є обовʼязковим',
+  'Field is required': 'Поле є обовʼязковим',
+
   'Step is not finished': 'Крок не завершено',
 
   'Offer label': 'Назва продукту',
