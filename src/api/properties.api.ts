@@ -1,4 +1,4 @@
-import { ApiResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse } from '../redux/app-redux.types';
 import { IPropertyReqData, PropertyEntity } from 'types/offers/properties.types';
 import { ClientApi } from './client.api';
 
@@ -9,7 +9,7 @@ export default class PropertiesApi {
   public static getAll = (
     _?: undefined,
     params?: IPropertyReqData['params']
-  ): Promise<ApiResponse<PropertyEntity[]>> => {
+  ): Promise<ApiAxiosResponse<PropertyEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), {
       params: {
         dataView: 'list',
@@ -20,7 +20,7 @@ export default class PropertiesApi {
   public static getAllInTree = (
     _?: undefined,
     params?: IPropertyReqData['params']
-  ): Promise<ApiResponse<PropertyEntity[]>> => {
+  ): Promise<ApiAxiosResponse<PropertyEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), {
       params: {
         dataView: 'tree',
@@ -33,7 +33,7 @@ export default class PropertiesApi {
   public static create = (
     data?: IPropertyReqData,
     params?: IPropertyReqData['params']
-  ): Promise<ApiResponse<PropertyEntity>> => {
+  ): Promise<ApiAxiosResponse<PropertyEntity>> => {
     return this.api.post(this.endpoints.create(), data?.data, {
       params: {
         dataView: 'list',
@@ -47,7 +47,7 @@ export default class PropertiesApi {
   public static updateById = (
     data?: IPropertyReqData,
     params?: IPropertyReqData['params']
-  ): Promise<ApiResponse<PropertyEntity>> => {
+  ): Promise<ApiAxiosResponse<PropertyEntity>> => {
     return this.api.patch(this.endpoints.updateById(data?._id), data?.data, {
       params: {
         dataView: 'list',
@@ -61,7 +61,7 @@ export default class PropertiesApi {
   public static getById = (
     data?: IPropertyReqData,
     params?: IPropertyReqData['params']
-  ): Promise<ApiResponse<PropertyEntity>> => {
+  ): Promise<ApiAxiosResponse<PropertyEntity>> => {
     return this.api.get(this.endpoints.getById(data?._id), {
       params: {
         ...data?.params,
@@ -70,7 +70,7 @@ export default class PropertiesApi {
     });
   };
 
-  public static deleteById = (data?: IPropertyReqData): Promise<ApiResponse<PropertyEntity>> => {
+  public static deleteById = (data?: IPropertyReqData): Promise<ApiAxiosResponse<PropertyEntity>> => {
     return this.api.delete(this.endpoints.deleteById(data?._id), {
       params: {
         getAll: false,

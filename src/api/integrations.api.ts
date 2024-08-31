@@ -1,4 +1,4 @@
-import { ApiResponse, AppQueries, ClientApi } from './index';
+import { ApiAxiosResponse, ApiQueryParams, ClientApi } from './index';
 import {
   InputIntegrationDto,
   InputIntegrationEntity,
@@ -12,7 +12,7 @@ export namespace IntegrationsApi {
   }
 
   export type GetAllQuery<Type extends Integration.DirectionType = Integration.DirectionType> = Partial<
-    Pick<AppQueries, 'warehouseId' | 'serviceId'>
+    Pick<ApiQueryParams, 'warehouseId' | 'serviceId'>
   > & {
     type: Type;
   };
@@ -24,7 +24,7 @@ export namespace IntegrationsApi {
     public static getAll = (
       _data?: unknown,
       params?: GetAllIntegrationsQueries
-    ): Promise<ApiResponse<(Integration.Input.Entity | Integration.Output.Entity)[]>> => {
+    ): Promise<ApiAxiosResponse<(Integration.Input.Entity | Integration.Output.Entity)[]>> => {
       return this.api.get(this.endpoints.getAll(params?.type), { params });
     };
 
@@ -32,7 +32,7 @@ export namespace IntegrationsApi {
       remove: (data?: {
         type: 'input' | 'output' | undefined;
         _id: string | undefined;
-      }): Promise<ApiResponse<{ result: boolean }>> => {
+      }): Promise<ApiAxiosResponse<{ result: boolean }>> => {
         return this.api.delete(this.endpoints.delete(data?.type, data?._id));
       },
     };
@@ -41,19 +41,19 @@ export namespace IntegrationsApi {
       getAll: (
         _data?: unknown,
         params?: GetAllIntegrationsQueries
-      ): Promise<ApiResponse<Integration.Input.Entity[]>> => {
+      ): Promise<ApiAxiosResponse<Integration.Input.Entity[]>> => {
         return this.api.get(this.endpoints.getAll('input'), { params });
       },
       create: (data?: {
         data: InputIntegrationDto;
         params?: { setAsDefault?: boolean };
-      }): Promise<ApiResponse<Integration.Input.Entity>> => {
+      }): Promise<ApiAxiosResponse<Integration.Input.Entity>> => {
         return this.api.post(this.endpoints.create('input'), data?.data, { params: data?.params });
       },
       getById: (
         _data?: unknown,
         params?: IntegrationsApi.GetOneQuery
-      ): Promise<ApiResponse<Integration.Output.Entity>> => {
+      ): Promise<ApiAxiosResponse<Integration.Output.Entity>> => {
         return this.api.get(this.endpoints.getById('input', params?._id), { params });
       },
     };
@@ -61,25 +61,25 @@ export namespace IntegrationsApi {
       getById: (
         _data?: unknown,
         params?: IntegrationsApi.GetOneQuery
-      ): Promise<ApiResponse<Integration.Output.Entity>> => {
+      ): Promise<ApiAxiosResponse<Integration.Output.Entity>> => {
         return this.api.get(this.endpoints.getById('output', params?._id), { params });
       },
 
       getAll: (
         _data?: unknown,
         params?: GetAllIntegrationsQueries
-      ): Promise<ApiResponse<Integration.Output.Entity[]>> => {
+      ): Promise<ApiAxiosResponse<Integration.Output.Entity[]>> => {
         return this.api.get(this.endpoints.getAll('output'), { params });
       },
       create: (data?: {
         data: OutputIntegrationDto;
         params?: { setAsDefault?: boolean };
-      }): Promise<ApiResponse<InputIntegrationEntity>> => {
+      }): Promise<ApiAxiosResponse<InputIntegrationEntity>> => {
         return this.api.post(this.endpoints.create('output'), data?.data, {
           params: data?.params,
         });
       },
-      update: (data?: { data: OutputIntegrationDto }): Promise<ApiResponse<Integration.Input.Entity>> => {
+      update: (data?: { data: OutputIntegrationDto }): Promise<ApiAxiosResponse<Integration.Input.Entity>> => {
         return this.api.post(this.endpoints.update('output'), data?.data);
       },
     };
@@ -87,7 +87,7 @@ export namespace IntegrationsApi {
 }
 
 export type GetAllIntegrationsQueries<Type extends Integration.DirectionType = Integration.DirectionType> = Partial<
-  Pick<AppQueries, 'warehouseId' | 'serviceId'>
+  Pick<ApiQueryParams, 'warehouseId' | 'serviceId'>
 > & {
   type: Type;
 };

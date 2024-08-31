@@ -7,7 +7,7 @@ import {
   UserEntity,
 } from '../../types/auth/auth.types';
 import { ClientApi } from '../client.api';
-import { ApiResponse } from '../api.types';
+import { ApiAxiosResponse } from '../api.types';
 import { Device } from './Devices.api';
 import { OAuthApi } from './OAuth.api';
 import { IBase } from '../../types/utils.types';
@@ -30,14 +30,14 @@ export default class AuthApi {
     return res;
   };
 
-  public static logOutUser = async (): Promise<ApiResponse<LogoutResponse>> => {
-    const res: ApiResponse<LogoutResponse> = await this.api.post(this.endpoints.logOut());
+  public static logOutUser = async (): Promise<ApiAxiosResponse<LogoutResponse>> => {
+    const res: ApiAxiosResponse<LogoutResponse> = await this.api.post(this.endpoints.logOut());
     ClientApi.unsetToken();
 
     return res;
   };
 
-  public static getCurrentUser = (): Promise<ApiResponse<UserEntity>> => {
+  public static getCurrentUser = (): Promise<ApiAxiosResponse<UserEntity>> => {
     return this.api.get(this.endpoints.getCurrent());
   };
 }

@@ -1,4 +1,4 @@
-import { ApiResponse, IBase } from '../../redux/app-redux.types';
+import { ApiAxiosResponse, IBase } from '../../redux/app-redux.types';
 import { PermissionEntity } from '../permissions.types';
 import { AppDate, HasEmbeddedLabel, HasEmbeddedName, HasEmbeddedReference } from '../utils.types';
 import { BusinessSubjectTypeEnum } from '../companies/companies.types';
@@ -42,11 +42,11 @@ export interface IManager extends PermissionEntity {}
 
 export type ILoggedUserInfo = Pick<IAuthState, 'access_token'> & Pick<UserEntity, 'email' | '_id'>;
 
-export interface ILoggedUserInfoRes extends ApiResponse<ILoggedUserInfo> {}
+export interface ILoggedUserInfoRes extends ApiAxiosResponse<ILoggedUserInfo> {}
 
-export interface IRegisteredUserInfoRes extends ApiResponse<IRegisteredUser> {}
+export interface IRegisteredUserInfoRes extends ApiAxiosResponse<IRegisteredUser> {}
 
-export interface ICurrentUserInfoRes extends ApiResponse<ICurrentUser> {}
+export interface ICurrentUserInfoRes extends ApiAxiosResponse<ICurrentUser> {}
 
 export interface IRegisteredUser {
   _id: string;

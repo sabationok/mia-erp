@@ -1,5 +1,5 @@
 import { ClientApi } from './client.api';
-import { ApiResponse } from './api.types';
+import { ApiAxiosResponse } from './api.types';
 import { IBase } from '../types/utils.types';
 import { HasBaseCmsConfigs } from '../types/cms.types';
 import axios, { AxiosResponse } from 'axios';
@@ -39,10 +39,12 @@ export namespace FilesApi {
     private static _api = ClientApi.clientRef;
     private static _enps = ClientApi._endpoints.files;
 
-    public static getUploadLink = (data?: GetFileUploadLinkDto): Promise<ApiResponse<FileUploadLinkResponseData>> => {
+    public static getUploadLink = (
+      data?: GetFileUploadLinkDto
+    ): Promise<ApiAxiosResponse<FileUploadLinkResponseData>> => {
       return this._api.post(this._enps.getUploadUrl(), data);
     };
-    public static saveUploadedFileLink = (data?: SaveUploadedFileLinkDto): Promise<ApiResponse<FileEntity>> => {
+    public static saveUploadedFileLink = (data?: SaveUploadedFileLinkDto): Promise<ApiAxiosResponse<FileEntity>> => {
       return this._api.post(this._enps.saveUploadedFileUrl(), data);
     };
     public static uploadFileByLink = (data?: UploadFileByLinkDto): Promise<AxiosResponse<string>> => {

@@ -23,16 +23,16 @@ const App: React.FC = () => {
   }, [access_token]);
 
   useLayoutEffect(() => {
-    const unsubscribers: (() => void)[] = [];
+    const unsubscribes: (() => void)[] = [];
 
     if (access_token) {
       ClientApi.setToken(access_token);
 
-      unsubscribers.push(
+      unsubscribes.push(
         ClientApi.onUnauthorized(error => {
           console.error('[onUnauthorized] ==========================================', error);
           ClientApi.unsetToken();
-          logOutUser();
+          logOutUser({});
         }),
         ClientApi.onForbidden(error => {
           console.error('[onForbidden] ==========================================', error);
@@ -47,15 +47,15 @@ const App: React.FC = () => {
       );
 
       return () => {
-        unsubscribers.forEach(off => off());
+        unsubscribes.forEach(off => off());
       };
     } else {
       ClientApi.unsetToken();
       return () => {
-        unsubscribers.forEach(off => off());
+        unsubscribes.forEach(off => off());
       };
     }
-  }, [access_token, dispatch, hasAccess, logOutUser]);
+  }, [access_token, dispatch, hasAccess, logOutUser, permissions]);
 
   return (
     <>

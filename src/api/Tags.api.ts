@@ -1,7 +1,7 @@
 import { ClientApi } from './client.api';
 import { TagEntity, TagItemDto } from '../types/tags.types';
 import { TagTypeEnum } from '../types/directories.types';
-import { ApiResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse } from '../redux/app-redux.types';
 
 export class TagsApi extends ClientApi {
   private static readonly _api = this.clientRef;
@@ -10,24 +10,24 @@ export class TagsApi extends ClientApi {
   public static getAll = (
     _?: undefined,
     params?: { ids?: string[]; type?: TagTypeEnum; types?: TagTypeEnum[] }
-  ): Promise<ApiResponse<TagEntity[]>> => {
+  ): Promise<ApiAxiosResponse<TagEntity[]>> => {
     return this._api.get(this.endpoints.getAll(), { params });
   };
-  public static getOne = (_?: undefined, params?: { _id: string }): Promise<ApiResponse<TagEntity>> => {
+  public static getOne = (_?: undefined, params?: { _id: string }): Promise<ApiAxiosResponse<TagEntity>> => {
     return this._api.get(this.endpoints.getOne(), { params });
   };
-  public static create = (data?: Omit<TagItemDto, '_id'>): Promise<ApiResponse<TagEntity>> => {
+  public static create = (data?: Omit<TagItemDto, '_id'>): Promise<ApiAxiosResponse<TagEntity>> => {
     return this._api.post(this.endpoints.create(), data);
   };
 
-  public static update = (data?: TagItemDto): Promise<ApiResponse<TagEntity>> => {
+  public static update = (data?: TagItemDto): Promise<ApiAxiosResponse<TagEntity>> => {
     return this._api.patch(this.endpoints.update(), data);
   };
 
   public static delete = (
     data?: { _id: string },
     params?: { soft?: boolean }
-  ): Promise<ApiResponse<{ result: boolean }>> => {
+  ): Promise<ApiAxiosResponse<{ result: boolean }>> => {
     return this._api.delete(this.endpoints.delete(data?._id), { params });
   };
 }

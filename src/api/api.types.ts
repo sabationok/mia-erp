@@ -2,7 +2,6 @@ import { AppDate, ArrayOfUUID, Keys, OnlyUUID, PartialRecord, UUID, Values } fro
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { TableSortOrderEnum } from '../components/TableList/tableTypes.types';
 import { CompanyQueryTypeEnum } from '../types/companies/companies.types';
-import { FilterReturnDataType } from '../components/Filter/AppFilter';
 import { AxiosResponse } from 'axios';
 import { AppResponseType } from '../redux/app-redux.types';
 
@@ -14,8 +13,8 @@ export enum ApiHeaders {
   x_token_crm = 'x-token-crm',
   Device_Id = 'Device-Id',
   User_Reference = 'User-Reference',
-  cookiesPermission = 'Cookies-Permission',
-  dnt = 'dnt',
+  Cookies_Permission = 'Cookies-Permission',
+  cookies_permission = 'cokies-permission',
 }
 
 export enum AppQueryKey {
@@ -106,9 +105,34 @@ export type RefQueries = PartialRecord<BaseQueryKeyType, OnlyUUID>;
 export type IdQueries = PartialRecord<IdQueryKeyType, UUID>;
 export type IdsQueries = PartialRecord<IdsQueryKeyType, ArrayOfUUID>;
 
-export interface AppQueries<Type = any> extends Record<string, any>, RefQueries, IdQueries, IdsQueries {
-  type?: Type;
+enum StringKey {
+  search = 'search',
+  searchBy = 'searchBy',
+  searchRef = 'searchRef',
+  sku = 'sku',
+  barCode = 'barCode',
+  label = 'label',
+  langKey = 'langKey',
 }
+export type StringApiQuery = PartialRecord<Keys<typeof StringKey>, boolean>;
+
+enum BooleanKey {
+  isArchived = 'isArchived',
+  withDeleted = 'withDeleted',
+  withDefault = 'withDefault',
+  deleted = 'deleted',
+  disabled = 'disabled',
+  createTreeData = 'createTreeData',
+  getAll = 'getAll',
+  isSelectable = 'isSelectable',
+  disabledForClient = 'disabledForClient',
+  isDefault = 'isDefault',
+  asDefault = 'asDefault',
+  fullInfo = 'fullInfo',
+}
+
+export type BooleanApiQuery = PartialRecord<Keys<typeof BooleanKey>, boolean>;
+
 export interface PaginationQuery {
   limit?: number;
   offset?: number;
@@ -122,43 +146,18 @@ export interface DatePeriodQuery {
   dateFrom?: AppDate;
   dateTo?: AppDate;
 }
+export enum DataView {
+  tree = 'tree',
+  list = 'list',
+}
 
-export interface ApiQueryParams<Type = any> extends AppQueries<Type>, PaginationQuery, TimePeriodQuery {
-  ids?: string;
-  dirType?: ApiDirType;
-  isArchived?: boolean;
-  withDeleted?: boolean;
-  withDefault?: boolean;
-  deleted?: boolean;
-  disabled?: boolean;
-  createTreeData?: boolean;
-  getAll?: boolean;
-  dataView?: 'tree' | 'list';
-  depth?: number;
-  isSelectable?: boolean;
-  sortParams?: ApiQuerySortParams;
-  sortOrder?: TableSortOrderEnum;
-  search?: string;
-  searchBy?: string;
-  searchRef?: string;
-  disabledForClient?: boolean;
-  status?: string | { internal?: string; external?: string };
-  reference?: string | { internal?: string; external?: string };
+export interface StatusQueryParams<Internal extends string = string> {
+  status?: string | { internal?: Internal; external?: string };
   statusType?: 'internal' | 'external';
+}
+export interface HasReferenceQuery {
+  reference?: string | { internal?: string; external?: string };
   referenceType?: 'internal' | 'external';
-  isDefault?: boolean;
-  asDefault?: boolean;
-  fullInfo?: boolean;
-  categories?: UUID[];
-
-  companyType?: CompanyQueryTypeEnum;
-
-  sku?: string;
-  barCode?: string;
-  label?: string;
-  langKey?: string;
-
-  filterParams?: Partial<FilterReturnDataType>;
 }
 
 export type SortOrderType = 'desc' | 'asc' | 'DESC' | 'ASC';
@@ -169,10 +168,30 @@ export interface ApiQuerySortParams<DataPath = any, DataKey = any> {
   dataKey?: DataKey | string;
 }
 
-export interface ApiQuerySearchParams<Path = any> {
-  searchPath?: Path | string;
+export interface ApiQuerySearchParams<Path extends string = string> {
+  searchPath?: Path;
   // dataKey?: DataKey | string;
   search?: string;
 }
 
-export interface ApiResponse<D = any, M = any> extends AxiosResponse<AppResponseType<D, M>> {}
+export interface ApiQueryParams<Type = any>
+  extends Record<string, any>,
+    RefQueries,
+    IdQueries,
+    IdsQueries,
+    BooleanApiQuery,
+    StringApiQuery,
+    PaginationQuery,
+    TimePeriodQuery,
+    StatusQueryParams,
+    HasReferenceQuery {
+  type?: Type;
+  dirType?: ApiDirType;
+  dataView?: DataView | Keys<typeof DataView>;
+  depth?: number;
+  sortParams?: ApiQuerySortParams;
+  sortOrder?: TableSortOrderEnum;
+  companyType?: CompanyQueryTypeEnum;
+}
+
+export interface ApiAxiosResponse<D = any, M = any> extends AxiosResponse<AppResponseType<D, M>> {}

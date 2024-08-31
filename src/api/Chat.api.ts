@@ -1,6 +1,6 @@
 import { ChatEntity, MessageEntity, SendMessageDto, UpdateMessageDto } from 'types/chat/chat.types';
 import { ClientApi } from './client.api';
-import { ApiHeaders, ApiQueryParams, ApiResponse } from './api.types';
+import { ApiHeaders, ApiQueryParams, ApiAxiosResponse } from './api.types';
 import { BaseApiClass } from './abstract-base-api-class.helper';
 import { UUID } from 'types/utils.types';
 
@@ -16,12 +16,12 @@ export namespace ChatMessagesApiTypes {
 class ChatMessagesApi extends BaseApiClass {
   private static _api = ClientApi.clientRef;
   private static _endpoints = ClientApi._endpoints.chat.messages;
-  public static send = (input?: { data: SendMessageDto }): Promise<ApiResponse<MessageEntity>> => {
+  public static send = (input?: { data: SendMessageDto }): Promise<ApiAxiosResponse<MessageEntity>> => {
     return this._api.post(this._endpoints.send(), input?.data, {
       headers: this.headers,
     });
   };
-  public static update = (input?: { data: UpdateMessageDto }): Promise<ApiResponse<MessageEntity>> => {
+  public static update = (input?: { data: UpdateMessageDto }): Promise<ApiAxiosResponse<MessageEntity>> => {
     return this._api.patch(this._endpoints.update(), input?.data, {
       headers: this.headers,
     });
@@ -30,7 +30,7 @@ class ChatMessagesApi extends BaseApiClass {
   public static getAll = (
     _?: undefined,
     params?: ChatMessagesApiTypes.FindAllQuery
-  ): Promise<ApiResponse<MessageEntity[]>> => {
+  ): Promise<ApiAxiosResponse<MessageEntity[]>> => {
     return this._api.get(this._endpoints.getAll(), {
       params,
       headers: this.headers,
@@ -61,21 +61,21 @@ export class ChatApi extends BaseApiClass {
     this.messages.removeHeader(key);
     return this;
   }
-  public static getOne = (_?: undefined, params?: ChatApiTypes.FindOneQuery): Promise<ApiResponse<ChatEntity>> => {
+  public static getOne = (_?: undefined, params?: ChatApiTypes.FindOneQuery): Promise<ApiAxiosResponse<ChatEntity>> => {
     return this._api.get(this._endpoints.getOne(), {
       params,
       headers: this.headers,
     });
   };
 
-  public static create = (input?: { data: { orderId?: string } }): Promise<ApiResponse<ChatEntity>> => {
+  public static create = (input?: { data: { orderId?: string } }): Promise<ApiAxiosResponse<ChatEntity>> => {
     return this._api.post(this._endpoints.create(), input?.data, {
       headers: this.headers,
     });
   };
   public static getAll = (_input?: {
     // data: { orderId?: string };
-  }): Promise<ApiResponse<ChatEntity[]>> => {
+  }): Promise<ApiAxiosResponse<ChatEntity[]>> => {
     return this._api.get(this._endpoints.getAll(), {
       headers: this.headers,
     });

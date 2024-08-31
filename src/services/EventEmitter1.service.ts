@@ -21,9 +21,14 @@ export namespace EvEmitter {
     once?: boolean;
     listener: EvListener<Payload>;
   };
-  export type EvListener<Ev> = (ev: Ev) => void;
+
   export type NamedQueue<Payload> = Map<string, SubscriberData<Payload>>;
   export type ListQueue<Payload> = SubscriberData<Payload>[];
+
+  export type EvListener<Ev> = (ev: Ev) => void;
+  export type ListenersMappedType<EventMap> = {
+    [key in keyof EventMap]: EvEmitter.EvListener<EventMap[key]>;
+  };
 
   export class EventQueues<Payload> {
     map: EvEmitter.NamedQueue<Payload>;

@@ -5,7 +5,7 @@ import {
   ITransactionRes,
 } from 'types/finances/transactions.types';
 import { ApiQueryParams } from './index';
-import { ApiResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse } from '../redux/app-redux.types';
 import { BankAccountReqData, IBankAccount } from '../types/finances/bank-accounts.types';
 import { ClientApi } from './client.api';
 
@@ -38,14 +38,14 @@ export default class TransactionsApi {
 export class BankAccountsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.finTransactions.bankAccounts;
-  public static create = (reqData?: BankAccountReqData): Promise<ApiResponse<IBankAccount>> => {
+  public static create = (reqData?: BankAccountReqData): Promise<ApiAxiosResponse<IBankAccount>> => {
     return this.api.post(this.endpoints.create(), reqData?.data, { params: reqData?.params });
   };
 
-  public static update = (reqData?: BankAccountReqData): Promise<ApiResponse<IBankAccount>> => {
+  public static update = (reqData?: BankAccountReqData): Promise<ApiAxiosResponse<IBankAccount>> => {
     return this.api.patch(this.endpoints.update(reqData?.data?._id), reqData?.data);
   };
-  public static getAll = (reqData?: { params?: ApiQueryParams }): Promise<ApiResponse<IBankAccount[]>> => {
+  public static getAll = (reqData?: { params?: ApiQueryParams }): Promise<ApiAxiosResponse<IBankAccount[]>> => {
     return this.api.get(this.endpoints.getAll(), { params: reqData?.params });
   };
 }

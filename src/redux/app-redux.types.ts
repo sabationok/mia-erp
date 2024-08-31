@@ -1,11 +1,11 @@
 import { ThunkArgs } from './store.store';
-import { ApiCallerPayload, ApiResponse } from '../api';
+import { ApiCallerPayload, ApiAxiosResponse } from '../api';
 import { ApiDirType } from './APP_CONFIGS';
 import { AppDate, MaybeNull, OnlyUUID } from '../types/utils.types';
 
 export * from '../types/global.types';
 
-export type { ApiResponse } from '../api/api.types';
+export type { ApiAxiosResponse } from '../api/api.types';
 
 export type UUID = string;
 export type MagicLink = string;
@@ -74,7 +74,7 @@ export type ServiceDispatcherAsync<SD = any, RD = any, E = any> = (args?: ThunkA
 
 export type ServiceApiCaller<SD = any, RD = any, E = any | unknown, MD = any> = (
   payload: ApiCallerPayload<SD, RD, E>
-) => Promise<ApiResponse<RD, MD> | undefined>;
+) => Promise<ApiAxiosResponse<RD, MD> | undefined>;
 
 export type _ServiceApiCaller<Type extends (...args: any[]) => any> = (
   ...args: Parameters<Type>

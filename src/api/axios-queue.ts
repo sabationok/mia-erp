@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
-import { ApiResponse } from './api.types';
+import { ApiAxiosResponse } from './api.types';
 import { ClientLogger } from '../utils/logger';
 import { ConfigService } from '../services';
 
@@ -7,7 +7,7 @@ export class AxiosQueue {
   private readonly _logger = new ClientLogger(AxiosQueue.name);
   queue: {
     config: InternalAxiosRequestConfig;
-    resolve: (config: ApiResponse) => void;
+    resolve: (config: ApiAxiosResponse) => void;
     reject: <Error = any>(error: AxiosError | Error) => void;
   }[] = [];
   isProcessing: boolean;
@@ -31,7 +31,7 @@ export class AxiosQueue {
       if (item) {
         const { config, resolve, reject } = item;
         try {
-          const response: ApiResponse = await this.client(config);
+          const response: ApiAxiosResponse = await this.client(config);
           this._logger.debug(config.url, response);
 
           resolve(response);
@@ -56,7 +56,7 @@ export class AxiosQueue {
     await Promise.all(
       this.queue.map(async ({ config, resolve, reject }) => {
         try {
-          const response: ApiResponse = await axios(config);
+          const response: ApiAxiosResponse = await axios(config);
           return resolve(response);
         } catch (error) {
           return reject(error);
@@ -72,7 +72,7 @@ export class AxiosQueue {
   }
 
   addToQueue(config: InternalAxiosRequestConfig) {
-    return new Promise<ApiResponse>((resolve, reject) => {
+    return new Promise<ApiAxiosResponse>((resolve, reject) => {
       this.queue.push({ config, resolve, reject });
       this._logger.log('this.queue', this.queue);
     });

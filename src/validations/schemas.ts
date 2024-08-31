@@ -2,6 +2,7 @@ import * as YUP from 'yup';
 import { PartialRecord, Values } from '../types/utils.types';
 import { isValidURL } from '../utils/validators/isValidUrl.validator';
 import { ObjectEntries, ObjectFromEntries } from '../utils';
+import { t } from '../lang';
 
 export const IsUUID = () => YUP.string().uuid();
 export const isEnum = <T extends object | string[]>(objOrArr: T) =>
@@ -57,19 +58,16 @@ export const IsEmail = (params?: { domainsList: { white?: string[]; black?: stri
         }),
   });
 
-export const IsPassword = (length: number = 6) => IsString64().min(length, t('').replace('{{length}}', length));
+export const IsPassword = (length: number = 6) =>
+  IsString64().min(length, t('').replace('{{length}}', length.toString()));
 export const IsUaMobilePhone = () => YUP.string().matches(/^\+380\d{9}$/, t(''));
 
-function IsFieldsSet<Fields extends Record<string, YUP.ObjectSchema>>({
-  required,
-  fields,
-}: {
-  required: (keyof Fields)[];
-  fields: Fields;
-}) {
+type FieldsMap = Record<string, () => YUP.Schema<any>>;
+
+function IsFieldsSet<Fields extends FieldsMap>({ required, fields }: { required: (keyof Fields)[]; fields: Fields }) {
   return ObjectFromEntries(
     ObjectEntries(fields).map(([key, value]) => {
-      return [key, required.includes(key) ? value().required() : value()] as const;
+      return [String(key), required.includes(key) ? value().required() : value()] as const;
     })
   );
 }
@@ -85,7 +83,7 @@ export function isNameFields({
 }: {
   required?: (keyof typeof nameFields)[];
 } = {}) {
-  return IsFieldsSet({ nameFields, required });
+  return IsFieldsSet({ fields: nameFields, required });
 }
 
 export const isNameSchema = (required?: (keyof typeof nameFields)[]) => YUP.object().shape(isNameFields({ required }));
@@ -100,7 +98,7 @@ export function isLabelFields({
 }: {
   required?: (keyof typeof labelFields)[];
 } = {}) {
-  return IsFieldsSet({ labelFields, required });
+  return IsFieldsSet({ fields: labelFields, required });
 }
 export const isLabelSchema = (required?: (keyof typeof labelFields)[]) =>
   YUP.object().shape(isLabelFields({ required }));

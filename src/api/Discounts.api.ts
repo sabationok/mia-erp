@@ -1,5 +1,5 @@
 import { ClientApi } from './client.api';
-import { ApiResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse } from '../redux/app-redux.types';
 import { PriceDiscountDto, PriceDiscountEntity } from '../types/price-management/discounts';
 import { ApiQueryParams } from './index';
 import { OnlyUUID } from '../types/utils.types';
@@ -26,27 +26,29 @@ export class DiscountsApi {
   public static readonly getAll = (
     _?: undefined,
     params?: GetAllDiscountsQuery
-  ): Promise<ApiResponse<PriceDiscountEntity[]>> => {
+  ): Promise<ApiAxiosResponse<PriceDiscountEntity[]>> => {
     return this._client.get(this._endpoints.getAll, { params });
   };
   public static readonly getOne = (
     _?: undefined,
     params?: GetDiscountQuery
-  ): Promise<ApiResponse<PriceDiscountEntity>> => {
+  ): Promise<ApiAxiosResponse<PriceDiscountEntity>> => {
     return this._client.get(this._endpoints.getOne, { params });
   };
-  public static readonly create = (data?: PriceDiscountDto): Promise<ApiResponse<PriceDiscountEntity>> => {
+  public static readonly create = (data?: PriceDiscountDto): Promise<ApiAxiosResponse<PriceDiscountEntity>> => {
     return this._client.post(this._endpoints.create, data);
   };
 
-  public static readonly update = (data?: PriceDiscountDto & OnlyUUID): Promise<ApiResponse<PriceDiscountEntity>> => {
+  public static readonly update = (
+    data?: PriceDiscountDto & OnlyUUID
+  ): Promise<ApiAxiosResponse<PriceDiscountEntity>> => {
     return this._client.patch(this._endpoints.update, data);
   };
 
   public static readonly remove = (data?: {
     discountId: string;
     priceId: string;
-  }): Promise<ApiResponse<{ result: boolean; discountId: string; priceId?: string }>> => {
+  }): Promise<ApiAxiosResponse<{ result: boolean; discountId: string; priceId?: string }>> => {
     return this._client.patch(this._endpoints.remove, data);
   };
 }

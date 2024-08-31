@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { AsyncThunkConfig } from 'redux/reduxTypes.types';
 import { ThunkArgs } from '../store.store';
-import { ApiResponse } from '../app-redux.types';
+import { ApiAxiosResponse } from '../app-redux.types';
 import { ClientApi } from '../../api';
 
 const USERS_API_BASENAME = '/users';
@@ -18,7 +18,7 @@ enum AuthThunkType {
   getById = 'users/getUserById',
 }
 
-export interface IGetAllUsersRes extends ApiResponse<UserEntity[]> {}
+export interface IGetAllUsersRes extends ApiAxiosResponse<UserEntity[]> {}
 
 export const getAllUsersThunk = createAsyncThunk<UserEntity[], ThunkArgs, AsyncThunkConfig>(
   AuthThunkType.getAll,

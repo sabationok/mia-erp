@@ -1,7 +1,7 @@
-import { ApiQueryParams, AppQueries } from '../../api';
+import { ApiQueryParams } from '../../api';
 
-export const toQueriesForReq = (queries: Partial<ApiQueryParams>): Partial<AppQueries> => {
-  let output: Partial<AppQueries> = {};
+export const toQueriesForReq = (queries: Partial<ApiQueryParams>): Partial<ApiQueryParams> => {
+  let output: Partial<ApiQueryParams> = {};
   Object.entries(queries).forEach(([k, v]) => {
     const newKey = `${k}Id`;
 

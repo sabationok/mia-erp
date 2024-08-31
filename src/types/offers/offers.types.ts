@@ -3,7 +3,7 @@ import { OfferCategoryEntity } from '../dir.types';
 import { PriceEntity } from '../price-management/price-management.types';
 import { WarehouseEntity, WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { IBrand } from '../../redux/directories/brands.types';
-import type { ApiQueryParams, AppQueries, FilesApi } from '../../api';
+import type { ApiQueryParams, FilesApi } from '../../api';
 import { VariationEntity } from './variations.types';
 import { PropertiesGroupEntity, PropertyValueEntity } from './properties.types';
 import {
@@ -163,7 +163,7 @@ export interface OfferRelatedFieldsDto extends PartialRecord<OfferFormRelatedFie
 
 type OfferDefaultRefKey = Keys<IOfferRelatedDefaultFields>;
 
-type OfferDefaultsIdKey = Keys<Pick<AppQueries, 'warehouseId' | 'variationId' | 'priceId' | 'inventoryId'>>;
+type OfferDefaultsIdKey = Keys<Pick<ApiQueryParams, 'warehouseId' | 'variationId' | 'priceId' | 'inventoryId'>>;
 export interface IOfferDefaultsDto
   extends PartialRecord<OfferDefaultRefKey, OnlyUUID>,
     PartialRecord<OfferDefaultsIdKey, UUID> {}

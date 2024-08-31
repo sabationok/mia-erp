@@ -1,7 +1,7 @@
 import { ClientApi } from 'api/client.api';
 import { UserEntity } from 'types/auth/auth.types';
 import { IBase } from 'types/utils.types';
-import { ApiResponse } from '../api.types';
+import { ApiAxiosResponse } from '../api.types';
 import { Auth } from './auth.api';
 
 export namespace Device {
@@ -22,7 +22,7 @@ export namespace Device {
     private static _api = ClientApi.clientRef;
     private static _ends = ClientApi._endpoints.auth.devices;
 
-    public static attach = (data?: AttachDto): Promise<ApiResponse<Device.Entity>> => {
+    public static attach = (data?: AttachDto): Promise<ApiAxiosResponse<Device.Entity>> => {
       return this._api.post(this._ends.attach(), data);
     };
   }

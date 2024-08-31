@@ -1,5 +1,5 @@
 import { ICreateOrderInfoDto, OrderEntity, SaleOrdersGroupDto } from '../../types/orders/orders.types';
-import { ApiResponse } from '../../redux/app-redux.types';
+import { ApiAxiosResponse } from '../../redux/app-redux.types';
 import { ApiQueryParams, ApiQuerySearchParams, ApiQuerySortParams } from '../index';
 import { ClientApi } from '../client.api';
 import { OrderSlotEntity, SaleOrderSlotDto, UpdateSaleOrderSlotDto } from '../../types/orders/order-slot.types';
@@ -18,15 +18,15 @@ export class SaleOrderSlotsApi {
       params?: GetOrderSlotsApiQuery;
     } = {},
     params?: GetOrderSlotsApiQuery
-  ): Promise<ApiResponse<OrderSlotEntity[]>> => {
+  ): Promise<ApiAxiosResponse<OrderSlotEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params: input.params || params });
   };
 
-  public static create = (input?: { data: SaleOrderSlotDto }): Promise<ApiResponse<OrderSlotEntity>> => {
+  public static create = (input?: { data: SaleOrderSlotDto }): Promise<ApiAxiosResponse<OrderSlotEntity>> => {
     return this.api.post(this.endpoints.create(), input?.data);
   };
 
-  public static update = (input?: { data: UpdateSaleOrderSlotDto }): Promise<ApiResponse<OrderSlotEntity[]>> => {
+  public static update = (input?: { data: UpdateSaleOrderSlotDto }): Promise<ApiAxiosResponse<OrderSlotEntity[]>> => {
     return this.api.patch(this.endpoints.create(), input?.data);
   };
 }
@@ -66,15 +66,15 @@ export default class SaleOrdersApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.ordersEndpoints;
 
-  public static getAll = (_?: any, params?: GetAllSaleOrdersQuery): Promise<ApiResponse<OrderEntity[]>> => {
+  public static getAll = (_?: any, params?: GetAllSaleOrdersQuery): Promise<ApiAxiosResponse<OrderEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
   };
-  public static getOne = (_?: unknown, params?: GetSaleOrderQuery): Promise<ApiResponse<OrderEntity>> => {
+  public static getOne = (_?: unknown, params?: GetSaleOrderQuery): Promise<ApiAxiosResponse<OrderEntity>> => {
     return this.api.get(this.endpoints.getOne(), {
       params,
     });
   };
-  public static create = (input?: ICreateOrderInfoDto): Promise<ApiResponse<OrderEntity>> => {
+  public static create = (input?: ICreateOrderInfoDto): Promise<ApiAxiosResponse<OrderEntity>> => {
     return this.api.post(this.endpoints.create());
   };
 }
