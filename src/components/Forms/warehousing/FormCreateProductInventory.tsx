@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import { useOffersSelector } from '../../../redux/selectors.store';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 import { transformVariationTableData } from '../../../utils/tables';

@@ -7,7 +7,7 @@ import { Text } from '../atoms/Text';
 import useAppAuthHook from '../../hooks/useAppAuth.hook';
 import { useMemo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';
-import translate from '../../lang';
+import translate from '../../i18e';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 
 export interface IUserInfoProps {

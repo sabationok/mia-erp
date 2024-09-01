@@ -1,6 +1,6 @@
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { OrderTypeEnum } from '../../../../types/orders/orders.types';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
 import { CreatedModal } from '../../../../Providers/ModalProvider/ModalProvider';
 import styled from 'styled-components';

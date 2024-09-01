@@ -6,7 +6,7 @@ import { ToastService } from '../../../../services';
 import { IMeasurement } from '../../../../types/utils.types';
 import { useState } from 'react';
 import { OfferFormAreaProps } from '../types';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 
 export interface OfferMeasurementFormProps extends OfferFormAreaProps<IMeasurement> {}
 

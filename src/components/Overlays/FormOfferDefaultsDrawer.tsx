@@ -14,7 +14,7 @@ import VariationsTab from '../AppPages/offers/tabs/VariationsTab';
 import WarehousingTab from '../AppPages/offers/tabs/WarehousingTab';
 import CounterpartyTab from '../Forms/offers/tabs/CounterpartyTab';
 import { CounterpartyTypesEnum } from '../../redux/directories/counterparties.types';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import WarehousesTab from '../Forms/offers/tabs/WarehousesTab';
 import { OnlyUUID } from '../../redux/app-redux.types';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';

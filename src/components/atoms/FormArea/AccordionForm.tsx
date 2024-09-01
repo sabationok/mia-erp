@@ -6,7 +6,7 @@ import { isUndefined } from 'lodash';
 import ButtonIcon from '../ButtonIcon';
 import styled, { css, useTheme } from 'styled-components';
 import { Property } from 'csstype';
-import { LangTextKey, t } from '../../../lang';
+import { LangTextKey, t } from '../../../i18e';
 import ActionsDropdown, { ActionsDropDownProps } from '../ActionsDropdown';
 
 export interface AccordionFormBaseProps {

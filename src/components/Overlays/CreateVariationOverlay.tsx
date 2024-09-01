@@ -16,7 +16,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppForm, useCurrentOffer, useCurrentVariation } from '../../hooks';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { UUID } from '../../types/utils.types';
 import OfferPropertySelector from '../Forms/offers/variations/OfferPropertySelector';
 import { PropertiesGroupEntity, PropertyEntity } from '../../types/offers/properties.types';

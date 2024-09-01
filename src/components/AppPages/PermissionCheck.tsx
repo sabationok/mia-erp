@@ -5,7 +5,7 @@ import useAppParams from '../../hooks/useAppParams.hook';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import AppLoader from '../atoms/AppLoader';
 import { isUndefined } from 'lodash';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { ToastService } from '../../services';
 import { ClientApi } from '../../api';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';

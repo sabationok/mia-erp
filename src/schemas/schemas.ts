@@ -2,7 +2,7 @@ import * as YUP from 'yup';
 import { PartialRecord, Values } from '../types/utils.types';
 import { isValidURL } from '../utils/validators/isValidUrl.validator';
 import { ObjectEntries, ObjectFromEntries } from '../utils';
-import { t } from '../lang';
+import { t } from '../i18e';
 
 export const IsUUID = () => YUP.string().uuid();
 export const isEnum = <T extends object | string[]>(objOrArr: T) =>

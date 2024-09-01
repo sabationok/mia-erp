@@ -3,7 +3,7 @@ import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsLis
 import { usePaymentsSelector } from '../../../redux/selectors.store';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import InputLabel from '../../atoms/Inputs/InputLabel';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { _enumToTabs } from '../../../utils';

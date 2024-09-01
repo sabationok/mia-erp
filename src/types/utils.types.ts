@@ -1,12 +1,13 @@
 import { ServiceMethodBase } from './integrations.types';
 import { CompanyEntity } from './companies/companies.types';
-import { LangPack } from '../lang';
+import { LangPack } from '../i18e';
 import { Path } from 'react-hook-form';
 import { MeasurementUnit } from './enums.types';
 import { AddressDto } from './addresses/addresses.types';
 import { PermissionEntity } from './permissions.types';
 
-export type UUID = string;
+export type UUID = `${string}-${string}-${string}-${string}-${string}` | string;
+
 export type LABEL = string;
 export type SKU = string;
 export type ARTICLE = string;

@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { FilterOption } from '../../atoms/TabSelector';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 
 export interface SupplementPolicyTabProps extends CompanySettingsTabBaseProps<'supplement'> {}
 

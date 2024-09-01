@@ -1,4 +1,4 @@
-import { LangPack } from '../lang';
+import { LangPack } from '../i18e';
 import { MaybeNull } from './utils.types';
 
 export interface ICmsBaseConfigs {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { LangTextKey } from '../../../lang';
+import { LangTextKey } from '../../../i18e';
 import { Text } from '../Text';
 import styled from 'styled-components';
 import FlexBox, { FlexLabel } from '../FlexBox';

@@ -7,7 +7,7 @@ import { useCallback, useState } from 'react';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import { useOffersSelector, usePriceManagementSelector } from '../../../../redux/selectors.store';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../../atoms/FormAfterSubmitOptions';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';

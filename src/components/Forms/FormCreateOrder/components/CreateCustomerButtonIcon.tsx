@@ -3,7 +3,7 @@ import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServ
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import ButtonIcon from '../../../atoms/ButtonIcon';
 import FormCreateCustomer from '../../crm/FormCreateCustomer';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { toReqData } from '../../../../utils/data-transform';
 import * as React from 'react';
 

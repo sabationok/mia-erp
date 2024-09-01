@@ -1,6 +1,6 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { IInvoice } from '../types/invoices.types';
-import { t } from '../lang';
+import { t } from '../i18e';
 import { enumToFilterOptions, numberWithSpaces } from '../utils';
 import { PaymentInternalTypeEnum } from '../types/integrations.types';
 import { pick } from 'lodash';

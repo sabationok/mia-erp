@@ -1,7 +1,7 @@
 import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { ITransaction } from '../types/finances/transactions.types';
-import { t } from '../lang';
+import { t } from '../i18e';
 import { TabOption } from '../components/atoms/TabSelector';
 import { FinTransactionType, FinTransactionTypeEnum } from '../types/directories.types';
 import { enumToFilterOptions } from '../utils';

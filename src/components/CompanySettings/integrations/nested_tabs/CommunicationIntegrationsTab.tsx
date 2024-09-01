@@ -2,7 +2,7 @@ import FlexBox from '../../../atoms/FlexBox';
 import ButtonIcon from '../../../atoms/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
-import { t } from 'lang';
+import { t } from 'i18e';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
 import { InputIntegrationEntity } from 'types/integrations.types';

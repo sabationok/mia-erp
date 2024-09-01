@@ -5,7 +5,7 @@ import { FlexUl } from '../../../atoms/FlexBox';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { OfferFormAreaProps } from '../types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { OfferEntity, OfferFormRelatedFieldKeyEnum, OfferFullFormData } from '../../../../types/offers/offers.types';
 import { idsFromRefs, sortIds } from '../../../../utils';
 import OfferCategoriesSelector from './OfferCategoriesSelector';

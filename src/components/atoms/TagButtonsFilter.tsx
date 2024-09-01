@@ -5,7 +5,7 @@ import FlexBox from './FlexBox';
 import { Text } from './Text';
 import { isUndefined } from 'lodash';
 import { MaybeNull } from '../../types/utils.types';
-import { t } from 'lang';
+import { t } from 'i18e';
 
 export type TagFilterOnSelectValue<Value = any> = FilterSelectValueHandler<Value>;
 

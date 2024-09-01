@@ -11,7 +11,7 @@ import { DrawerHeader, OverlayFooter, OverlayForm } from './index';
 import { OfferEntity } from '../../types/offers/offers.types';
 import { useCurrentOffer } from '../../hooks';
 import { sortIds } from '../../utils';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { CreatedDrawer } from '../../Providers/Drawer';
 import TagButtonsFilter from '../atoms/TagButtonsFilter';
 import { isArray } from 'lodash';

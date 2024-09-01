@@ -5,7 +5,7 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { useAppForm } from '../../../hooks';
 import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '../../../data/companies.data';

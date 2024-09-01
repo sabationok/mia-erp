@@ -7,7 +7,7 @@ import TabSelector from '../../../atoms/TabSelector';
 import { OverviewTextArea } from 'components/Overviews/components/OverviewTextArea';
 import { OverviewCellProps } from '../../components/overview-types';
 import { OrderEntity } from '../../../../types/orders/orders.types';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { _enumToTabs } from '../../../../utils';
 import { OrderOverviewTotals } from '../compnents/OrderOverviewTotals';
 import { PartialRecord } from '../../../../types/utils.types';

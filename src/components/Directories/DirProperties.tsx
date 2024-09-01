@@ -25,7 +25,7 @@ import { CustomSelectHandler } from '../atoms/Inputs/CustomSelect';
 import CreatePropertyModal from '../Modals/CreatePropertyModal';
 import { RenderStackHistory } from '../atoms/RenderStackHistory';
 import styled, { useTheme } from 'styled-components';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import ButtonSwitch from '../atoms/ButtonSwitch';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import InputLabel from 'components/atoms/Inputs/InputLabel';

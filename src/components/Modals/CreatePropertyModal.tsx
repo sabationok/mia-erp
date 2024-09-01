@@ -2,7 +2,7 @@ import { ModalFormProps } from '../ModalForm';
 import { AppFormProvider } from '../../hooks/useAppForm.hook';
 import { OfferTypeEnum } from '../../types/offers/offers.types';
 import FlexBox from '../atoms/FlexBox';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { useAppForm } from '../../hooks';
 import { PropertyBaseEntity, PropertyFormData, PropertyLevelIsType } from '../../types/offers/properties.types';
 import React from 'react';

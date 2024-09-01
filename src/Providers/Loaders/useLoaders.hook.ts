@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { Id, ToastContent, ToastOptions } from 'react-toastify';
 import { PartialRecord } from 'types/utils.types';
 import { ToastService } from '../../services';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 
 export type LoadersRef<Name extends string> = PartialRecord<Name, boolean>;
 export type UseLoaderConfig = {

@@ -3,7 +3,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { useMemo } from 'react';
 import ButtonIcon from '../../atoms/ButtonIcon';
 import { OfferEntity } from '../../../types/offers/offers.types';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { MaybeNull } from '../../../types/utils.types';
 
 export interface ProductCardForSelectorProps {

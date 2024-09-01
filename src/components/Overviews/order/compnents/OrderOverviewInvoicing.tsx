@@ -2,7 +2,7 @@ import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OrderEntity } from '../../../../types/orders/orders.types';
 import { AreaStyledComp } from '../../components/CellStyles';
 import { useMemo } from 'react';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
 import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';

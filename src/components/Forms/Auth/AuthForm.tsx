@@ -18,7 +18,7 @@ import { useAppRouter } from '../../../hooks';
 import { BusinessSubjectTypeEnum } from '../../../types/companies/companies.types';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { isEnum, isLabelSchema, isNameSchema, passwordFields } from '../../../validations';
+import { isEnum, isLabelSchema, isNameSchema, passwordFields } from '../../../schemas';
 
 export interface Props {
   helloTitle?: string;

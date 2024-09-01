@@ -11,7 +11,7 @@ import { omit } from 'lodash';
 import FlexBox from '../../atoms/FlexBox';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 

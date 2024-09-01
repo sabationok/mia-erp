@@ -1,7 +1,7 @@
 import { ModalFormProps } from '../ModalForm';
 import { OfferDimensionsFormArea } from '../Forms/offers/dimensions/OfferDimensionsFormArea';
 import ModalBase from '../atoms/Modal';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { toOfferFormData } from '../../utils';
 import { useEffect } from 'react';
 import { OfferMeasurementFormArea } from 'components/Forms/offers/measurement/OfferMeasurementFormArea';

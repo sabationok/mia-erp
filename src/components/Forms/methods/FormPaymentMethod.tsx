@@ -5,7 +5,7 @@ import { DisabledStates, IBaseKeys } from '../../../types/utils.types';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import { useAppDispatch } from '../../../redux/store.store';
 import React, { useState } from 'react';
-import { LangKeyEnum, t } from '../../../lang';
+import { LangKeyEnum, t } from '../../../i18e';
 import { useAppForm } from '../../../hooks';
 import { omit, pick } from 'lodash';
 import ModalBase from '../../atoms/Modal';

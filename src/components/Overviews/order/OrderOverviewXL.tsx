@@ -4,7 +4,7 @@ import { ModalHeader } from '../../atoms';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { useAppRouter } from '../../../hooks';
 import { enumToFilterOptions } from '../../../utils';
 import TabSelector from '../../atoms/TabSelector';

@@ -1,7 +1,7 @@
 import { ThunkArgs } from '../redux/store.store';
 import { FieldValues } from 'react-hook-form';
 import { FilterOption } from '../components/atoms/TabSelector';
-import { t } from '../lang';
+import { t } from '../i18e';
 import { Values } from '../types/utils.types';
 
 export function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(

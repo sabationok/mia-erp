@@ -1,7 +1,7 @@
 import { IContractor } from '../redux/directories/contractors.types';
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { TableSearchParam } from '../components/TableList/tableTypes.types';
-import { t } from '../lang';
+import { t } from '../i18e';
 import { ICounterparty } from '../redux/directories/counterparties.types';
 import { Path } from 'react-hook-form';
 

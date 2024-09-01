@@ -6,7 +6,7 @@ import TagButtonsFilter from '../atoms/TagButtonsFilter';
 import { AccentColorEnum, getAccentColor } from '../../theme/accentColors';
 import { enumToFilterOptions, enumToTabs } from '../../utils/fabrics';
 import { Text } from '../atoms/Text';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { useMemo, useState } from 'react';
 import TabSelector from '../atoms/TabSelector';
 

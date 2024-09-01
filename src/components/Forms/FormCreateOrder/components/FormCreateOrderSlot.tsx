@@ -5,7 +5,7 @@ import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'rea
 import { ITableListProps } from '../../../TableList/tableTypes.types';
 import TableList from '../../../TableList/TableList';
 import { ApiQueryParams, createApiCall, OffersApi, WarehousesApi } from '../../../../api';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { createTableTitlesFromProperties, enumToFilterOptions, getIdRef, useStepsHandler } from '../../../../utils';
 import TabSelector from '../../../atoms/TabSelector';
 import { VariationEntity } from '../../../../types/offers/variations.types';

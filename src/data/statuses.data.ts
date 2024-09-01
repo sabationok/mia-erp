@@ -1,4 +1,4 @@
-import { t } from '../lang';
+import { t } from '../i18e';
 import { IconIdType } from '../img/sprite';
 import { enumToArray } from '../utils';
 import { isUndefined } from 'lodash';

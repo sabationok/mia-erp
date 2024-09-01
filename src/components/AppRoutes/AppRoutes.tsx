@@ -1,31 +1,26 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';
 import PermissionCheck from '../AppPages/PermissionCheck';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
-import { AppUrlParamKeys } from '../../hooks/useAppParams.hook';
+import { AppUrlParamKeys } from '../../hooks';
 import { AppPages, AppPagesEnum } from 'components/AppPages';
 
 const { PageNotFound } = AppPages;
-
+const notFoundRouteProps = {
+  path: '*',
+  element: (
+    <AppPages.AppGridPage path={'notFound'}>
+      <PageNotFound />
+    </AppPages.AppGridPage>
+  ),
+};
 const AppRoutes: React.FC<{ isLoaded?: boolean }> = () => {
   const { access_token } = useAuthSelector();
 
-  const isAuthorized = useMemo(() => !!access_token, [access_token]);
-
-  const notFoundRouteProps = useMemo(
-    () => ({
-      path: '*',
-      element: (
-        <AppPages.AppGridPage path={'notFound'}>
-          <PageNotFound />
-        </AppPages.AppGridPage>
-      ),
-    }),
-    []
-  );
+  const isAuthorized = !!access_token;
 
   return (
     <Routes>
@@ -46,8 +41,11 @@ const AppRoutes: React.FC<{ isLoaded?: boolean }> = () => {
 
         <Route path={AppPagesEnum.companies} element={<AppPages.PageSelectCompany path={AppPagesEnum.companies} />} />
 
-        <Route path={`:${AppUrlParamKeys.permissionId}`} element={<PermissionCheck redirectTo={'/app/companies'} />}>
-          <Route index element={<Navigate to={AppPagesEnum.transactions} />} />
+        <Route
+          path={`:${AppUrlParamKeys.permissionId}`}
+          element={<PermissionCheck redirectTo={`/app/${AppPagesEnum.companies}`} />}
+        >
+          <Route index element={<Navigate to={AppPagesEnum.offers} />} />
           <Route path={AppPagesEnum.companies} element={<AppPages.PageSelectCompany path={AppPagesEnum.companies} />} />
           <Route
             path={AppPagesEnum.transactions}

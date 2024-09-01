@@ -18,7 +18,7 @@ import SelectOfferModal from './SelectOfferModal';
 import OrderSlotOverview from './OrderSlotOverview';
 import { useMediaQuery } from 'react-responsive';
 import { Text } from '../../atoms/Text';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { toPrice } from '../../../utils/numbers';
 import { CART_DEFAULT_ID } from '../../../redux/cart/cart.slice';
 import { enumToTabs } from '../../../utils';

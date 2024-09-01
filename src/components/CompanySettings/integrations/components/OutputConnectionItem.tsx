@@ -3,7 +3,7 @@ import { useAppDispatch } from '../../../../redux/store.store';
 import { getOutputIntegrationByIdThunk } from '../../../../redux/integrations/integrations.thunk';
 import FlexBox, { FlexLi, FlexUl } from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { toAppDateFormat } from '../../../../utils';
 import { isNumber } from 'lodash';
 import { Tag } from 'antd';

@@ -1,7 +1,7 @@
 import { ModalFormProps } from '../../ModalForm';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { LangKeyEnum, t } from '../../../lang';
+import { LangKeyEnum, t } from '../../../i18e';
 import React, { useState } from 'react';
 import { useAppForm } from '../../../hooks';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';

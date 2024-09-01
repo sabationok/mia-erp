@@ -17,7 +17,7 @@ import { updatePriceThunk } from '../../../redux/priceManagement/priceManagement
 import FlexBox, { FlexUl, SimpleGridBox } from '../../atoms/FlexBox';
 import ButtonIcon from '../../atoms/ButtonIcon';
 import { getAllDiscountsThunk } from '../../../redux/priceManagement/discounts/discounts.thunks';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { CreateDiscountModal } from '../../Modals/CreateDiscountModal';
 import { Text } from '../../atoms/Text';
 import styled, { useTheme } from 'styled-components';

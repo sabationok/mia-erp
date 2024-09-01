@@ -103,6 +103,7 @@ export class ClientApi extends ApiEventEmitterService {
       url: this._endpoints.auth.refreshTokens(),
       logOutUrl: this._endpoints.auth.logOut(),
     },
+    eventListeners: this.eventListeners,
     baseURL:
       ConfigService.getBaseApiUrl() ||
       (ConfigService.baseApiProviderIs.localhost

@@ -1,7 +1,7 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import InputLabel from '../../atoms/Inputs/InputLabel';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import InputText from '../../atoms/Inputs/InputText';
 import FlexBox from '../../atoms/FlexBox';
 import InputSecurityControlHOC from '../../atoms/Inputs/SecurityInputControlHOC';

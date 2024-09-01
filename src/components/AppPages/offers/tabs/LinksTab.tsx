@@ -5,7 +5,7 @@ import { OfferOverviewAddsTabProps } from './types';
 import { useAppDispatch } from '../../../../redux/store.store';
 import { useEffect } from 'react';
 import { getAllLinksThunk } from '../../../../redux/tracking/links/links.thunks';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 
 export const LinksTab = ({ selected }: OfferOverviewAddsTabProps) => {
   const dispatch = useAppDispatch();

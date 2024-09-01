@@ -1,6 +1,6 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { HasAuthor, HasEditor, IBase, WithPeriod } from '../types/utils.types';
-import { t } from '../lang';
+import { t } from '../i18e';
 
 export const buildTableColumnCreator = <TData>(column: CellTittleProps<TData>) => {
   return () => column as never;

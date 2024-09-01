@@ -2,7 +2,7 @@ import FlexBox from 'components/atoms/FlexBox';
 import styled from 'styled-components';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { t } from 'lang';
+import { t } from 'i18e';
 import { Text } from 'components/atoms/Text';
 import FormAccordionItem from '../../../atoms/FormAccordionItem';
 import InputLabel from 'components/atoms/Inputs/InputLabel';

@@ -1,6 +1,6 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { PropertyEntity } from '../types/offers/properties.types';
-import { t } from '../lang';
+import { t } from '../i18e';
 import { VariationEntity } from '../types/offers/variations.types';
 import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../types/price-management/price-management.types';
 import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';

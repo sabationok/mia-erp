@@ -1,5 +1,5 @@
 import { IBase, IBaseKeys, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
-import { LangPack } from '../lang';
+import { LangPack } from '../i18e';
 import { CompanyEntity } from './companies/companies.types';
 import { ApiQueryParams } from '../api';
 import { HasBaseCmsConfigs } from './cms.types';

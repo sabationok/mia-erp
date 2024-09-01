@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import FlexBox, { FlexLi, FlexUl } from './FlexBox';
 import ButtonIcon from './ButtonIcon';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { Text } from './Text';
 import styled, { css } from 'styled-components';
 import { IconIdType } from '../../img/sprite';

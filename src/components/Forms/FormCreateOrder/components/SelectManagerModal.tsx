@@ -3,7 +3,7 @@ import { PermissionEntity, PermissionRecipientEnum } from '../../../../types/per
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { usersDirColumns } from '../../../../data/usersDir.data';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { useMemo, useState } from 'react';
 import { usePermissionsSelector } from '../../../../redux/selectors.store';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';

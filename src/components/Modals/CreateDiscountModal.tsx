@@ -13,7 +13,7 @@ import { useAppDispatch } from '../../redux/store.store';
 import { updateDiscountThunk } from '../../redux/priceManagement/discounts/discounts.thunks';
 import { toReqData } from '../../utils';
 import { omit } from 'lodash';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 
 export interface CreateDiscountModalProps extends CreatedModal {
   priceId?: string;

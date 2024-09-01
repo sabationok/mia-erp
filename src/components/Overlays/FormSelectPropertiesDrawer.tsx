@@ -15,7 +15,7 @@ import OfferPropertySelector from '../Forms/offers/variations/OfferPropertySelec
 import { PropertiesFilterData, PropertiesGroupSelector } from '../atoms/PropertiesGroupSelector';
 import { useCurrentOffer } from '../../hooks';
 import { sortIds } from '../../utils';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { CreatedDrawer } from '../../Providers/Drawer';
 
 export interface FormSelectPropertiesProps

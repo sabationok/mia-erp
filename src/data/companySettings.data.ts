@@ -7,7 +7,7 @@ import FormCreateCustomRole from '../components/Forms/Company/FormCreateCustomRo
 import { Modals } from '../components/Modals/Modals';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
 import CompanyIntegrationsModal from '../components/CompanySettings/CompanyIntegrationsModal';
-import { t } from '../lang';
+import { t } from '../i18e';
 import Forms from '../components/Forms';
 import DirPaymentMethods from '../components/CompanySettings/DirPaymentMethods';
 import DirDeliveryMethods from '../components/CompanySettings/DirDeliveryMethods';

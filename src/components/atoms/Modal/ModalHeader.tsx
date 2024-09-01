@@ -4,7 +4,7 @@ import { Text } from '../Text';
 import styled, { useTheme } from 'styled-components';
 import { IconIdType } from '../../../img/sprite';
 import { useMemo, useRef, useState } from 'react';
-import { t } from 'lang';
+import { t } from 'i18e';
 
 export interface IModalHeaderAction {
   title?: string;

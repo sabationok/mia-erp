@@ -1,7 +1,7 @@
 import FlexBox from '../../../atoms/FlexBox';
 import { IntegrationTabProps } from '../InputIntegrationsTab';
 import { useEffect, useState } from 'react';
-import { t } from 'lang';
+import { t } from 'i18e';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
 import { InputIntegrationEntity } from 'types/integrations.types';

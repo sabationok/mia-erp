@@ -2,7 +2,7 @@ import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import React, { useMemo } from 'react';
 import FlexBox from '../../../atoms/FlexBox';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import { useCurrentOffer } from '../../../../hooks';

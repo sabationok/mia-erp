@@ -3,7 +3,7 @@ import { OrderEntity } from '../../../../types/orders/orders.types';
 import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import { Text } from '../../../atoms/Text';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 
 export const OrderOverviewGroupInfo: RenderOverviewAreaComponent<OrderEntity> = ({ cell, overlayHandler, data }) => {
   return (

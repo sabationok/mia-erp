@@ -12,7 +12,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import translate, { getTranslatedString } from '../../../lang';
+import translate, { getTranslatedString } from '../../../i18e';
 import { FieldValues } from 'react-hook-form/dist/types';
 import { AppErrorSubmitHandler, AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';

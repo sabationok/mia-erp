@@ -6,7 +6,7 @@ import { useOffersSelector } from '../../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { OfferFormAreaProps } from '../types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { OfferFormRelatedFieldKeyEnum, OfferFullFormData } from '../../../../types/offers/offers.types';
 import { PropertiesGroupSelector } from '../../../atoms/PropertiesGroupSelector';
 import { PropertyBaseEntity, PropertyEntity } from '../../../../types/offers/properties.types';

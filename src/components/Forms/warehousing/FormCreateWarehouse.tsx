@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import FlexBox from '../../atoms/FlexBox';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { FormInputs } from '../components/atoms';
 import { Text } from '../../atoms/Text';
 import Switch from '../../atoms/Switch';

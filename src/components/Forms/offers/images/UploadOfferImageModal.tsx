@@ -12,7 +12,7 @@ import * as YUP from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import DrawerBase from '../../../atoms/OverlayBase';
-import { t } from 'lang';
+import { t } from 'i18e';
 import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
 import { CreatedModal } from '../../../../Providers/ModalProvider/ModalProvider';
 

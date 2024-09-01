@@ -1,6 +1,6 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { CustomerEntity } from '../types/customers.types';
-import { t } from '../lang';
+import { t } from '../i18e';
 
 export const customersColumns: CellTittleProps<CustomerEntity>[] = [
   {

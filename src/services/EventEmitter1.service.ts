@@ -87,6 +87,7 @@ export class EventEmitter1<
     }
 
     queue.map.set(id, { id: `m_${id}`, listener });
+
     return () => {
       this._offFor(event, `m_${id}`);
     };

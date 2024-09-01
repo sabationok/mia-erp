@@ -8,7 +8,7 @@ import { ToastService } from '../../../../services';
 import FlexBox from '../../../atoms/FlexBox';
 import Changer from '../../../atoms/Changer';
 import ButtonIcon from '../../../atoms/ButtonIcon';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import { AreaStyledComp } from '../../components/CellStyles';
 import { useOfferOverviewLoaders } from '../../../AppPages/offers/PageOfferOverview';

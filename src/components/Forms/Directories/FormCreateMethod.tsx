@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import InputLabel from '../../atoms/Inputs/InputLabel';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import React, { useState } from 'react';
 import { useAppForm } from '../../../hooks';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';

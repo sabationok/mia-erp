@@ -1,7 +1,7 @@
 import ButtonIcon, { buttonPointerCss } from 'components/atoms/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { MaybeNull } from '../../types/utils.types';
 import { isFunction, isUndefined } from 'lodash';
 import FlexBox from './FlexBox';

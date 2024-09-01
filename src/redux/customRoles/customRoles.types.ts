@@ -1,6 +1,6 @@
 import { IBase } from '../app-redux.types';
 import { ICompanyBase } from '../../types/companies/companies.types';
-import { LangPack } from '../../lang';
+import { LangPack } from '../../i18e';
 
 export enum ModuleName {
   counterparties = 'counterparties',

@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import ButtonIcon from '../../../atoms/ButtonIcon';
 import FlexBox from '../../../atoms/FlexBox';
 import { useOffersSelector } from '../../../../redux/selectors.store';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import TagButtonsFilter from '../../../atoms/TagButtonsFilter';
 import SvgIcon from '../../../atoms/SvgIcon';
 

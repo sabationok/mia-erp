@@ -4,7 +4,7 @@ import { useOffersSelector } from '../../../../redux/selectors.store';
 import React, { useMemo } from 'react';
 import FormSelectPropertiesDrawer from '../../../Overlays/FormSelectPropertiesDrawer';
 import FlexBox from '../../../atoms/FlexBox';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import { OverviewPropertyComponent } from '../../components/OverviewPropertyComponent';

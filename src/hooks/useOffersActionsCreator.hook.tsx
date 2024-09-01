@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { TableActionsCreator } from '../components/TableList/tableTypes.types';
 import { OfferEntity, OfferStatusEnum } from '../types/offers/offers.types';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
-import { t } from '../lang';
+import { t } from '../i18e';
 import EditOfferModal from '../components/Modals/EditOfferModal';
 import CreateOfferModal from '../components/Modals/CreateOfferModal';
 import { useAppRouter } from './useRouter.hook';

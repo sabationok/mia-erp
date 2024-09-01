@@ -1,4 +1,4 @@
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { AppUrlParamKeys } from '../../hooks';
 
 export * as AppPages from './pages';

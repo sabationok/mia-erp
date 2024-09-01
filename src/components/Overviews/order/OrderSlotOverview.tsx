@@ -5,7 +5,7 @@ import ButtonIcon from '../../atoms/ButtonIcon';
 import { useMemo, useState } from 'react';
 import { OfferImageSlotEntity } from '../../../types/offers/offers.types';
 import { Text } from '../../atoms/Text';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import CountSelectorBase from '../../atoms/CountSelectorBase';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { numberWithSpaces } from '../../../utils';

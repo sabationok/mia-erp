@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import FlexBox, { FlexBoxProps } from './FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from './ButtonIcon';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { Text } from './Text';
 
 export interface FormAccordeonItemProps {

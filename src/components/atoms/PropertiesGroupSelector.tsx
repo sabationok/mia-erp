@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { CustomSelectHandler } from './Inputs/CustomSelect';
 import FlexBox from './FlexBox';
 import InputLabel from './Inputs/InputLabel';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import ButtonsGroup from './ButtonsGroup';
 import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { Values } from '../../types/utils.types';

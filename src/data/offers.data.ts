@@ -1,5 +1,5 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import { t } from '../lang';
+import { t } from '../i18e';
 import { OfferEntity, OfferStatusEnum } from '../types/offers/offers.types';
 import { getStatusesByEnum } from './statuses.data';
 import { enumToFilterOptions } from '../utils';

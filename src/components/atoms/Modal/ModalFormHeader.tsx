@@ -1,6 +1,6 @@
 import FlexBox from '../FlexBox';
 import ButtonIcon from '../ButtonIcon';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { Text } from '../Text';
 import styled from 'styled-components';
 

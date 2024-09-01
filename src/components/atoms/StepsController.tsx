@@ -4,7 +4,7 @@ import { FilterOption } from './TabSelector';
 import ButtonIcon from './ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { checks } from '../../utils';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { useMediaQuery } from 'react-responsive';
 import { MaybeNull } from '../../types/utils.types';
 

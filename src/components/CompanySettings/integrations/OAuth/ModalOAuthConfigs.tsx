@@ -3,7 +3,7 @@ import { Integration } from '../../../../types/integrations.types';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { ApiKeyItem } from '../components/ApiKeyItem';
 import ButtonIcon from '../../../atoms/ButtonIcon';
 import { ModalOAuthConfigsForm } from './ModalOAuthConfigsForm';

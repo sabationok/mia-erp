@@ -8,7 +8,7 @@ import { PartialRecord } from '../../types/utils.types';
 import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
 import { TagEntity, TagItemDto } from '../../types/tags.types';
 import { Text } from '../atoms/Text';
-import { t } from 'lang';
+import { t } from 'i18e';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useTagsSelector } from '../../redux/selectors.store';

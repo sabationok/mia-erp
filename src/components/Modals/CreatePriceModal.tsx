@@ -2,7 +2,7 @@ import { ModalFormProps } from '../ModalForm';
 import { IPriceFormData, PriceEntity } from '../../types/price-management/price-management.types';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OfferEntity } from '../../types/offers/offers.types';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { VariationEntity } from '../../types/offers/variations.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { LoadersProvider, useLoadersProvider } from '../../Providers/Loaders/LoaderProvider';

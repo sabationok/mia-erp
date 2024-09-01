@@ -9,7 +9,7 @@ import OrderInvoicesTab from './tabs/OrderInvoicesTab';
 import OrderPaymentsTab from './tabs/OrderPaymentsTab';
 import OrderDeliveriesTab from './tabs/OrderDeliveriesTab';
 import { DrawerHeader } from '../../Overlays';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 
 export interface PageOrderOverviewTabsProps {
   isVisible?: boolean;

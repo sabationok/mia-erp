@@ -1,7 +1,7 @@
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../atoms/ExtraFooterWithButton';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { useModalService } from '../../../Providers/ModalProvider/ModalProvider';
 import FormCreateOutputIntegration from '../../Forms/integrations/FormCreateOutputIntegration';
 import { useEffect, useMemo } from 'react';

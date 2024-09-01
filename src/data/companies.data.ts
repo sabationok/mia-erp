@@ -1,5 +1,5 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import { t } from '../lang';
+import { t } from '../i18e';
 import { BusinessSubjectTypeEnum, CompanyEntity, OwnershipTypeEnum } from '../types/companies/companies.types';
 import { enumToFilterOptions } from '../utils';
 import { TableSearchParam, TableSortParam } from '../components/TableList/tableTypes.types';

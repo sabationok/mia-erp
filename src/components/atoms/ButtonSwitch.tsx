@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import _ from 'lodash';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import ButtonsGroup from './ButtonsGroup';
 import { MaybeNull } from '../../types/utils.types';
 

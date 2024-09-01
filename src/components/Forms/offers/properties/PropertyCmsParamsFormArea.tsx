@@ -13,7 +13,7 @@ import { ObjectValues, toReqData } from '../../../../utils';
 import { pick } from 'lodash';
 import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
-import { LangKeyEnum, t } from '../../../../lang';
+import { LangKeyEnum, t } from '../../../../i18e';
 import InputText from '../../../atoms/Inputs/InputText';
 import LangButtonsGroup from '../../../atoms/LangButtonsGroup';
 import React, { useState } from 'react';

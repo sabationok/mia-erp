@@ -11,7 +11,7 @@ import { ICustomRole } from '../../redux/customRoles/customRoles.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import DirListItem from '../Directories/DirList/DirListItem';
 import ExtraFooterWithButton from '../atoms/ExtraFooterWithButton';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 
 export interface DirCustomRolesProps
   extends IDirInTreeProps<any, ICustomRole, ICustomRole, ICustomRole, CustomRolesService> {}

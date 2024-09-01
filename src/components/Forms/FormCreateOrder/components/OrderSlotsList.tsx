@@ -7,7 +7,7 @@ import { IOrderSlot, IOrderSlotBase, IOrderTempSlot } from '../../../../types/or
 import OrderSlotOverview from '../../../Overviews/order/OrderSlotOverview';
 import { nanoid } from '@reduxjs/toolkit';
 import ButtonIcon from '../../../atoms/ButtonIcon';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { Modals } from '../../../Modals/Modals';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import { ToastService } from '../../../../services';

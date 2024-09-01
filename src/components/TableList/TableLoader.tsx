@@ -1,4 +1,4 @@
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import styled, { useTheme } from 'styled-components';
 import { Oval } from 'react-loader-spinner';
 import { Text } from '../atoms/Text';

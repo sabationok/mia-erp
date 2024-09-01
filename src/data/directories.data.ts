@@ -13,7 +13,7 @@ import {
   GetDirInTreeActionsCreatorOptions,
   IDirItemBase,
 } from '../types/dir.types';
-import { t } from '../lang';
+import { t } from '../i18e';
 import DirTreeComp from '../components/Directories/DirTreeComp';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';

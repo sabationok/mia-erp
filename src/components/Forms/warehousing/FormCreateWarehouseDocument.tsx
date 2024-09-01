@@ -9,7 +9,7 @@ import {
   WarehouseDocumentType,
   WarehouseEntity,
 } from '../../../types/warehousing/warehouses.types';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { useAppForm } from '../../../hooks';
 import { useOffersSelector, useWarehousesSelector } from '../../../redux/selectors.store';
 import { Path } from 'react-hook-form';

@@ -1,6 +1,6 @@
 import { RenderOverviewAreaComponent } from './overview-types';
 import FlexBox from '../../atoms/FlexBox';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import React, { useMemo } from 'react';
 import { AreaStyledComp } from './CellStyles';
 

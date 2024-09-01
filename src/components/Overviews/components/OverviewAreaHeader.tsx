@@ -1,4 +1,4 @@
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import FlexBox from '../../atoms/FlexBox';
 import React from 'react';
 import { AreaStyledComp } from './CellStyles';

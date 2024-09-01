@@ -8,7 +8,7 @@ import { useModalService } from '../../../../Providers/ModalProvider/ModalProvid
 import AddImageSetModal, { FormAddImageSetData } from './AddImageSetModal';
 import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
 import ButtonIcon from '../../../atoms/ButtonIcon';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { formAddImageSetTabs } from '../../../../data';
 import { ImageSetSrcType } from '../../../../types/offers/offer-images.types';
 import { isNumber } from 'lodash';

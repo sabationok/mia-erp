@@ -9,7 +9,7 @@ import { BaseAppPageProps } from '../index';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { LoadersProvider, useLoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import OverlayStackProvider from '../../../Providers/Overlay/OverlayStackProvider';
 
 interface Props extends BaseAppPageProps {}

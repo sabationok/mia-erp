@@ -4,7 +4,7 @@ import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
 import FlexBox, { FlexBoxProps, FlexFieldSet } from '../FlexBox';
 import { Property } from 'csstype';
 import { Text } from '../Text';
-import { LangTextKey, t } from '../../../lang';
+import { LangTextKey, t } from '../../../i18e';
 import { PartialRecord, PrefixKeys } from '../../../types/utils.types';
 
 export type InputStateIs = PrefixKeys<PartialRecord<'error' | 'success' | 'loading', boolean>>;

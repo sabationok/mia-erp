@@ -1,4 +1,4 @@
-import { Action, createAction } from '@reduxjs/toolkit';
+import { Action, createAction, isAnyOf } from '@reduxjs/toolkit';
 import { PermissionEntity } from '../../types/permissions.types';
 import { logOutPermissionThunk } from './permissions.thunk';
 
@@ -8,9 +8,5 @@ export const updatePermissionsWithDelete = createAction<{ id: string }>('permiss
 export const setMockPermissionData = createAction<PermissionEntity>('permissions/setMockPermissionData');
 
 export function onPermissionLogout(a: Action) {
-  return (
-    clearCurrentPermission.type === a.type ||
-    logOutPermissionThunk.fulfilled.type === a.type ||
-    logOutPermissionThunk.rejected.type === a.type
-  );
+  return isAnyOf(clearCurrentPermission, logOutPermissionThunk.fulfilled, logOutPermissionThunk.rejected)(a);
 }

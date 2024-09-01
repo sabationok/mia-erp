@@ -1,6 +1,6 @@
 import { AddressDto } from 'redux/app-redux.types';
 import { HTMLAttributes } from 'react';
-import { t } from 'lang';
+import { t } from 'i18e';
 
 export const destinationAddressInputsProps: ({
   name: keyof AddressDto;

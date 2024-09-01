@@ -3,7 +3,7 @@ import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo, useState } from 'react';
 import ButtonIcon from '../../atoms/ButtonIcon';
 import styled from 'styled-components';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { usePageCurrentOffer } from '../../AppPages/offers/PageOfferProvider';
 import { DrawerHeader } from '../../Overlays';
 import TabSelector from '../../atoms/TabSelector';

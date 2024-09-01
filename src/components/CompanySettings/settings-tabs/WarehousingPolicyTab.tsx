@@ -3,7 +3,7 @@ import { useAppForm } from '../../../hooks';
 import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { WarehousingPolicy } from 'types/companies/policies';
 
 export interface WarehousingPolicyTabProps extends CompanySettingsTabBaseProps<'warehousing'> {}

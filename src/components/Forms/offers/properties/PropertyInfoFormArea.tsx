@@ -8,7 +8,7 @@ import { omit } from 'lodash';
 import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import InputText from '../../../atoms/Inputs/InputText';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
 import React from 'react';

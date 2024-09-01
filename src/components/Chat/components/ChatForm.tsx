@@ -6,7 +6,7 @@ import { FlexForm } from '../../atoms/FlexBox';
 import InputText from '../../atoms/Inputs/InputText';
 import { ChatWs } from '../../../socket';
 import ButtonIcon from '../../atoms/ButtonIcon';
-import { YUP } from 'validations';
+import { YUP } from 'schemas';
 import { sendChatMessageThunk } from '../../../redux/chat/chat.thunks';
 
 interface ChatFormData {

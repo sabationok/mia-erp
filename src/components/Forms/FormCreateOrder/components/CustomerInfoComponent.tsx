@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 
 const CustomerInfoComponent = ({
   info,

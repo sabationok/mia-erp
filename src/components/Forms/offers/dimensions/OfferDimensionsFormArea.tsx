@@ -5,7 +5,7 @@ import useOffersService from '../../../../hooks/useOffersService.hook';
 import { ToastService } from '../../../../services';
 import { useState } from 'react';
 import { OfferFormAreaProps } from '../types';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { OfferFormData } from '../../../../types/offers/offers.types';
 
 export interface OfferDimensionsFormSectionProps extends OfferFormAreaProps<OfferFormData['dimensions']> {}

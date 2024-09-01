@@ -7,7 +7,7 @@ import DirListItem from '../Directories/DirList/DirListItem';
 import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
 import { usePaymentsSelector } from '../../redux/selectors.store';
 import { IPaymentMethod, PaymentInternalTypeEnum } from '../../types/integrations.types';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { FormPaymentMethod } from '../Forms/methods/FormPaymentMethod';
 
 export interface DirPaymentMethodsProps

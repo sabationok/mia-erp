@@ -9,7 +9,7 @@ import {
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import ButtonsGroup, { ButtonGroupSelectHandler } from '../../atoms/ButtonsGroup';
-import { t } from 'lang';
+import { t } from 'i18e';
 import { UUID } from '../../../types/utils.types';
 import { useAppDispatch } from '../../../redux/store.store';
 import { createDiscountThunk, updateDiscountThunk } from '../../../redux/priceManagement/discounts/discounts.thunks';

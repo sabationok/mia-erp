@@ -14,7 +14,7 @@ import { ToastService } from '../../../services';
 import { AccordionForm } from '../../atoms/FormArea/AccordionForm';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import Switch from '../../atoms/Switch';
 import { usePriceModalFormLoaders } from '../../Modals/CreatePriceModal';
 import * as yup from 'yup';

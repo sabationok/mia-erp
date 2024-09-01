@@ -1,7 +1,7 @@
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { EngagementSource, ICustomerFormData } from '../../../types/customers.types';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import InputLabel from '../../atoms/Inputs/InputLabel';

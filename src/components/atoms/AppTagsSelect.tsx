@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import FlexBox from './FlexBox';
 import InputLabel from './Inputs/InputLabel';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { tagsFilterOptions } from '../../data/modalFilterOptions.data';
 import { Values } from '../../types/utils.types';
 import TabSelector from './TabSelector';

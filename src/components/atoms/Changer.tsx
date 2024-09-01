@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTheme } from 'styled-components';
 import { Text } from './Text';
 import { IconIdType } from '../../img/sprite';
-import { LangPack } from '../../lang';
+import { LangPack } from '../../i18e';
 import { checks } from '../../utils';
 
 export interface ChangerOption<T = any, D = any> {

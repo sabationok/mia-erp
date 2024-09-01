@@ -1,7 +1,7 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { VariationEntity, VariationFormData } from '../../../../types/offers/variations.types';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 
 export interface SelectVariationModalProps

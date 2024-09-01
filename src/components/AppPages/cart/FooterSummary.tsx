@@ -4,7 +4,7 @@ import styled, { useTheme } from 'styled-components';
 import { isUndefined } from 'lodash';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { toPrice } from '../../../utils/numbers';
 import InputText from '../../atoms/Inputs/InputText';
 import ButtonIcon from '../../atoms/ButtonIcon';

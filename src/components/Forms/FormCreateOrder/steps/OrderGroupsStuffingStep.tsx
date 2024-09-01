@@ -6,7 +6,7 @@ import { WarehouseEntity } from '../../../../types/warehousing/warehouses.types'
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import ButtonIcon from '../../../atoms/ButtonIcon';
 import { ToastService } from 'services';
-import { t } from 'lang';
+import { t } from 'i18e';
 import { Modals } from '../../../Modals/Modals';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import OrderGroupItem from '../components/OrderGroupItem';

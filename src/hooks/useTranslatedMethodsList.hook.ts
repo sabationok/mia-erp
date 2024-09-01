@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getTranslatedString, LangKey } from '../lang';
+import { getTranslatedString, LangKey } from '../i18e';
 import { ExtServiceBase, ServiceMethodBase } from '../types/integrations.types';
 
 interface UseTranslatedListDataOptions<M extends ServiceMethodBase = any> {

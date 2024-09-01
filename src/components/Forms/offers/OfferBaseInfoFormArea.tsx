@@ -9,7 +9,7 @@ import {
 } from '../../../types/offers/offers.types';
 import { useAppForm } from '../../../hooks';
 import InputLabel from '../../atoms/Inputs/InputLabel';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import InputText from '../../atoms/Inputs/InputText';
 import FlexBox from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect';

@@ -15,7 +15,7 @@ import { AppModuleName } from '../../redux/reduxTypes.types';
 import { toReqData } from '../../utils';
 import Forms from '../Forms';
 import { IDeliveryMethodFormData } from '../Forms/methods/FormDeliveryMethod';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 
 export interface DirDeliveryMethodsProps
   extends IDirInTreeProps<MethodDirType, IDeliveryMethod, IDeliveryMethod, IDeliveryMethod> {

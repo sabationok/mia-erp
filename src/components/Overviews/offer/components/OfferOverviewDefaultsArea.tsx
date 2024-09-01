@@ -2,7 +2,7 @@ import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import { useTheme } from 'styled-components';
 import React, { useMemo } from 'react';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
 import { AreaStyledComp } from '../../components/CellStyles';

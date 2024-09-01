@@ -13,7 +13,7 @@ import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { toInputValueDate, toTrReqData } from '../../../utils';
 import { useAppSelector } from '../../../redux/store.store';
 import FlexBox from '../../atoms/FlexBox';
-import translate from '../../../lang';
+import translate from '../../../i18e';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useAppForm } from '../../../hooks';
 import { yupResolver } from '@hookform/resolvers/yup';

@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import { toReqData } from '../../../utils';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { Text } from '../../atoms/Text';
 import { ToastService } from '../../../services';

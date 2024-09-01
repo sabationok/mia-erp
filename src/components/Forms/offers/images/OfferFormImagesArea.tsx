@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react';
 import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import FormOfferImagesComponent from './FormOfferImagesComponent';
 import { getIdRef } from '../../../../utils';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 
 type OfferField = Partial<OfferImageSlotEntity>[];
 export interface OfferFormImagesAreaProps extends OfferFormAreaProps<OfferField> {

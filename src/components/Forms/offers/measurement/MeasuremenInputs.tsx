@@ -7,7 +7,7 @@ import InputText from '../../../atoms/Inputs/InputText';
 import FlexBox from '../../../atoms/FlexBox';
 import * as React from 'react';
 import { UseAppFormReturn } from 'hooks/useAppForm.hook';
-import { t } from 'lang';
+import { t } from 'i18e';
 import { HasMeasurement } from 'types/utils.types';
 import { MeasurementUnit } from '../../../../types/enums.types';
 

@@ -4,7 +4,7 @@ import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useEffect, useMemo } from 'react';
 import { ITableListProps } from '../../../TableList/tableTypes.types';
 import { customersColumns } from '../../../../data/customers.data';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import TableList from '../../../TableList/TableList';
 import { useCustomersSelector } from '../../../../redux/selectors.store';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';

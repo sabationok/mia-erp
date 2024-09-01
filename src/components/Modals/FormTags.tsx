@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { createTagThunk, deleteTagThunk, updateTagThunk } from '../../redux/tags/tags.thunks';
 import { toReqData } from '../../utils';
 import ModalBase from '../atoms/Modal';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { AccordionForm } from '../atoms/FormArea/AccordionForm';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';

@@ -1,7 +1,7 @@
 import { CompanySettingsTabBaseProps } from './companySettingsTabs.types';
 import { useDeliveriesSelector } from '../../../redux/selectors.store';
 import CustomSelect from '../../atoms/Inputs/CustomSelect';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsList.hook';
@@ -13,7 +13,7 @@ import { useAppForm } from '../../../hooks';
 import InputText from '../../atoms/Inputs/InputText';
 import { DeliveryPolicy } from 'types/companies/policies';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { delivery_policy_json_data_schema } from '../../../validations/companies';
+import { delivery_policy_json_data_schema } from '../../../schemas/companies';
 
 export interface DeliveryPolicyTabProps extends CompanySettingsTabBaseProps<'delivery'> {}
 

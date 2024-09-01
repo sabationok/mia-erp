@@ -8,7 +8,7 @@ import { useOfferOverviewLoaders } from './PageOfferOverview';
 import { OverlayStack } from '../../../Providers/Overlay/OverlayStack';
 import OfferOverviewXL from 'components/Overviews/offer/OfferOverviewXL';
 import { Modals } from '../../Modals/Modals';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 
 export interface OfferOverviewPageLeftSideProps {
   toggleRightSideVisibility?: () => void;

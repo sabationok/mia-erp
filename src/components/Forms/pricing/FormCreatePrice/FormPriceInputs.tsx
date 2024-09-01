@@ -8,7 +8,7 @@ import {
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import InputText from '../../../atoms/Inputs/InputText';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import styled from 'styled-components';
 import { UseFormReturn } from 'react-hook-form/dist/types';
 import { enumToArray } from '../../../../utils';

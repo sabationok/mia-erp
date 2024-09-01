@@ -7,7 +7,7 @@ import { Modals } from '../components/Modals/Modals';
 import { useAppServiceProvider } from './useAppServices.hook';
 import { AppModuleName } from '../redux/reduxTypes.types';
 import { TableActionsBuilder } from '../utils/tables';
-import { t } from '../lang';
+import { t } from '../i18e';
 import { useAuthSelector } from '../redux/selectors.store';
 import { CompanyQueryType, CompanyQueryTypeEnum } from '../types/companies/companies.types';
 import { ToastService } from '../services';

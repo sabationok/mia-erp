@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { persistor, store } from 'redux/store.store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter } from 'react-router-dom';
-import AppThemeProvider from 'Providers/AppThemeProvider/AppThemeProvider';
+import ThemeProvider from 'Providers/AppThemeProvider/ThemeProvider';
 import ModalProvider from 'Providers/ModalProvider/ModalProvider';
 import './index.scss';
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,7 +21,7 @@ root.render(
     <PersistGate persistor={persistor}>
       <BrowserRouter basename="/mia-erp">
         <AppServiceProvider>
-          <AppThemeProvider>
+          <ThemeProvider>
             <CartProvider>
               <ModalProvider>
                 <SideBarProvider>
@@ -29,7 +29,7 @@ root.render(
                 </SideBarProvider>
               </ModalProvider>
             </CartProvider>
-          </AppThemeProvider>
+          </ThemeProvider>
         </AppServiceProvider>
       </BrowserRouter>
     </PersistGate>

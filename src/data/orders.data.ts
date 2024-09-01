@@ -1,7 +1,7 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { OrderEntity, OrderStatusEnum } from '../types/orders/orders.types';
 import { IOrderTempSlot, OrderSlotEntity } from '../types/orders/order-slot.types';
-import { t } from '../lang';
+import { t } from '../i18e';
 import { TableSearchParam, TableSortParam } from '../components/TableList/tableTypes.types';
 import { FilterOption } from '../components/atoms/TabSelector';
 import { getStatusesByEnum } from './statuses.data';

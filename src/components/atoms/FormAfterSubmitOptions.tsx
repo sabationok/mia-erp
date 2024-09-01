@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { memo, useCallback, useEffect, useState } from 'react';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import styled from 'styled-components';
 import FlexBox from './FlexBox';
 import CheckBox from '../TableList/TebleCells/CellComponents/CheckBox';

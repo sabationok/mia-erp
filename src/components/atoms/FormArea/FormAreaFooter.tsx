@@ -1,7 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon';
 import styled from 'styled-components';
 import FlexBox from '../FlexBox';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 
 export interface FormAreaFooterProps {
   formId?: string;

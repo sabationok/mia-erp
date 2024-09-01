@@ -5,7 +5,7 @@ import FormAccordionItem from '../../../atoms/FormAccordionItem';
 import styled, { useTheme } from 'styled-components';
 import FlexBox from '../../../atoms/FlexBox';
 import ButtonIcon from '../../../atoms/ButtonIcon';
-import { t } from 'lang';
+import { t } from 'i18e';
 import { Text } from '../../../atoms/Text';
 
 const OrderGroupItem = ({

@@ -17,12 +17,20 @@ export class ApiEventEmitterService {
   };
 
   static onUnauthorized = (listener: HttpApi.EventListenersMap['onUnauthorized']) => {
-    return this.emitter.on(HttpApi.ReservedEventName.onUnauthorized, listener);
+    return this.emitter.onWith(
+      HttpApi.ReservedEventName.onUnauthorized,
+      HttpApi.ReservedEventName.onUnauthorized,
+      listener
+    );
   };
   static onRefreshToken = (listener: HttpApi.EventListenersMap['onRefreshToken']) => {
-    return this.emitter.on(HttpApi.ReservedEventName.onRefreshToken, listener);
+    return this.emitter.onWith(
+      HttpApi.ReservedEventName.onRefreshToken,
+      HttpApi.ReservedEventName.onRefreshToken,
+      listener
+    );
   };
   static onForbidden = (listener: HttpApi.EventListenersMap['onForbidden']) => {
-    return this.emitter.on(HttpApi.ReservedEventName.onForbidden, listener);
+    return this.emitter.onWith(HttpApi.ReservedEventName.onForbidden, HttpApi.ReservedEventName.onForbidden, listener);
   };
 }

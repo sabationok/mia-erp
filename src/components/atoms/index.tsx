@@ -2,7 +2,7 @@ import ButtonIcon from './ButtonIcon';
 import FlexBox from './FlexBox';
 import { Text } from './Text';
 import styled from 'styled-components';
-import { t } from '../../lang';
+import { t } from '../../i18e';
 import { isUndefined } from 'lodash';
 
 export const DefaultContent: React.FC<{ content?: string }> = ({ content } = {}) => {

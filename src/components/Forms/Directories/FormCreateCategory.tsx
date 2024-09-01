@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { DirectoriesFormProps } from '../../../types/dir.types';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import { useAppForm } from '../../../hooks';

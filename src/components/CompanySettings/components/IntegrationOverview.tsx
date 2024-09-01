@@ -1,5 +1,5 @@
 import { InputIntegrationEntity } from '../../../types/integrations.types';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import { toAppDateFormat } from '../../../utils/date-time';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';

@@ -8,7 +8,7 @@ import { FilterOption } from '../../atoms/TabSelector';
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import { WarehouseEntity, WarehousingSettingsFormData } from '../../../types/warehousing/warehouses.types';
-import { t } from 'lang';
+import { t } from 'i18e';
 import { CompanyDto, CompanyEntity, ICompanyWithConfigs } from 'types/companies/companies.types';
 import { Text } from '../../atoms/Text';
 import Switch from '../../atoms/Switch';

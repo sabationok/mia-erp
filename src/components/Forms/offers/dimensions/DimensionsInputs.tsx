@@ -1,4 +1,4 @@
-import { t } from 'lang';
+import { t } from 'i18e';
 import * as React from 'react';
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';

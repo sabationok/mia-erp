@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
-import { t } from '../../../lang';
+import { t } from '../../../i18e';
 import StepsController from '../../atoms/StepsController';
 import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
 import OrderInfoStep from './steps/OrderInfoStep';

@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { IsDynamicValue, IsEmail, IsString255, IsUaMobilePhone, IsUrl, IsUUID } from '../../../../validations';
+import { IsDynamicValue, IsEmail, IsString255, IsUaMobilePhone, IsUrl, IsUUID } from '../../../../schemas';
 import { OAuth } from '../../../../types/auth/o-auth.namespace';
 import { Integration } from '../../../../types/integrations.types';
 import { useAppDispatch } from '../../../../redux/store.store';
@@ -10,7 +10,7 @@ import { arrayToFilterOptions, enumToArray, enumToFilterOptions, ObjectValues, t
 import ModalBase from '../../../atoms/Modal';
 import FlexBox, { FlexForm } from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
-import { t } from '../../../../lang';
+import { t } from '../../../../i18e';
 import InputText from '../../../atoms/Inputs/InputText';
 import TagButtonsFilter from '../../../atoms/TagButtonsFilter';
 import FormAccordionItem from '../../../atoms/FormAccordionItem';

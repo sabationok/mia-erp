@@ -1,4 +1,4 @@
-import { LangKeyEnum } from '../../lang';
+import { LangKeyEnum } from '../../i18e';
 import React from 'react';
 import { enumToFilterOptions } from '../../utils';
 import ButtonsGroup from './ButtonsGroup';

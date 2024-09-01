@@ -5,7 +5,7 @@ import { OrderEntity } from '../types/orders/orders.types';
 import { Modals } from '../components/Modals/Modals';
 import { useNavigate } from 'react-router-dom';
 import { ExtractIdString } from '../utils/data-transform';
-import { t } from '../lang';
+import { t } from '../i18e';
 import { useAppServiceProvider } from './useAppServices.hook';
 import { AppModuleName } from '../redux/reduxTypes.types';
 
