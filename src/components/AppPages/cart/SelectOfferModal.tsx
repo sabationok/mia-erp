@@ -1,4 +1,4 @@
-import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../../types/warehousing';
 import { CreatedModal, useModalService } from '../../../Providers/ModalProvider/ModalProvider';
 import { useCart } from '../../../Providers/CartProvider';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';

@@ -16,6 +16,7 @@ import { isString } from 'lodash';
 export interface DirectoriesState extends Record<string, any> {
   defaultDirectories?: Record<string, DefaultDirectoryType[]>;
   directories: Record<ApiDirType | string, IDirItemBase[]>;
+
   error: AuthErrorType;
   isLoading: boolean;
 }

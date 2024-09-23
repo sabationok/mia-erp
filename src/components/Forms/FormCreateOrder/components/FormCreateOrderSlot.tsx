@@ -17,7 +17,7 @@ import StepsController from '../../../atoms/StepsController';
 import { useAppForm } from '../../../../hooks';
 import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
-import { WarehouseEntity, WarehouseItemEntity } from '../../../../types/warehousing/warehouses.types';
+import { WarehouseEntity, WarehouseInventoryEntity } from '../../../../types/warehousing';
 import { warehouseBatchColumns } from '../../../../data/warehauses.data';
 import _ from 'lodash';
 import { nanoid } from '@reduxjs/toolkit';
@@ -46,7 +46,7 @@ export interface FormCreateOrderSlotFormData {
   variation?: VariationEntity;
   product?: OfferEntity;
   warehouse?: WarehouseEntity;
-  inventory?: WarehouseItemEntity;
+  inventory?: WarehouseInventoryEntity;
 }
 type FormKey = keyof FormCreateOrderSlotFormData;
 
@@ -61,7 +61,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   const [products, setProducts] = useState<OfferEntity[]>([]);
   const [variations, setVariations] = useState<VariationEntity[]>([]);
   // const [prices, setPrices] = useState<IPriceListItem[]>([]);
-  const [inventories, setInventories] = useState<WarehouseItemEntity[]>([]);
+  const [inventories, setInventories] = useState<WarehouseInventoryEntity[]>([]);
   const [formData, setFormData] = useState<FormCreateOrderSlotFormData>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -130,7 +130,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   // );
 
   const warehousingTableConfig = useMemo(
-    (): ITableListProps<WarehouseItemEntity> => ({
+    (): ITableListProps<WarehouseInventoryEntity> => ({
       tableTitles: warehouseBatchColumns,
       tableData: inventories,
       hasSearch: false,

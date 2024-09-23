@@ -1,7 +1,7 @@
 import { useWarehousesSelector } from '../redux/selectors.store';
 import { useMemo } from 'react';
 import { FilterOption } from '../components/atoms/TabSelector';
-import { WarehouseEntity } from '../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../types/warehousing';
 import { OnlyUUID } from '../redux/app-redux.types';
 import { getIdRef } from '../utils/data-transform';
 import { usePermissionsSelector } from './usePermissionsService.hook';

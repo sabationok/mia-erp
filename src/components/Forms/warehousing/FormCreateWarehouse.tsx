@@ -1,4 +1,4 @@
-import { IWarehouseDto, WarehouseTypeEnum } from '../../../types/warehousing/warehouses.types';
+import { WarehouseDto, WarehouseTypeEnum } from '../../../types/warehousing';
 import { useAppForm } from '../../../hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -19,7 +19,7 @@ export interface FormCreateWarehouseProps extends Omit<ModalFormProps<any, any, 
   onSubmit?: AppSubmitHandler<IWarehouseFormData>;
   update?: string;
 }
-export interface IWarehouseFormData extends IWarehouseDto {
+export interface IWarehouseFormData extends WarehouseDto {
   asDefault?: boolean;
 }
 

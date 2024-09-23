@@ -3,7 +3,7 @@ import { WarehouseInventoryEntity } from 'types/warehousing/warehouse-inventory.
 import { OfferEntity } from 'types/offers/offers.types';
 import { PriceEntity } from '../types/price-management/price-management.types';
 import { IOrderTempSlot } from '../types/orders/order-slot.types';
-import { WarehouseEntity } from '../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../types/warehousing';
 import Decimal from 'decimal.js';
 import { omit } from 'lodash';
 import {

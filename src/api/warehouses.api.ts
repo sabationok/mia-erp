@@ -2,9 +2,10 @@ import { ApiQueryParams } from './index';
 import {
   IWarehouseDocReqData,
   IWarehouseReqData,
+  OfferInventoryDto,
   WarehouseEntity,
-  WarehouseItemEntity,
-} from '../types/warehousing/warehouses.types';
+  WarehouseInventoryEntity,
+} from '../types/warehousing';
 import { ApiAxiosResponse, OnlyUUID } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
 
@@ -14,15 +15,20 @@ export class WarehouseInventoriesApi {
 
   public static getAll = (
     params?: Pick<ApiQueryParams, 'warehouseId' | 'offerId' | 'variationId'>
-  ): Promise<ApiAxiosResponse<WarehouseItemEntity[]>> => {
+  ): Promise<ApiAxiosResponse<WarehouseInventoryEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
+  };
+  public static create = (args?: {
+    data: OfferInventoryDto;
+  }): Promise<ApiAxiosResponse<WarehouseInventoryEntity[]>> => {
+    return this.api.post(this.endpoints.create(), args?.data);
   };
 }
 
 export class WarehousingDocumentsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.warehousing.documents;
-  public static createDocument = (input?: IWarehouseDocReqData): Promise<ApiAxiosResponse<WarehouseItemEntity>> => {
+  public static create = (input?: IWarehouseDocReqData): Promise<ApiAxiosResponse<WarehouseInventoryEntity>> => {
     return this.api.post(this.endpoints.create(), input?.data, { params: input?.params });
   };
 }
@@ -32,12 +38,12 @@ export class WarehousesApi {
   public static inventories = WarehouseInventoriesApi;
   public static documents = WarehousingDocumentsApi;
 
-  public static createWarehouse = (data?: IWarehouseReqData): Promise<ApiAxiosResponse<WarehouseEntity>> => {
+  public static create = (data?: IWarehouseReqData): Promise<ApiAxiosResponse<WarehouseEntity>> => {
     return this.api.post(this.endpoints.create(), data?.data, { params: data?.params });
   };
 
-  public static updateWarehouse = (data?: IWarehouseReqData): Promise<ApiAxiosResponse<WarehouseEntity>> => {
-    return this.api.patch(this.endpoints.update(data?._id), data?.data);
+  public static update = (data?: IWarehouseReqData): Promise<ApiAxiosResponse<WarehouseEntity>> => {
+    return this.api.patch(this.endpoints.update(), data?.data);
   };
   public static getById = (
     warehouse?: OnlyUUID,

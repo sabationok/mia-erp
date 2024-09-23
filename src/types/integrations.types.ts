@@ -108,7 +108,7 @@ export interface ExtServiceBase extends IBase {
   label: string;
   provider: ExternalServiceProvidersEnum;
   lang?: LangPack;
-  defIntegration?: InputIntegrationEntity;
+  defIntegration?: InputConnectionEntity;
   disabled?: boolean;
   // originServices?: ExtSubServicesEntity;
   services?: ExternalServiceTypeEnum[];
@@ -201,7 +201,7 @@ export namespace Integration {
   }
 }
 
-export type InputIntegrationEntity = Integration.Input.Entity;
+export type InputConnectionEntity = Integration.Input.Entity;
 
 export type OutputIntegrationEntity = Integration.Output.Entity;
 

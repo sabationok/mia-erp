@@ -21,7 +21,9 @@ export type Ref = OnlyUUID;
 export type FieldValues = Record<string, any>;
 
 export type Values<T extends any> = T extends (infer U)[] ? U : T[keyof T];
+
 export type Keys<T extends any> = keyof T;
+
 export type PrefixKeys<T, Prefix extends string = '$'> = {
   [K in keyof T as `${Prefix}${string & K}`]: T[K];
 };

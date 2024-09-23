@@ -4,7 +4,7 @@ import { CompanyEntity } from '../../types/companies/companies.types';
 import { IManager } from '../../types/auth/auth.types';
 import { SupplierDirEntity } from '../../types/dir.types';
 import { TabOption } from '../../components/atoms/TabSelector';
-import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../types/warehousing';
 import { ICustomerBase } from '../../types/customers.types';
 
 export type RefundTypeFilterOption = TabOption;

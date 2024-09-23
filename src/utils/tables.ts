@@ -3,7 +3,7 @@ import { PropertyEntity } from '../types/offers/properties.types';
 import { t } from '../i18e';
 import { VariationEntity } from '../types/offers/variations.types';
 import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../types/price-management/price-management.types';
-import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';
+import { WarehouseInventoryEntity } from '../types/warehousing';
 import { numberWithSpaces } from './numbers';
 import { ITableAction, ITableListContext } from '../components/TableList/tableTypes.types';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
@@ -176,7 +176,7 @@ export const priceAmountAndPercentageFieldsLabels: Record<
 export function createPriceColumnForBatch(
   name: keyof PriceAmountAndPercentageFields,
   width?: string
-): CellTittleProps<WarehouseItemEntity> {
+): CellTittleProps<WarehouseInventoryEntity> {
   return {
     top: {
       name: priceAmountAndPercentageFieldsLabels[name]?.amount,

@@ -1,4 +1,4 @@
-import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../../types/warehousing';
 import { useCart } from '../../../Providers/CartProvider';
 import { useAppQuery } from '../../../hooks';
 import { useMemo, useState } from 'react';

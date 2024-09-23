@@ -2,7 +2,7 @@ import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import { NavLink, useLocation } from 'react-router-dom';
 import { PermissionEntity } from '../../../types/permissions.types';
-import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../../types/warehousing';
 import { PriceListEntity } from '../../../types/price-management/price-management.types';
 import { usePermissionsSelector } from '../../../hooks/usePermissionsService.hook';
 import { useEffect, useMemo } from 'react';

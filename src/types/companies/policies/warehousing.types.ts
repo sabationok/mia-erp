@@ -1,5 +1,5 @@
 import { MaybeNull, UUID } from '../../utils.types';
-import { WarehouseEntity } from '../../warehousing/warehouses.types';
+import { WarehouseEntity } from '../../warehousing';
 import { IFormDataValueWithID } from '../../../redux/app-redux.types';
 
 export interface HasPolicy {

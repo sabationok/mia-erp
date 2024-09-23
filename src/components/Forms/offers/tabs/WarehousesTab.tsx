@@ -3,7 +3,7 @@ import { OnlyUUID } from '../../../../redux/app-redux.types';
 import { useWarehousesSelector } from '../../../../redux/selectors.store';
 import { useCallback, useEffect, useMemo } from 'react';
 import { getIdRef } from '../../../../utils';
-import { WarehouseEntity } from '../../../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../../../types/warehousing';
 import { warehousesTableColumns } from '../../../../data/warehauses.data';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';

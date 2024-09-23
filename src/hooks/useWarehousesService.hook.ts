@@ -1,38 +1,36 @@
 import { useMemo } from 'react';
-import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from '../redux/app-redux.types';
-import { ApiQueryParams } from '../api';
+import { __ServiceDispatcherAsync, ServiceApiCaller } from '../redux/app-redux.types';
 import {
-  IProductInventoryReqData,
+  WarehouseInventoryReqData,
   IWarehouseReqData,
   WarehouseEntity,
-  WarehouseItemEntity,
-} from '../types/warehousing/warehouses.types';
+  WarehouseInventoryEntity,
+} from '../types/warehousing';
 import {
   createWarehouseThunk,
   getAllWarehousesThunk,
   getWarehouseByIdThunk,
 } from '../redux/warehouses/warehouses.thunks';
-import { defaultThunkPayload } from '../utils/fabrics';
 import { useAppDispatch } from '../redux/store.store';
 
 export interface WarehousesService {
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: ApiQueryParams }, WarehouseEntity[]>;
-  getById: ServiceDispatcherAsync<OnlyUUID, WarehouseEntity>;
-  create: ServiceDispatcherAsync<IWarehouseReqData, WarehouseEntity>;
+  getAll: __ServiceDispatcherAsync<typeof getAllWarehousesThunk>;
+  getById: __ServiceDispatcherAsync<typeof getWarehouseByIdThunk>;
+  create: __ServiceDispatcherAsync<typeof createWarehouseThunk>;
 
   update?: ServiceApiCaller<IWarehouseReqData, WarehouseEntity>;
 
-  // ? PRODUCT INVENTORIES
-  addItem?: ServiceApiCaller<IProductInventoryReqData, WarehouseItemEntity>;
-  removeItem?: ServiceApiCaller<IProductInventoryReqData, WarehouseItemEntity>;
+  // ? INVENTORIES
+  addItem?: ServiceApiCaller<WarehouseInventoryReqData, WarehouseInventoryEntity>;
+  removeItem?: ServiceApiCaller<WarehouseInventoryReqData, WarehouseInventoryEntity>;
 }
 export const useWarehousesService = (): WarehousesService => {
   const dispatch = useAppDispatch();
   return useMemo(
     (): WarehousesService => ({
-      getAll: args => dispatch(getAllWarehousesThunk(defaultThunkPayload(args))),
-      getById: args => dispatch(getWarehouseByIdThunk(defaultThunkPayload(args))),
-      create: args => dispatch(createWarehouseThunk(defaultThunkPayload(args))),
+      getAll: args => dispatch(getAllWarehousesThunk(args)),
+      getById: args => dispatch(getWarehouseByIdThunk(args)),
+      create: args => dispatch(createWarehouseThunk(args)),
     }),
     [dispatch]
   );

@@ -6,7 +6,7 @@ import { Text } from '../../../atoms/Text';
 import { t } from 'i18e';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
-import { InputIntegrationEntity } from 'types/integrations.types';
+import { InputConnectionEntity } from 'types/integrations.types';
 import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
 import { getIdRef, toQueriesForReq } from 'utils';
 import styled from 'styled-components';
@@ -27,7 +27,7 @@ const DeliveryIntegrationsTab: React.FC<DeliveryIntegrationsTabProps> = ({
   ...props
 }) => {
   const service = useAppServiceProvider()[AppModuleName.integrations];
-  const [integrationsList, setIntegrationsList] = useState<InputIntegrationEntity[]>([]);
+  const [integrationsList, setIntegrationsList] = useState<InputConnectionEntity[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
   const trDeliveryMethods = useTranslatedMethodsList(useShipmentsSelector().methods);

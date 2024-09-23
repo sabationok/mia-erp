@@ -1,9 +1,9 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IProductInventoryFormData } from '../../../types/warehousing/warehouses.types';
+import { OfferInventoryFormData } from '../../../types/warehousing';
 
 export interface FormCreateInventoryProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
-  onSubmit?: AppSubmitHandler<IProductInventoryFormData>;
+  onSubmit?: AppSubmitHandler<OfferInventoryFormData>;
   update?: string;
 }
 const FormCreateInventory: React.FC<FormCreateInventoryProps> = ({ onClose, title, onSubmit }) => {

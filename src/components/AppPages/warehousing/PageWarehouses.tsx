@@ -9,7 +9,7 @@ import { ApiQuerySortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import useWarehousesActionsCreatorHook from '../../../hooks/useWarehousesActionsCreator.hook';
 import { warehousesTableColumns } from '../../../data/warehauses.data';
-import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../../types/warehousing';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useNavigate } from 'react-router-dom';
 import { BaseAppPageProps } from '../index';

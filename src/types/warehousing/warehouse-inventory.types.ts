@@ -1,39 +1,50 @@
-import { HasOwnerAsCompany, HasStatus, IBase, MaybeNull, WithPeriod } from '../utils.types';
+import { HasOwnerAsCompany, IBase, MaybeNull, UUID, WithPeriod } from '../utils.types';
 import { OfferEntity } from '../offers/offers.types';
 import { VariationEntity } from '../offers/variations.types';
 import { PriceEntity } from '../price-management/price-management.types';
-import { WarehouseEntity } from './warehouses.types';
+import { WarehouseEntity } from './index';
+import { ApiQueryParams } from '../../api';
+import { TagEntity } from '../tags.types';
 
-export type WarehouseInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
+// type WarehouseInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface WarehouseInventoryEntity extends IBase, WithPeriod, HasOwnerAsCompany {
-  warehouse?: WarehouseEntity;
-  offer?: OfferEntity;
-  variation?: VariationEntity;
-  price?: PriceEntity;
-  status?: WarehouseInventoryStatus;
-
+export interface WarehouseInventoryBase extends WithPeriod {
   available?: number;
   reserved?: number;
   awaiting?: number;
   lost?: number;
+  stock?: number;
+  reservation?: boolean;
 }
-// * INVENTORIES
+export interface WarehouseInventoryEntity extends IBase, WarehouseInventoryBase, HasOwnerAsCompany {
+  warehouse?: WarehouseEntity;
+  offer?: OfferEntity;
+  variation?: VariationEntity;
+  price?: PriceEntity;
+
+  customerTags?: TagEntity[];
+  supplierTags?: TagEntity[];
+}
+
+export interface OfferInventoryDto extends WarehouseInventoryBase {
+  warehouseId?: UUID;
+  offerId?: UUID;
+  priceId?: UUID;
+
+  customerTags?: UUID[];
+  supplierTags?: UUID[];
+}
+export interface WarehouseInventoryReqData {
+  _id?: UUID;
+  data: OfferInventoryDto;
+  params?: Pick<ApiQueryParams, 'limit' | 'offset' | 'offerId' | 'warehouseId' | 'price'>;
+}
 export interface HasWarehouseInventory {
   inventory?: MaybeNull<WarehouseInventoryEntity>;
 }
-export interface IProductInventoryFormData extends WithPeriod, HasStatus<WarehouseInventoryStatus> {
+
+export interface IProductInventoryFormData extends OfferInventoryDto {
   offer?: Omit<OfferEntity, 'categories' | 'inventories' | 'category' | 'properties'>;
-  variation?: Omit<VariationEntity, 'properties'>;
   price?: Omit<PriceEntity, 'list' | 'offer'>;
   warehouse?: WarehouseEntity;
-
-  stock?: number;
-  reserved?: number;
-  awaiting?: number;
-  lost?: number;
-  reservation?: boolean;
-
-  customerTags?: string[];
-  supplierTags?: string[];
 }

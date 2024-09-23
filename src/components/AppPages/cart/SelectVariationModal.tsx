@@ -6,7 +6,7 @@ import { useCart } from '../../../Providers/CartProvider';
 import { useAppRouter, useCurrentOffer } from '../../../hooks';
 import { VariationEntity } from '../../../types/offers/variations.types';
 import { OfferEntity } from '../../../types/offers/offers.types';
-import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../../types/warehousing';
 import { CreatedModal, useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
 import DrawerBase from '../../atoms/OverlayBase';
 import VariationsTab from '../offers/tabs/VariationsTab';

@@ -1,6 +1,6 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { WarehouseEntity, WarehouseInventoryEntity } from '../../types/warehousing/warehouses.types';
+import { WarehouseEntity, WarehouseInventoryEntity } from '../../types/warehousing';
 import { createWarehouseThunk, getAllWarehousesThunk, getWarehouseByIdThunk } from './warehouses.thunks';
 import { sliceCleaner } from '../../utils';
 import { onUserLogout } from '../auth/auth.actions';
@@ -50,22 +50,21 @@ export const warehousesSlice = createSlice({
     builder
       .addCase(getAllWarehousesThunk.fulfilled, (s, a) => {
         const inputArr = a?.payload?.data && Array.isArray(a?.payload?.data) ? a?.payload?.data : [];
-
-        if (a.payload?.refresh) {
+        if (a.payload?.update) {
+          s.list = [...inputArr, ...s.list];
+        } else {
           s.list = [...inputArr];
-          return;
         }
-        s.list = [...inputArr, ...s.list];
       })
       .addCase(createWarehouseThunk.fulfilled, (s, a) => {
         if (a.payload) {
-          s.list = [a.payload, ...s.list];
+          s.list = [a.payload.data, ...s.list];
         }
       })
       .addCase(getWarehouseByIdThunk.fulfilled, (s, a) => {
         if (a.payload) {
-          s.current = a.payload;
-          s.dataMap[a.payload._id] = a.payload;
+          s.current = a.payload.data;
+          s.dataMap[a.payload.data._id] = a.payload.data;
         }
       })
 

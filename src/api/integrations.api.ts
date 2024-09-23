@@ -1,7 +1,7 @@
 import { ApiAxiosResponse, ApiQueryParams, ClientApi } from './index';
 import {
+  InputConnectionEntity,
   InputIntegrationDto,
-  InputIntegrationEntity,
   Integration,
   OutputIntegrationDto,
 } from '../types/integrations.types';
@@ -74,7 +74,7 @@ export namespace IntegrationsApi {
       create: (data?: {
         data: OutputIntegrationDto;
         params?: { setAsDefault?: boolean };
-      }): Promise<ApiAxiosResponse<InputIntegrationEntity>> => {
+      }): Promise<ApiAxiosResponse<InputConnectionEntity>> => {
         return this.api.post(this.endpoints.create('output'), data?.data, {
           params: data?.params,
         });

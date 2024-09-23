@@ -13,7 +13,7 @@ import {
 import { CustomerEntity } from '../../types/customers.types';
 import { HasBaseCmsConfigs } from '../../types/cms.types';
 import { HasImgPreview, HasLabel, HasSku } from '../../types/utils.types';
-import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../types/warehousing';
 import { SliceMap } from '../reduxTypes.types';
 
 export const CART_ID_PREFIX = 'cart';

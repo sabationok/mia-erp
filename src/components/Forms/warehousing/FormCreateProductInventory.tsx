@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
-import { IProductInventoryFormData } from '../../../types/warehousing/warehouses.types';
+import { OfferInventoryFormData } from '../../../types/warehousing';
 import { PriceEntity } from '../../../types/price-management/price-management.types';
 import { VariationEntity } from '../../../types/offers/variations.types';
 import styled from 'styled-components';
@@ -21,7 +21,7 @@ import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import { useForm } from 'react-hook-form';
 import { OnlyUUID } from '../../../redux/app-redux.types';
 
-export interface FormCreateProductInventoryProps extends Omit<ModalFormProps<IProductInventoryFormData>, 'onSubmit'> {
+export interface FormCreateProductInventoryProps extends Omit<ModalFormProps<OfferInventoryFormData>, 'onSubmit'> {
   product?: OfferEntity;
 }
 
@@ -101,7 +101,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
     setSelectedPrice(price);
   }, []);
 
-  const onValid = (data: IProductInventoryFormData) => {
+  const onValid = (data: OfferInventoryFormData) => {
     console.log('IProductInventoryFormData', data);
   };
 

@@ -1,4 +1,4 @@
-import { InputIntegrationEntity } from '../../../types/integrations.types';
+import { InputConnectionEntity } from '../../../types/integrations.types';
 import { t } from '../../../i18e';
 import { toAppDateFormat } from '../../../utils/date-time';
 import FlexBox from '../../atoms/FlexBox';
@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { isString } from 'lodash';
 
 export interface IntegrationOverviewProps {
-  info: InputIntegrationEntity;
+  info: InputConnectionEntity;
   onSetAsDefaultPress?: () => void;
   onDeletePress?: () => void;
   onEditPress?: () => void;

@@ -2,7 +2,7 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { warehouseOverviewTableColumns } from '../../../../data/warehauses.data';
 import Forms from '../../../Forms';
-import { WarehouseItemEntity } from '../../../../types/warehousing/warehouses.types';
+import { WarehouseInventoryEntity } from '../../../../types/warehousing';
 import { useModalProvider } from '../../../../Providers/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useOffersSelector } from '../../../../redux/selectors.store';
@@ -33,7 +33,7 @@ const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps
     [currentProduct, productsS]
   );
 
-  const tableConfigs = useMemo((): ITableListProps<WarehouseItemEntity> => {
+  const tableConfigs = useMemo((): ITableListProps<WarehouseInventoryEntity> => {
     return {
       tableData: currentProduct?.inventories,
       tableTitles: warehouseOverviewTableColumns,

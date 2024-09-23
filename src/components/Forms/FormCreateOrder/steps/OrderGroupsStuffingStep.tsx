@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { IOrderTempSlot } from 'types/orders/orders.types';
 import FlexBox from '../../../atoms/FlexBox';
 import styled from 'styled-components';
-import { WarehouseEntity } from '../../../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../../../types/warehousing';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import ButtonIcon from '../../../atoms/ButtonIcon';
 import { ToastService } from 'services';

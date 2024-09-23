@@ -17,7 +17,7 @@ import {
 import { HasBaseCmsConfigs } from '../cms.types';
 import { OrderStatusEnum } from './orders.types';
 import { OfferEntity } from '../offers/offers.types';
-import { WarehouseEntity, WarehouseInventoryEntity } from '../warehousing/warehouses.types';
+import { WarehouseEntity, WarehouseInventoryEntity } from '../warehousing';
 import { IPriceBase, PriceEntity } from '../price-management/price-management.types';
 import { VariationEntity } from '../offers/variations.types';
 import { PriceDiscountRecord } from '../price-management/discounts';

@@ -8,7 +8,7 @@ import { useWarehousesSelector } from '../../../redux/selectors.store';
 import { ApiQuerySortParams } from '../../../api';
 import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 import { useAppParams } from '../../../hooks';
-import { WarehouseItemEntity } from '../../../types/warehousing/warehouses.types';
+import { WarehouseInventoryEntity } from '../../../types/warehousing';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
 import { Modals } from '../../Modals/Modals';
@@ -33,7 +33,7 @@ const PageWarehouseOverview: React.FC<any> = (props: Props) => {
   const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
 
   const tableConfig = useMemo(
-    (): ITableListProps<WarehouseItemEntity> => ({
+    (): ITableListProps<WarehouseInventoryEntity> => ({
       tableData: state.current?.inventories,
       hasFilter: false,
       hasSearch: true,
@@ -70,13 +70,13 @@ const Page = styled.div`
   ${takeFullGridArea}
 `;
 
-type WarehouseTableActionsCreator = TableActionsCreator<WarehouseItemEntity>;
+type WarehouseTableActionsCreator = TableActionsCreator<WarehouseInventoryEntity>;
 
 const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
   // const service = useAppServiceProvider().warehouses;
   const modalS = useModalProvider();
 
-  return (ctx: ITableListContext<WarehouseItemEntity>) => {
+  return (ctx: ITableListContext<WarehouseInventoryEntity>) => {
     const current = ctx.selectedRow;
 
     return [

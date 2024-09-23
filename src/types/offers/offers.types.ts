@@ -1,13 +1,13 @@
-import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
 import { OfferCategoryEntity } from '../dir.types';
 import { PriceEntity } from '../price-management/price-management.types';
-import { WarehouseEntity, WarehouseItemEntity } from '../warehousing/warehouses.types';
+import { WarehouseEntity, WarehouseInventoryEntity } from '../warehousing';
 import { IBrand } from '../../redux/directories/brands.types';
 import type { ApiQueryParams, FilesApi } from '../../api';
 import { VariationEntity } from './variations.types';
 import { PropertiesGroupEntity, PropertyValueEntity } from './properties.types';
-import {
+import type {
   AppDate,
+  ArrayOfUUID,
   HasAuthor,
   HasBarCode,
   HasDescription,
@@ -22,17 +22,19 @@ import {
   HasSku,
   HasStatus,
   HasType,
+  IBase,
   Keys,
   MaybeNull,
+  OnlyUUID,
   PartialRecord,
   UUID,
   WithPeriod,
 } from '../utils.types';
 import { OfferImageSlotEntity } from './offer-images.types';
-import { WarehouseInventoryEntity } from '../warehousing/warehouse-inventory.types';
 import { HasBaseCmsConfigs } from '../cms.types';
 import { HasTags, TagEntity } from '../tags.types';
 import { CounterpartyEntity } from '../counterparty/counterparty.types';
+import { IFormDataValueWithID } from '../../redux/app-redux.types';
 
 export type { OfferImageSlotEntity } from './offer-images.types';
 
@@ -102,7 +104,7 @@ export interface IOfferRelatedDefaultFields {
   variation?: VariationEntity;
   price?: PriceEntity;
   warehouse?: WarehouseEntity;
-  inventory?: WarehouseItemEntity;
+  inventory?: WarehouseInventoryEntity;
   supplier?: CounterpartyEntity;
 }
 export interface OfferEntity

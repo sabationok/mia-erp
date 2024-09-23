@@ -2,7 +2,7 @@ import { ITableAction, ITableListContext } from '../components/TableList/tableTy
 import { IModalProviderContext, useModalProvider } from '../Providers/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { WarehousesService } from './useWarehousesService.hook';
-import { WarehouseEntity, IWarehouseDto, IWarehouseReqData } from '../types/warehousing/warehouses.types';
+import { WarehouseEntity, WarehouseDto, IWarehouseReqData } from '../types/warehousing';
 import { Modals } from '../components/Modals/Modals';
 import { IWarehouseFormData } from '../components/Forms/warehousing/FormCreateWarehouse';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ export type WarehouseActionCreatorOptions = {
   navigate: NavigateFunction;
 };
 const createWarehouseReqData = (input: IWarehouseFormData, _id?: string): IWarehouseReqData => {
-  let dto = {} as IWarehouseDto;
+  let dto = {} as WarehouseDto;
 
   (Object.keys(input) as (keyof IWarehouseFormData)[]).forEach(k => {
     const v = input[k] as IWarehouseFormData[typeof k];
