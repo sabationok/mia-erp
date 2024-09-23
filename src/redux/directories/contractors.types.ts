@@ -4,17 +4,10 @@ import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../../types/companie
 
 export interface IContractor<T extends ContractorsTypesEnum = any> extends IDirItemBase<ApiDirType.CONTRACTORS> {
   type: T;
-  name?: string;
   fullName?: string;
-  secondName?: string;
   businessSubjectType?: BusinessSubjectTypeEnum;
-  label?: string;
-  email?: string;
-  phone?: string;
-  personalTaxCode?: string;
   attractionSource?: IDirItemBase<ApiDirType.SOURCE_ATTRACTION>;
   ownershipType?: OwnershipTypeEnum;
-  description?: string;
   tags?: string[];
 }
 

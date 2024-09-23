@@ -1,9 +1,8 @@
-import { IBaseDirItem } from './dir.types';
+import { DirItemFormData, IBaseDirItem } from './dir.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
-import { IBase, IBaseKeys, OnlyUUID, UUID } from '../redux/app-redux.types';
+import { IBase, IBaseKeys } from './utils.types';
 
 export interface DefaultDirectoryType extends IBase {
-  _id: string;
   label: { en: string; ua?: string };
   disabled?: boolean;
 }
@@ -11,16 +10,10 @@ export interface DefaultDirectoryType extends IBase {
 export interface FinCategoryEntity
   extends Pick<
     IBaseDirItem<FinTransactionType, ApiDirType.CATEGORIES_TR>,
-    IBaseKeys | 'parent' | 'childrenList' | 'createdAt' | 'label' | 'description' | 'code' | 'taxCode' | 'type'
+    IBaseKeys | 'parent' | 'childrenList' | 'label' | 'description' | 'code' | 'taxCode' | 'type'
   > {}
 
-export interface FinCategoryFormData
-  extends Partial<OnlyUUID>,
-    Omit<FinCategoryEntity, IBaseKeys | 'childrenList' | 'parent'> {
-  parent?: Pick<FinCategoryEntity, 'label'> & Partial<OnlyUUID>;
-  parentId?: UUID;
-}
-
+export type FinCategoryFormData = DirItemFormData<FinCategoryEntity>;
 export enum FinTransactionTypeEnum {
   INCOME = 'INCOME',
   TRANSFER = 'TRANSFER',

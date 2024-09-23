@@ -2,7 +2,18 @@ import { ModalFormProps } from '../components/ModalForm';
 import { FinCategoryEntity, FinCategoryFormData, FinTransactionTypeEnum, TagTypeEnum } from './directories.types';
 import { FinAccountsTypeEnum } from './finances/fin-accounts.types';
 import { TabOption } from '../components/atoms/TabSelector';
-import { IBase } from '../redux/app-redux.types';
+import {
+  HasDescription,
+  HasEmail,
+  HasIconUrl,
+  HasLabel,
+  HasPhone,
+  HasType,
+  IBase,
+  IBaseKeys,
+  MaybeNull,
+  OnlyUUID,
+} from './utils.types';
 import { CompanyEntity } from './companies/companies.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { IModalProviderContext, ModalService } from '../Providers/ModalProvider/ModalProvider';
@@ -11,7 +22,8 @@ import { AppSubmitHandler, UseAppFormSubmitOptions } from '../hooks/useAppForm.h
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { OfferTypeEnum } from './offers/offers.types';
 import { CounterpartyTypesEnum } from '../redux/directories/counterparties.types';
-import { MaybeNull } from './utils.types';
+import { UUID } from '../redux/app-redux.types';
+import { OfferCategoryFormData } from '../components/Forms/Directories/FormCreateOfferCategory';
 
 export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.COUNTS]: FinAccountsTypeEnum;
@@ -23,50 +35,37 @@ export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.TAGS]: TagTypeEnum;
 }
 
-export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> extends IBase {
+export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any>
+  extends IBase,
+    HasLabel,
+    HasDescription,
+    HasEmail,
+    HasPhone {
   dirType?: DirType;
   owner?: Pick<CompanyEntity, '_id' | 'name' | 'email'>;
-  // products?: IProduct[];
-  // orders?: IOrder[];
+
   parent?: IBaseDirItem<Type, DirType>;
   childrenList?: IBaseDirItem<Type, DirType>[];
-  type?: Type;
-  name?: string;
-  secondName?: string;
-  label?: string;
-  status?: 'ARCHIVED' | 'DELETED' | 'ACTIVE';
-  taxCode?: string | number;
-  personalTaxCode?: string | number;
-  description?: string;
-  manufacturer?: string;
-  email?: string;
-  phone?: string;
-  code?: string | number;
-}
 
-export interface IDirItemBase<DirType extends ApiDirType = any> extends IBase {
-  type?: DirItemTypeByDirType[DirType];
-  dirType?: DirType;
-  owner?: Pick<CompanyEntity, '_id' | 'name' | 'email'>;
-  // products?: OnlyUUID[];
-  // orders?: OnlyUUID[];
-  parent?: MaybeNull<IDirItemBase<DirType>>;
-  childrenList?: MaybeNull<IDirItemBase<DirType>[]>;
+  type?: DirItemTypeByDirType[DirType] extends any ? DirItemTypeByDirType[DirType] : Type;
+
+  secondName?: MaybeNull<string>;
   name?: MaybeNull<string>;
-  secondName?: string;
 
-  label?: MaybeNull<string>;
-  // status?: 'ARCHIVED' | 'DELETED' | 'ACTIVE';
   taxCode?: string | number;
   personalTaxCode?: string | number;
 
-  description?: string;
   manufacturer?: string;
-  email?: string;
-  phone?: string;
-  code?: string | number;
+  code?: string;
 }
 
+export interface IDirItemBase<DirType extends ApiDirType = any, Type = any> extends IBaseDirItem<Type, DirType> {}
+
+export type DirItemFormData<Type> = Omit<Type, IBaseKeys | 'childrenList' | 'parent'> &
+  Partial<OnlyUUID> & {
+    parent?: MaybeNull<Partial<OnlyUUID> & HasLabel>;
+    parentId?: UUID;
+  };
 export interface IDirTreeParentItem<DirType extends ApiDirType = any> extends IDirItemBase<DirType> {
   childrenList: IDirTreeParentItem<DirType>[];
 }
@@ -79,7 +78,7 @@ export interface DirBaseProps extends ModalFormProps {
 }
 
 export interface DirectoriesFormProps<DirType extends ApiDirType = any, ItemDataType = any, FormData = any>
-  extends Omit<ModalFormProps<any, any, ItemDataType>, 'onSubmit'> {
+  extends Omit<ModalFormProps<any, any, FormData>, 'onSubmit'> {
   _id?: string;
   dirType?: DirType;
   type?: DirItemTypeByDirType[DirType];
@@ -167,11 +166,16 @@ export type DirInTreeActionsCreatorType<
   onChangeDisableStatus?: (id: string, status: boolean, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
 };
 
-export interface DirCategoriesProps
+export interface DirFinCategoriesProps
   extends IDirInTreeProps<ApiDirType.CATEGORIES_TR, FinCategoryFormData, FinCategoryFormData, FinCategoryEntity> {}
 
 export interface DirOfferCategoriesProps
-  extends IDirInTreeProps<ApiDirType.CATEGORIES_PROD, FinCategoryFormData, FinCategoryFormData, FinCategoryEntity> {}
+  extends IDirInTreeProps<
+    ApiDirType.CATEGORIES_PROD,
+    OfferCategoryFormData,
+    OfferCategoryFormData,
+    OfferCategoryEntity
+  > {}
 
 export interface IActivity extends IDirItemBase<ApiDirType.ACTIVITIES> {}
 export interface IActivityFormData extends Omit<IActivity, '_id' | 'createdAt' | 'updatedAt'> {}
@@ -180,11 +184,10 @@ export interface DirActivitiesProps
 
 // ? ================ OFFER CATEGORIES
 export interface OfferCategoryEntity
-  extends Pick<
-    IDirItemBase<ApiDirType.CATEGORIES_PROD>,
-    'label' | 'dirType' | 'description' | 'type' | 'parent' | 'childrenList'
-  > {}
-// export interface IProductCategoryDirItem extends IDirItemBase<ApiDirType.CATEGORIES_PROD> {}
+  extends IBase,
+    Pick<IDirItemBase<ApiDirType.CATEGORIES_PROD>, 'label' | 'dirType' | 'description' | 'parent' | 'childrenList'>,
+    HasType<OfferTypeEnum>,
+    HasIconUrl {}
 
 // ? ================ BRANDS
 export interface IBrand extends IDirItemBase {}

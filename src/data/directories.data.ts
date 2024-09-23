@@ -4,8 +4,7 @@ import { contractorsColumns, contractorsSearchParams } from './contractors.data'
 import {
   DirActivitiesProps,
   DirBrandsProps,
-  DirCategoriesProps,
-  DirCountsProps,
+  DirFinCategoriesProps,
   DirInTreeActionsCreatorType,
   DirMarksProps,
   DirOfferCategoriesProps,
@@ -42,7 +41,7 @@ export const getDirInTreeActionsCreator = (
   Modal: Modals = Modals.FormCreateDirTreeComp,
   { createParentTitle, createChildTitle, updateItemTitle }: GetDirInTreeActionsCreatorOptions = {}
 ): DirInTreeActionsCreatorType<ApiDirType, IDirItemBase, DirectoriesService> => {
-  return ({ modalService, service, type, dirType, findById }) => {
+  return ({ modalService, service, type, dirType }) => {
     return {
       onCreateParent: () => {
         const modal = modalService.open({
@@ -59,7 +58,7 @@ export const getDirInTreeActionsCreator = (
               dirType &&
                 service
                   .create({
-                    data: { dirType, data },
+                    data: { dirType, data: toReqData(data) },
                     onSuccess: _rd => {
                       console.debug('Created', dirType, _rd);
 
@@ -85,7 +84,7 @@ export const getDirInTreeActionsCreator = (
             onSubmit: (data, o) => {
               service
                 .create({
-                  data: { dirType, data },
+                  data: { dirType, data: toReqData(data) },
                   onSuccess: _rd => {
                     o?.close && modal?.onClose();
                     ToastService.success(`Created: ${data.label}`);
@@ -109,7 +108,7 @@ export const getDirInTreeActionsCreator = (
             onSubmit: (data, o) => {
               service
                 ?.update({
-                  data: { dirType, _id, data },
+                  data: { dirType, _id, data: toReqData(data) },
                   onSuccess: _rd => {
                     o?.close && modal?.onClose();
                     ToastService.success(`Updated: ${data.label}`);
@@ -133,7 +132,7 @@ export const getDirInTreeActionsCreator = (
       },
       onChangeDisableStatus: (_id, status) => {
         service
-          .changeDisabledStatus({ data: { dirType, _id, data: { disabled: status } }, onSuccess: (_rd, meta) => {} })
+          .changeDisabledStatus({ data: { dirType, _id, data: { disabled: status } }, onSuccess: _rd => {} })
           .then();
       },
     };
@@ -148,7 +147,7 @@ export const getDirInTreeActionsCreator = (
 //   disabled: boolean;
 // }
 
-const CountsProps: DirCountsProps = {
+const CountsProps = {
   title: t('counts'),
   fillHeight: true,
   createParentTitle: t('createParentCount'),
@@ -164,7 +163,7 @@ const CountsProps: DirCountsProps = {
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateFinAccount, { createParentTitle: t('Create count') }),
 };
 
-const countsDir: IDirectoryListItem<any, DirCountsProps> = {
+const countsDir: IDirectoryListItem<any, any> = {
   title: CountsProps.title,
   iconId: iconId.wallet,
   ModalChildren: DirTreeComp,
@@ -172,7 +171,7 @@ const countsDir: IDirectoryListItem<any, DirCountsProps> = {
   disabled: false,
 };
 
-const CategoriesProps: DirCategoriesProps = {
+const CategoriesProps: DirFinCategoriesProps = {
   title: 'Статті доходів/витрат',
   options: categoriesFilterOptions,
   fillHeight: true,
@@ -187,7 +186,7 @@ const CategoriesProps: DirCategoriesProps = {
   filterDefaultValue: FinTransactionTypeEnum.INCOME,
   actionsCreator: getDirInTreeActionsCreator(Modals.CreateOfferCategory, { createParentTitle: t('Create category') }),
 };
-const trCategoriesDir: IDirectoryListItem<any, DirCategoriesProps> = {
+const trCategoriesDir: IDirectoryListItem<any, DirFinCategoriesProps> = {
   title: CategoriesProps.title,
   iconId: iconId.folder,
   ModalChildren: DirTreeComp,
@@ -223,7 +222,7 @@ const CounterpartiesProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
   fillWidth: true,
   dirType: ApiDirType.CONTRACTORS,
   options: counterpartyFilterOptions,
-  getTableSettings: ({ service, modalService, type, dirType }) => ({
+  getTableSettings: ({ service, modalService, _type, dirType }) => ({
     tableTitles: contractorsColumns,
     searchParams: contractorsSearchParams,
     actionsCreator: _ctx => [
@@ -249,7 +248,7 @@ const CounterpartiesProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
                     ToastService.success(`Created: ${data.label || data.name}`);
                     modal?.onClose();
                   },
-                  onError: e => {},
+                  onError: _e => {},
                 });
               },
             },

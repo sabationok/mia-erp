@@ -1,31 +1,30 @@
 import * as YUP from 'yup';
-import { IsEnum, IsString255, isString500, IsString64, IsUUID } from '../schemas';
+import { IsEnum, IsString255, isString500, IsString64, IsUrl, IsUUID } from '../schemas';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { FinCategoryFormData, FinTransactionTypeEnum } from '../../types/directories.types';
 import { pick } from 'lodash';
 import { OfferTypeEnum } from '../../types/offers/offers.types';
+import { OfferCategoryFormData } from '../../components/Forms/Directories/FormCreateOfferCategory';
 
-const IsDirItemBaseSchema = (dirType: keyof typeof ApiDirType) => {
-  const base = YUP.object().shape({
-    _id: IsUUID(),
-    label: IsString255(),
-    description: isString500(),
-    dirType: IsEnum(pick(ApiDirType, [dirType])).required(),
-    parentId: IsUUID(),
-  });
-
-  return base;
-};
-export const finCategorySchema: YUP.ObjectSchema<FinCategoryFormData> = IsDirItemBaseSchema('CATEGORIES_TR').shape({
-  // dirType: IsEnum(pick(ApiDirType, 'CATEGORIES_PROD')).required(),
+const dirItemBaseSchema = YUP.object().shape({
+  _id: IsUUID(),
+  label: IsString255(),
+  description: isString500(),
+  parentId: IsUUID(),
+});
+const dirItemParentSchema = dirItemBaseSchema.omit(['description', 'parentId']);
+export const finCategorySchema: YUP.ObjectSchema<FinCategoryFormData> = dirItemBaseSchema.shape({
+  dirType: IsEnum(pick(ApiDirType, ['CATEGORIES_TR'])).required(),
   type: IsEnum(FinTransactionTypeEnum).required(),
-  taxCode: IsString64(),
-  parent: YUP.lazy(() => finCategorySchema),
-  code: IsString64(),
+  taxCode: IsString64().optional(),
+  parent: dirItemParentSchema.optional(),
+  code: IsString64().optional(),
 });
 
-export const offerCategoryDtoSchema = IsDirItemBaseSchema('CATEGORIES_PROD').shape({
+export const offerCategoryDtoSchema: YUP.ObjectSchema<OfferCategoryFormData> = dirItemBaseSchema.shape({
+  dirType: IsEnum(pick(ApiDirType, ['CATEGORIES_PROD'])).required(),
+  type: IsEnum(OfferTypeEnum).required(),
   description: IsString255().optional(),
-  type: IsEnum(OfferTypeEnum),
-  parent: YUP.lazy(() => offerCategoryDtoSchema),
+  parent: dirItemParentSchema.notRequired(),
+  iconUrl: IsUrl().notRequired(),
 });

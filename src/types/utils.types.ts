@@ -165,7 +165,9 @@ export interface HasStatusRef {
 export interface HasType<Type extends string | number = string> {
   type?: MaybeNull<Type>;
 }
-
+export interface HasIconUrl {
+  iconUrl?: MaybeNull<string>;
+}
 export interface HasCategory<Type extends string | number = string> {
   category?: MaybeNull<Type>;
 }
@@ -276,6 +278,14 @@ export interface HasTaxCode {
 export interface HasMagicLink {
   magicLink?: MaybeNull<string>;
 }
+
+export interface HasEmail {
+  email?: MaybeNull<string>;
+}
+export interface HasPhone {
+  phone?: MaybeNull<string>;
+}
+
 export interface References<Internal = any, External = any> {
   internal?: MaybeNull<Internal>;
   external?: MaybeNull<External>;

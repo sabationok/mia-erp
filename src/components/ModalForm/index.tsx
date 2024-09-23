@@ -9,9 +9,7 @@ import { CreatedModal } from '../../Providers/ModalProvider/ModalProvider';
 
 export interface ModalFormBaseProps<T = any>
   extends CreatedModal,
-    Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onSelect'> {
-  onSubmit?: (ev: FormEvent<HTMLFormElement>) => void;
-  onReset?: (args?: any) => void;
+    Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSelect'> {
   footer?: boolean;
   // onClose?: () => void;
   defaultState?: Partial<T>;
@@ -37,7 +35,7 @@ export interface ModalFormAddsProps {
   filterName?: any;
 }
 
-export type ModalFormProps<V = any, D = any, DataType = any> = ModalFormBaseProps<DataType> &
+export type ModalFormProps<V = any, D = any, FormData = any> = ModalFormBaseProps<FormData> &
   ModalFormAddsProps &
   ModalFormFilterProps<V, D>;
 const ModalForm: React.FC<ModalFormProps> = ({
@@ -69,12 +67,12 @@ const ModalForm: React.FC<ModalFormProps> = ({
     if (typeof onSubmit === 'function') onSubmit(ev);
   }
 
-  function handleReset() {
+  function handleReset(event: any) {
     const close = onClose ?? modal.onClose;
     close();
 
     if (!onReset) return console.log('No passed "onReset" handler');
-    if (typeof onReset === 'function') onReset();
+    if (typeof onReset === 'function') onReset(event);
   }
 
   return (
