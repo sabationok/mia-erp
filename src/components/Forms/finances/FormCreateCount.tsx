@@ -1,10 +1,9 @@
 import ModalForm from 'components/ModalForm';
-import { ICount, ICountFormData } from 'redux/directories/counts.types';
+import { FinAccountEntity, FinAccountFormData, FinAccountsTypeEnum } from 'types/finances/fin-accounts.types';
 import React from 'react';
 import translate, { t } from '../../../i18e';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
-import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DirectoriesFormProps } from '../../../types/dir.types';
@@ -14,14 +13,25 @@ import { pick } from 'lodash';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { FormInputs } from '../components/atoms';
+import { IsEnum, IsString255, IsString64, IsUUID } from '../../../schemas';
+import { CurrencyCode } from '../../../types/utils.types';
 
-export interface FormCreateCountProps extends DirectoriesFormProps<ApiDirType.COUNTS, ICount, ICountFormData> {}
+export interface FormCreateFinAccountProps
+  extends DirectoriesFormProps<ApiDirType.COUNTS, FinAccountEntity, FinAccountFormData> {}
 
-const validation = yup.object().shape({
-  label: yup.string().required(),
-  description: yup.string().max(250).optional(),
+const finAccountDtoSchema: yup.ObjectSchema<FinAccountFormData> = yup.object().shape({
+  _id: IsUUID(),
+  parentId: IsUUID(),
+  label: IsString255().required(),
+  // description:  IsString255().optional(),
+  dirType: IsEnum(ApiDirType).required(),
+  code: IsString64(),
+  type: IsEnum(FinAccountsTypeEnum),
+  status: IsEnum({}),
+  currency: IsEnum(CurrencyCode),
+  balance: IsString64(),
 });
-const FormCreateCount: React.FC<FormCreateCountProps> = ({
+const FormCreateCount: React.FC<FormCreateFinAccountProps> = ({
   parent,
   create,
   type,
@@ -37,22 +47,23 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     formState: { errors },
     register,
     handleSubmit,
-  } = useAppForm<ICountFormData>({
+  } = useAppForm<FinAccountFormData>({
     defaultValues: (parent?._id
       ? {
           ...data,
           type,
           parent: pick(parent, '_id'),
+          parentId: parent?._id,
         }
       : {
           ...data,
           type,
-        }) as ICountFormData,
-    resolver: yupResolver(validation),
+        }) as FinAccountFormData,
+    resolver: yupResolver(finAccountDtoSchema, { stripUnknown: true }),
     reValidateMode: 'onSubmit',
   });
 
-  function formEventWrapper(evHandler?: AppSubmitHandler<ICountFormData>) {
+  function formEventWrapper(evHandler?: AppSubmitHandler<FinAccountFormData>) {
     if (evHandler) {
       return handleSubmit(data =>
         evHandler(data, {
@@ -91,9 +102,9 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
           <InputText placeholder={translate('selectCurrency')} {...register('currency')} disabled />
         </InputLabel>
 
-        <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
-          <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
-        </InputLabel>
+        {/*<InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>*/}
+        {/*  <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />*/}
+        {/*</InputLabel>*/}
       </FormInputs>
     </ModalForm>
   );

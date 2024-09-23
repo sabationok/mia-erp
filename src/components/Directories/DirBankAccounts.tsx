@@ -9,14 +9,14 @@ import FlexBox from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { DirInTreeActionsCreatorType } from '../../types/dir.types';
 import ExtraFooterWithButton from '../atoms/ExtraFooterWithButton';
-import { BankAccountDestinationType, IBankAccount } from '../../types/finances/bank-accounts.types';
+import { BankAccountDestinationType, BankAccountEntity } from '../../types/finances/bank-accounts.types';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../redux/reduxTypes.types';
 
 export interface DirBankAccountsCompProps extends CreatedModal {
   createParentTitle?: string;
   dirType?: ApiDirType;
-  filterSearchPath?: keyof IBankAccount;
+  filterSearchPath?: keyof BankAccountEntity;
   filterDefaultValue?: string;
   tabs?: TabOption<BankAccountDestinationType>[];
   actionsCreator?: DirInTreeActionsCreatorType;

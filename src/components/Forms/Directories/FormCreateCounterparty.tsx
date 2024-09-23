@@ -137,7 +137,7 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
           <ButtonsGroup
             options={businessSubjectTypeFilterOptions}
             borderRadius={'4px'}
-            onSelect={({ option, value, index }) => {
+            onSelect={({ option }) => {
               setValue('businessSubjectType', option.value);
             }}
           />

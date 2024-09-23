@@ -1,4 +1,4 @@
-import { IBase, OnlyUUID } from '../redux/app-redux.types';
+import { HasCurrencyCode, IBase, OnlyUUID } from '../redux/app-redux.types';
 import { IPaymentMethod } from './integrations.types';
 import {
   HasEmbeddedError,
@@ -8,7 +8,6 @@ import {
   HasMethod,
   MaybeNull,
 } from './utils.types';
-import { CurrencyCode } from './finances/transactions.types';
 
 export enum PaymentInternalStatusEnum {
   created = 'created',
@@ -38,13 +37,13 @@ export interface IPayment
     HasExpireDate,
     HasEmbeddedReferences,
     HasEmbeddedStatus<PaymentStatusInfo>,
-    HasEmbeddedError<PaymentErrorInfo> {
+    HasEmbeddedError<PaymentErrorInfo>,
+    HasCurrencyCode {
   amountStart?: MaybeNull<number>;
   amountEnd?: MaybeNull<number>;
 
   commission?: MaybeNull<PaymentCommissionInfo>;
   card?: MaybeNull<any>;
-  currency?: MaybeNull<CurrencyCode>;
 
   invoice?: OnlyUUID;
 

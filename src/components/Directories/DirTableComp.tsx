@@ -57,7 +57,7 @@ const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSett
 
   useEffect(() => {
     if (!tableData.length) {
-      service.getAllByDirType({ data: { dirType } });
+      service.getAll({ data: { dirType } });
     }
     // eslint-disable-next-line
   }, []);

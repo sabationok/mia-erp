@@ -25,7 +25,7 @@ const useLoadInitialAppDataHook = ({
   const { _id, permission_token, company } = usePermissionsSelector().permission;
   const prService = usePermissionsServiceHook();
   const {
-    directories: { getAllByDirType },
+    directories: { getAll },
 
     // priceManagement,
     // transactions,
@@ -67,7 +67,7 @@ const useLoadInitialAppDataHook = ({
           },
         });
         directoriesForLoading.map(({ dirType, createTreeData }) => {
-          return getAllByDirType({
+          return getAll({
             data: { dirType, params: { createTreeData } },
           });
         });

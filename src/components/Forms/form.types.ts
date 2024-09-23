@@ -31,7 +31,7 @@ export type { FormCreateOrdersGroupProps } from './FormCreateOrder/FormCreateOrd
 export type { SelectOrderTypeModalProps } from './FormCreateOrder/components/SelectOrderTypeModal';
 export type { FormCreateOrderSlotProps } from './FormCreateOrder/components/FormCreateOrderSlot';
 // sep FINANCES
-export type { FormCreateCategoryProps } from './Directories/FormCreateCategory';
+export type { FormCreateOfferCategoryProps } from './Directories/FormCreateOfferCategory';
 export type { FormCreateBankAccountProps } from './finances/FormCreateBankAccount';
-export type { FormCreateCountProps } from './finances/FormCreateCount';
+export type { FormCreateFinAccountProps } from './finances/FormCreateCount';
 export type { FormCreateTransactionProps } from './finances/FormCreateTransaction';

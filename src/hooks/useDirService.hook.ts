@@ -18,9 +18,9 @@ export interface DirectoriesService<
   DirType extends ApiDirType = any,
   CreateDTO = any,
   UpdateDTO = any,
-  ItemDataType = IDirItemBase<DirType>
+  ItemDataType = IDirItemBase<DirType>,
 > {
-  getAllByDirType: ServiceDispatcherAsync<DirThunkBaseSubmitData, DirThunkBaseReturnData<ItemDataType[]>>;
+  getAll: ServiceDispatcherAsync<DirThunkBaseSubmitData, DirThunkBaseReturnData<ItemDataType[]>>;
   create: ServiceDispatcherAsync<CreateDirItemThunkSubmitData<CreateDTO>, DirThunkBaseReturnData<ItemDataType[]>>;
   update: ServiceDispatcherAsync<UpdateDirItemThunkSubmitData<UpdateDTO>, DirThunkBaseReturnData<ItemDataType[]>>;
   delete?: ServiceDispatcherAsync<OnlyUUID & { refresh?: boolean }, DirThunkBaseReturnData<ItemDataType[]>>;
@@ -39,7 +39,7 @@ const useDirService = (): DirectoriesService => {
 
   return useMemo(
     (): DirectoriesService => ({
-      getAllByDirType: args => dispatch(getAllDirectoryItemsThunk(defaultThunkPayload(args))),
+      getAll: args => dispatch(getAllDirectoryItemsThunk(defaultThunkPayload(args))),
       create: args => dispatch(createDirectoryItemThunk(defaultThunkPayload(args))),
       update: args => dispatch(updateDirectoryItemThunk(defaultThunkPayload(args))),
       changeDisabledStatus: args => dispatch(updateDirectoryItemThunk(defaultThunkPayload(args))),

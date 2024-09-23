@@ -12,7 +12,8 @@ export const CreateBankAccount = lazy(() => import('./finances/FormCreateBankAcc
 // * OTHER DIRECTORIES
 export const CreateDirTreeComp = lazy(() => import('./Directories/FormCreateDirTreeComp'));
 export const CreateContractor = lazy(() => import('./Directories/FormCreateCounterparty'));
-export const CreateCategory = lazy(() => import('./Directories/FormCreateCategory'));
+export const CreateOfferCategory = lazy(() => import('./Directories/FormCreateOfferCategory'));
+export const CreateFinCategory = lazy(() => import('./Directories/FormCreateFinCategory'));
 export const CreateTag = lazy(() => import('./Directories/FormCreateTag'));
 // * PRICING
 export const CreatePrice = lazy(() => import('./pricing/FormCreatePrice/FormCreatePrice'));

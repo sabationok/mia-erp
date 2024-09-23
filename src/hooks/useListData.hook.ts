@@ -1,16 +1,8 @@
-import { IFounderEntries } from '../utils/founder';
+import { founder, IFounderEntries } from '../utils';
 import { useMemo } from 'react';
-import { founder } from '../utils';
 
 const useFilteredLisData = <T = any>({ searchParam, searchQuery, data }: IFounderEntries<T>) => {
   return useMemo(() => founder<T>({ searchParam, searchQuery, data }), [data, searchParam, searchQuery]);
 };
-const useEntryListData = <T = any>(list: T[], path: keyof T) =>
-  useMemo((): T[] => list.filter(el => !el[path]), [list, path]);
 
-const useListDataHooks = () => ({
-  useFilteredLisData,
-  useEntryListData,
-});
-export { useFilteredLisData, useEntryListData };
-export default useListDataHooks;
+export { useFilteredLisData };

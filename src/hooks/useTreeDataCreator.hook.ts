@@ -1,6 +1,6 @@
 import { createTreeDataMapById, IBaseFields, TreeOptions } from '../utils/createTreeData';
 import { FinCategoryEntity } from '../types/directories.types';
-import { ICount } from '../redux/directories/counts.types';
+import { FinAccountEntity } from '../types/finances/fin-accounts.types';
 import { useMemo, useState } from 'react';
 
 export interface TreeDataCreatorState<T = any> {
@@ -10,12 +10,12 @@ export interface TreeDataCreatorState<T = any> {
   error: string | null;
 }
 
-export interface TreeDataCreatorOptions<T = FinCategoryEntity | ICount> {
+export interface TreeDataCreatorOptions<T = FinCategoryEntity | FinAccountEntity> {
   dataList: (T & IBaseFields<T>)[];
   rootDataValidator?: (item: T) => boolean;
 }
 
-const useTreeDataCreator = <T = FinCategoryEntity | ICount>({
+const useTreeDataCreator = <T = FinCategoryEntity | FinAccountEntity>({
   dataList,
   rootDataValidator,
 }: TreeDataCreatorOptions<T>): TreeDataCreatorState<T> => {

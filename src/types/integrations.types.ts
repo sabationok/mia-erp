@@ -16,7 +16,7 @@ import {
   MaybeNull,
   UUID,
 } from './utils.types';
-import { IBankAccount } from './finances/bank-accounts.types';
+import { BankAccountEntity } from './finances/bank-accounts.types';
 import { PermissionRecipientEnum } from './permissions.types';
 import { OAuth } from './auth/o-auth.namespace';
 
@@ -366,7 +366,7 @@ export interface IPaymentMethod
     string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum,
     ExtPaymentService
   > {
-  bankAccount?: MaybeNull<IBankAccount>;
+  bankAccount?: MaybeNull<BankAccountEntity>;
   configs?: {
     commissionSender?: number;
     commissionReceiver?: number;

@@ -3,8 +3,8 @@ import { createTransactionThunk, getAllTransactionsThunk } from 'redux/finances/
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { ITransaction } from 'types/finances/transactions.types';
 import { checks } from '../../utils';
-import { ICount } from '../directories/counts.types';
-import { IBankAccount } from '../../types/finances/bank-accounts.types';
+import { FinAccountEntity } from '../../types/finances/fin-accounts.types';
+import { BankAccountEntity } from '../../types/finances/bank-accounts.types';
 import {
   createBankAccountThunk,
   getBankAccountsListThunk,
@@ -14,8 +14,8 @@ import {
 export interface IFinTransactionsState {
   transactions: ITransaction[];
   filteredTransactions?: ITransaction[];
-  bankAccounts: IBankAccount[];
-  finCounts: ICount[];
+  bankAccounts: BankAccountEntity[];
+  finCounts: FinAccountEntity[];
   isLoading: boolean;
   error: StateErrorType;
 }

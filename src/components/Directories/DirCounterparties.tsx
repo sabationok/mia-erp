@@ -15,7 +15,7 @@ const DirCounterparties: React.FC<DirContractorsProps> = ({ tableSettings, ...pr
   const { directories } = useAppServiceProvider();
 
   useEffect(() => {
-    directories.getAllByDirType({ data: { dirType: ApiDirType.CONTRACTORS } });
+    directories.getAll({ data: { dirType: ApiDirType.CONTRACTORS } });
     // eslint-disable-next-line
   }, []);
 

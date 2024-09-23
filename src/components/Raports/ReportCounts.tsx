@@ -6,7 +6,7 @@ import { IReportBaseProps } from './report.types';
 import FlexBox from '../atoms/FlexBox';
 import { TabOption } from '../atoms/TabSelector';
 import { numberWithSpaces } from 'utils';
-import { CountType } from 'redux/directories/counts.types';
+import { CountType } from 'types/finances/fin-accounts.types';
 import { CurrencyCode } from '../../types/finances/transactions.types';
 import styled from 'styled-components';
 

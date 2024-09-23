@@ -3,7 +3,7 @@ import PriceListOverview, { PriceListOverviewProps } from './PriceListOverview';
 import OfferOverview, { ProductOverviewProps } from '../Overviews/offer/OfferOverview';
 import SelectProductModal, { SelectProductModalProps } from './SelectProductModal';
 import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
-import DirPoperties, { DirPropertiesProps } from '../Directories/DirProperties';
+import DirProperties, { DirPropertiesProps } from '../Directories/DirProperties';
 import Forms, { FormPropTypes } from '../Forms';
 import { FormCreateBankAccountProps } from '../Forms/finances/FormCreateBankAccount';
 import CreatePriceModal, { ModalCreatePriceProps } from './CreatePriceModal';
@@ -20,8 +20,9 @@ export enum Modals {
   FormCreatePriceList = 'FormCreatePriceList',
 
   FormCreateCustomRole = 'FormCreateCustomRole',
-  FormCreateCount = 'FormCreateCount',
-  FormCreateCategory = 'FormCreateCategory',
+  FormCreateFinAccount = 'FormCreateFinAccount',
+  CreateOfferCategory = 'CreateOfferCategory',
+  CreateFinCategory = 'CreateFinCategory',
   FormCreateCompany = 'FormCreateCompany',
   FormCreateMethod = 'FormCreateMethod',
   FormInviteUser = 'FormInviteUser',
@@ -59,11 +60,12 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateActivity]: Forms.CreateActivity,
   [Modals.FormCreateContractor]: Forms.CreateContractor,
   [Modals.FormCreateTransaction]: Forms.CreateTransaction,
-  [Modals.FormCreateCategory]: Forms.CreateCategory,
+  [Modals.CreateOfferCategory]: Forms.CreateOfferCategory,
+  [Modals.CreateFinCategory]: Forms.CreateFinCategory,
   [Modals.FormCreatePriceList]: Forms.CreatePriceList,
   [Modals.CreatePrice]: CreatePriceModal,
   [Modals.FormCreateCustomRole]: Forms.CreateCustomRole,
-  [Modals.FormCreateCount]: Forms.CreateCount,
+  [Modals.FormCreateFinAccount]: Forms.CreateCount,
   [Modals.FormCreateCompany]: Forms.CreateCompany,
   [Modals.FormCreateTag]: Forms.CreateTag,
   [Modals.FormCreateMethod]: Forms.CreateMethod,
@@ -85,7 +87,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   // sep FINANCES
   [Modals.FormCreateBankAccount]: Forms.CreateBankAccount,
   // sep DIRECTORIES
-  [Modals.DirProperties]: DirPoperties,
+  [Modals.DirProperties]: DirProperties,
   // [Modals.DirTreeComponent]: DirTreeComp,
   // sep Modals props
   [Modals.PriceListOverview]: PriceListOverview,
@@ -103,9 +105,9 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateActivity]: FormPropTypes.FormCreateCompanyActivityProps;
   [Modals.FormCreateContractor]: FormPropTypes.FormCreateContractorProps;
   [Modals.FormCreateTransaction]: FormPropTypes.FormCreateTransactionProps;
-  [Modals.FormCreateCategory]: FormPropTypes.FormCreateCategoryProps;
-  [Modals.FormCreateCategory]: FormPropTypes.FormCreateCategoryProps;
-  [Modals.FormCreateCount]: FormPropTypes.FormCreateCountProps;
+  [Modals.CreateOfferCategory]: FormPropTypes.FormCreateCategoryProps;
+  [Modals.CreateFinCategory]: FormPropTypes.FormCreateCategoryProps;
+  [Modals.FormCreateFinAccount]: FormPropTypes.FormCreateFinAccountProps;
   [Modals.FormCreateCompany]: FormPropTypes.FormCreateCompanyProps;
   [Modals.FormCreateCustomRole]: FormPropTypes.FormCreateCustomRoleProps;
   [Modals.FormCreateMethod]: FormPropTypes.FormCreateMethodProps;

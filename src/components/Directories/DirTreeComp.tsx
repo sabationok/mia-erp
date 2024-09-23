@@ -45,7 +45,7 @@ const DirTreeComp = ({
 
   useEffect(() => {
     if (!directory.length) {
-      service.getAllByDirType({ data: { dirType } });
+      service.getAll({ data: { dirType } });
     }
     // eslint-disable-next-line
   }, []);
@@ -61,7 +61,7 @@ const DirTreeComp = ({
   });
 
   const renderList = useMemo(() => {
-    return fList.map((item, index) => {
+    return fList.map(item => {
       return (
         <DirListItem
           key={`${dirType}_${item._id}`}

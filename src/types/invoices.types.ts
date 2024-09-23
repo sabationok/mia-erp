@@ -1,5 +1,5 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
-import { IOrderSlot, OrderEntity } from './orders/orders.types';
+import { HasCurrencyCode, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
+import { OrderEntity } from './orders/orders.types';
 import { IInvoicingMethod } from './integrations.types';
 import {
   AppDate,
@@ -15,8 +15,8 @@ import {
 } from './utils.types';
 import { IDelivery } from './deliveries.types';
 import { IPayment } from './payments.types';
-import { CurrencyCode } from './finances/transactions.types';
 import { ApiQueryParams } from '../api';
+import { OrderSlotEntity } from './orders/order-slot.types';
 
 export interface InvoiceAmount {
   amountStart?: MaybeNull<number>;
@@ -59,8 +59,7 @@ export interface InvoiceErrorInfo {
   external?: MaybeNull<string>;
 }
 
-export interface IInvoiceTotals {
-  currency: MaybeNull<CurrencyCode>;
+export interface IInvoiceTotals extends HasCurrencyCode {
   amountStart: MaybeNull<number>;
   amountEnd: MaybeNull<number>;
   bonusUsed: MaybeNull<number>;
@@ -86,7 +85,7 @@ export interface IInvoice
     HasEmbeddedError<InvoiceErrorInfo> {
   order?: OrderEntity;
   delivery?: IDelivery;
-  slots?: IOrderSlot[];
+  slots?: OrderSlotEntity[];
   payments?: IPayment[];
   validity?: number;
 

@@ -17,7 +17,7 @@ export interface FinCategoryEntity
 export interface FinCategoryFormData
   extends Partial<OnlyUUID>,
     Omit<FinCategoryEntity, IBaseKeys | 'childrenList' | 'parent'> {
-  parent?: Pick<FinCategoryEntity, 'label' | '_id'>;
+  parent?: Pick<FinCategoryEntity, 'label'> & Partial<OnlyUUID>;
   parentId?: UUID;
 }
 

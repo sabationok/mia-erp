@@ -21,7 +21,7 @@ import FormCreateCounterparty from '../components/Forms/Directories/FormCreateCo
 import { toReqData } from '../utils';
 import { OfferTypeEnum } from '../types/offers/offers.types';
 import { ModalChildrenProps, Modals } from '../components/Modals/Modals';
-import { CountsTypesEnum } from '../redux/directories/counts.types';
+import { FinAccountsTypeEnum } from '../types/finances/fin-accounts.types';
 import { FinTransactionTypeEnum } from '../types/directories.types';
 import { DirectoriesService } from '../hooks/useDirService.hook';
 import DirProperties, { DirPropertiesProps } from '../components/Directories/DirProperties';
@@ -160,8 +160,8 @@ const CountsProps: DirCountsProps = {
   archiving: true,
   filterSearchPath: 'type',
   options: countsFilterOptions,
-  filterDefaultValue: CountsTypesEnum.ACTIVE,
-  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCount, { createParentTitle: t('Create count') }),
+  filterDefaultValue: FinAccountsTypeEnum.ACTIVE,
+  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateFinAccount, { createParentTitle: t('Create count') }),
 };
 
 const countsDir: IDirectoryListItem<any, DirCountsProps> = {
@@ -185,7 +185,7 @@ const CategoriesProps: DirCategoriesProps = {
   availableLevels: 2,
   filterSearchPath: 'type',
   filterDefaultValue: FinTransactionTypeEnum.INCOME,
-  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory, { createParentTitle: t('Create category') }),
+  actionsCreator: getDirInTreeActionsCreator(Modals.CreateOfferCategory, { createParentTitle: t('Create category') }),
 };
 const trCategoriesDir: IDirectoryListItem<any, DirCategoriesProps> = {
   title: CategoriesProps.title,
@@ -207,7 +207,7 @@ const ProductCategoriesProps: DirOfferCategoriesProps = {
   filterSearchPath: 'type',
   filterDefaultValue: OfferTypeEnum.GOODS,
   availableLevels: 5,
-  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory, { createParentTitle: t('Create category') }),
+  actionsCreator: getDirInTreeActionsCreator(Modals.CreateOfferCategory, { createParentTitle: t('Create category') }),
 };
 const prodCategoriesDir: IDirectoryListItem<any, DirOfferCategoriesProps> = {
   title: ProductCategoriesProps.title,

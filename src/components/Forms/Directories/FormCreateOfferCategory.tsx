@@ -1,26 +1,27 @@
 import ModalForm from 'components/ModalForm';
-import { FinCategoryEntity, FinCategoryFormData } from 'types/directories.types';
 import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import { t } from '../../../i18e';
-import { DirectoriesFormProps } from '../../../types/dir.types';
+import { DirectoriesFormProps, OfferCategoryEntity } from '../../../types/dir.types';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import { useAppForm } from '../../../hooks';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { FormInputs } from '../components/atoms';
-import { finCategorySchema } from '../../../schemas/directories';
+import { offerCategoryDtoSchema } from '../../../schemas/directories';
+import { IBaseKeys, OnlyUUID } from '../../../types/utils.types';
 
-export interface FormCreateCategoryProps
-  extends DirectoriesFormProps<
-    ApiDirType.CATEGORIES_PROD & ApiDirType.CATEGORIES_TR,
-    FinCategoryEntity,
-    FinCategoryFormData
-  > {}
+export type OfferCategoryFormData = Partial<Omit<OfferCategoryEntity, IBaseKeys | 'childrenList' | 'parent'>> &
+  Partial<OnlyUUID> & {
+    parent?: Partial<OnlyUUID> & { label?: string };
+    parentId?: string;
+  };
+export interface FormCreateOfferCategoryProps
+  extends DirectoriesFormProps<ApiDirType.CATEGORIES_PROD, OfferCategoryEntity, OfferCategoryFormData> {}
 
-const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
+const FormCreateOfferCategory: React.FC<FormCreateOfferCategoryProps> = ({
   _id,
   type,
   edit,
@@ -33,19 +34,19 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   const submitOptions = useAfterSubmitOptions();
 
   const {
-    formState: { errors, isValid },
+    formState: { errors },
     register,
     handleSubmit,
     formValues,
-  } = useAppForm<FinCategoryFormData>({
-    defaultValues: defaultState ?? undefined,
-    resolver: yupResolver(finCategorySchema),
+  } = useAppForm<OfferCategoryFormData>({
+    defaultValues: defaultState,
+    resolver: yupResolver(offerCategoryDtoSchema, { stripUnknown: true }),
     reValidateMode: 'onSubmit',
-    mode: 'onChange',
+    mode: 'onBlur',
   });
 
-  const onValid = (data: FinCategoryFormData) => {
-    console.log('FormCreateCategory on valid', { defaultState, data });
+  const onValid = (data: OfferCategoryFormData) => {
+    console.log('FormCreateOfferCategory on valid', { defaultState, data });
 
     onSubmit &&
       onSubmit(data, {
@@ -53,12 +54,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
       });
   };
   return (
-    <ModalForm
-      {...props}
-      onSubmit={handleSubmit(onValid)}
-      isValid={isValid}
-      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
-    >
+    <ModalForm {...props} onSubmit={handleSubmit(onValid)} extraFooter={<FormAfterSubmitOptions {...submitOptions} />}>
       <FormInputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
           <InputText defaultValue={type ? t(type).toUpperCase() : type} disabled />
@@ -82,4 +78,4 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   );
 };
 
-export default FormCreateCategory;
+export default FormCreateOfferCategory;

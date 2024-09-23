@@ -1,6 +1,6 @@
 import { ModalFormProps } from '../components/ModalForm';
 import { FinCategoryEntity, FinCategoryFormData, FinTransactionTypeEnum, TagTypeEnum } from './directories.types';
-import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
+import { FinAccountsTypeEnum } from './finances/fin-accounts.types';
 import { TabOption } from '../components/atoms/TabSelector';
 import { IBase } from '../redux/app-redux.types';
 import { CompanyEntity } from './companies/companies.types';
@@ -14,7 +14,7 @@ import { CounterpartyTypesEnum } from '../redux/directories/counterparties.types
 import { MaybeNull } from './utils.types';
 
 export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
-  [ApiDirType.COUNTS]: CountsTypesEnum;
+  [ApiDirType.COUNTS]: FinAccountsTypeEnum;
   [ApiDirType.CATEGORIES_TR]: FinTransactionTypeEnum;
   [ApiDirType.CATEGORIES_PROD]: OfferTypeEnum;
   [ApiDirType.PROPERTIES_PRODUCTS]: OfferTypeEnum;
@@ -173,10 +173,6 @@ export interface DirCategoriesProps
 export interface DirOfferCategoriesProps
   extends IDirInTreeProps<ApiDirType.CATEGORIES_PROD, FinCategoryFormData, FinCategoryFormData, FinCategoryEntity> {}
 
-// export interface DirBrandsProps
-//   extends IDirInTreeProps<ApiDirType.BRANDS, any, ICategoryFormData, ICategoryFormData, ICategory> {}
-
-export interface DirCountsProps extends IDirInTreeProps<ApiDirType.COUNTS, ICountFormData, ICountFormData, ICount> {}
 export interface IActivity extends IDirItemBase<ApiDirType.ACTIVITIES> {}
 export interface IActivityFormData extends Omit<IActivity, '_id' | 'createdAt' | 'updatedAt'> {}
 export interface DirActivitiesProps
@@ -184,7 +180,10 @@ export interface DirActivitiesProps
 
 // ? ================ OFFER CATEGORIES
 export interface OfferCategoryEntity
-  extends Pick<IDirItemBase<ApiDirType.CATEGORIES_PROD>, 'label' | 'dirType' | 'description' | 'type'> {}
+  extends Pick<
+    IDirItemBase<ApiDirType.CATEGORIES_PROD>,
+    'label' | 'dirType' | 'description' | 'type' | 'parent' | 'childrenList'
+  > {}
 // export interface IProductCategoryDirItem extends IDirItemBase<ApiDirType.CATEGORIES_PROD> {}
 
 // ? ================ BRANDS

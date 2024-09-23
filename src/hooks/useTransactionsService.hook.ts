@@ -5,13 +5,13 @@ import { createTransactionThunk, getAllTransactionsThunk } from '../redux/financ
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { ApiQueryParams, createApiCall, TransactionsApi } from 'api';
-import { BankAccountReqData, IBankAccount } from '../types/finances/bank-accounts.types';
+import { BankAccountEntity, BankAccountReqData } from '../types/finances/bank-accounts.types';
 import { createBankAccountThunk, getBankAccountsListThunk } from '../redux/finances/bank-accounts/bank-accounts.thunks';
 
 export interface UseBankAccountsService {
-  create: ServiceDispatcherAsync<BankAccountReqData, IBankAccount>;
+  create: ServiceDispatcherAsync<BankAccountReqData, BankAccountEntity>;
   // update: ServiceApiCaller<BankAccountReqData, IBankAccount>; // !!!!! ===>>> ServiceDispatcher
-  getList: ServiceDispatcherAsync<{ update?: boolean; query?: ApiQueryParams }, IBankAccount[]>;
+  getList: ServiceDispatcherAsync<{ update?: boolean; query?: ApiQueryParams }, BankAccountEntity[]>;
 }
 export interface UseFinancesService {
   create: ServiceDispatcherAsync<ITransactionReqData, ITransaction>;

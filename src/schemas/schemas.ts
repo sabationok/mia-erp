@@ -16,7 +16,7 @@ export const IsString255 = () => YUP.string().max(255);
 export const isString500 = () => YUP.string().max(500);
 
 export const IsUrl = (params?: Parameters<typeof isValidURL>[1]) => {
-  return YUP.string().test('isValidUrl', 'Is not valid url', (value, context) => {
+  return YUP.string().test('isValidUrl', 'Is not valid url', value => {
     return value ? isValidURL(value, params) : true;
   });
 };
@@ -110,7 +110,7 @@ export const isLabelSchema = (required?: (keyof typeof labelFields)[]) =>
 export const IsDynamicValue = <T extends PartialRecord<string, string[]>>(
   dataKey: string,
   valuesMap: T,
-  options?: {
+  _options?: {
     message?: string;
   }
 ) => {
