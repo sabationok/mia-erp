@@ -12,7 +12,7 @@ const LOCALHOST_API_PORT = ConfigService.get('LOCALHOST_API_PORT') || 5000;
 const BASE_URL_LOCALHOST = `http://localhost:${LOCALHOST_API_PORT}/api/`;
 
 const BASE_URL_RAILWAY = `https://crm-nest-api-production.up.railway.app/api/`;
-const isDevMode = ConfigService.isDevMode();
+const isDevMode = ConfigService.isDevMode;
 
 const baseApi = axios.create({
   baseURL: isDevMode ? BASE_URL_LOCALHOST : BASE_URL_RAILWAY,

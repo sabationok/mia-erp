@@ -1,20 +1,24 @@
+import { ApiAxiosResponse } from 'api';
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
-import { ApiAxiosResponse } from './api.types';
-import { ClientLogger } from '../utils/logger';
-import { ConfigService } from '../services';
+import { ClientLogger } from 'utils/logger';
+import ConfigService from './ConfigService';
 
-export class AxiosQueue {
-  private readonly _logger = new ClientLogger(AxiosQueue.name);
+export class AxiosQueueService {
+  private readonly _logger: ClientLogger;
   queue: {
     config: InternalAxiosRequestConfig;
-    resolve: (config: ApiAxiosResponse) => void;
+    resolve: (value: ApiAxiosResponse) => void;
     reject: <Error = any>(error: AxiosError | Error) => void;
   }[] = [];
   isProcessing: boolean;
 
-  constructor(private readonly client: AxiosInstance) {
+  constructor(
+    private readonly client: AxiosInstance,
+    configs: { name: string }
+  ) {
     this.queue = [];
     this.isProcessing = false;
+    this._logger = new ClientLogger([AxiosQueueService.name, configs.name].join('/'));
   }
 
   async processQueue() {
@@ -72,6 +76,7 @@ export class AxiosQueue {
   }
 
   addToQueue(config: InternalAxiosRequestConfig) {
+    // проміс висть у повітрі поки ми його не вирішимо або не зарежджектимо після рефреш акшену
     return new Promise<ApiAxiosResponse>((resolve, reject) => {
       this.queue.push({ config, resolve, reject });
       this._logger.log('this.queue', this.queue);

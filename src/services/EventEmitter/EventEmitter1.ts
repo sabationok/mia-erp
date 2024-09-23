@@ -1,61 +1,24 @@
-import { ClientLogger } from '../utils/logger';
-import { MaybeAsyncResult, PartialRecord } from '../types/utils.types';
-import ConfigService from './ConfigService';
-import { ObjectKeys } from '../utils';
-import { AxiosError } from 'axios';
-
-export namespace EvEmitter {
-  export type EventsMap = {
-    [key: string]: any;
-  };
-  export type Events<EvMap extends EventsMap = EventsMap> = EventsMap &
-    EvMap & {
-      onUnauthorized?: AxiosError;
-      onForbidden?: AxiosError;
-      onRefreshToken?: { _id: string; access_token: string };
-    };
-
-  export type Id = `l_${string | number}` | `m_${string | number}`;
-  export type SubscriberData<Payload> = {
-    id: Id;
-    once?: boolean;
-    listener: EvListener<Payload>;
-  };
-
-  export type NamedQueue<Payload> = Map<string, SubscriberData<Payload>>;
-  export type ListQueue<Payload> = SubscriberData<Payload>[];
-
-  export type EvListener<Ev> = (ev: Ev) => void;
-  export type ListenersMappedType<EventMap> = {
-    [key in keyof EventMap]: EvEmitter.EvListener<EventMap[key]>;
-  };
-
-  export class EventQueues<Payload> {
-    map: EvEmitter.NamedQueue<Payload>;
-    list: EvEmitter.ListQueue<Payload>;
-
-    constructor() {
-      this.list = [];
-      this.map = new Map();
-    }
-  }
-}
+import * as EventEmitter from './EventEmitter.types';
+import { MaybeAsyncResult, PartialRecord } from '../../types/utils.types';
+import { ClientLogger } from 'utils/logger';
+import { ObjectKeys } from '../../utils';
+import ConfigService from 'services/ConfigService';
 
 export class EventEmitter1<
-  EmitEvMap extends EvEmitter.EventsMap = EvEmitter.EventsMap,
-  Event extends keyof EmitEvMap = keyof EmitEvMap,
+  EmitEvMap extends EventEmitter.EventsMap = EventEmitter.EventsMap,
+  EventName extends Extract<keyof EmitEvMap, string> = Extract<keyof EmitEvMap, string>,
 > {
   private _maxListeners: number = 10;
   private _logger: ClientLogger;
-  private _queues: PartialRecord<Event, EvEmitter.EventQueues<EmitEvMap[Event]>> = {};
+  private _queues: PartialRecord<EventName, EventEmitter.EventQueues<EmitEvMap[EventName]>> = {};
 
-  constructor(configs?: { name?: string }) {
+  constructor(configs?: { name?: string; _maxListeners?: number }) {
     this._logger = new ClientLogger(
       configs?.name ? [EventEmitter1.name, configs?.name ?? 'default'].join('/') : EventEmitter1.name
     );
   }
 
-  on<Key extends Event>(event: Key, listener: EvEmitter.EvListener<EmitEvMap[Key]>): () => void {
+  on<Key extends EventName>(event: Key, listener: EventEmitter.EvListener<EmitEvMap[Key]>): () => void {
     const queue = this._getQueue(event);
     if (queue.map.size + queue.list.length >= this._maxListeners) {
       this._logger.warn(
@@ -73,7 +36,7 @@ export class EventEmitter1<
     };
   }
 
-  onWith<Key extends Event>(event: Key, id: string, listener: EvEmitter.EvListener<EmitEvMap[Key]>): () => void {
+  onWith<Key extends EventName>(event: Key, id: string, listener: EventEmitter.EvListener<EmitEvMap[Key]>): () => void {
     const queue = this._getQueue(event);
 
     // Перевірка на максимальну кількість слухачів
@@ -87,13 +50,12 @@ export class EventEmitter1<
     }
 
     queue.map.set(id, { id: `m_${id}`, listener });
-
     return () => {
       this._offFor(event, `m_${id}`);
     };
   }
 
-  clear(event?: Event) {
+  clear(event?: EventName) {
     if (event) {
       this._clearQueue(event);
     } else {
@@ -103,25 +65,25 @@ export class EventEmitter1<
     }
   }
 
-  emit<Key extends Event, Async extends boolean = boolean>(
-    event: Key,
+  emit<Key extends EventName, Async extends boolean = boolean>(
+    eventName: Key,
     args: EmitEvMap[Key],
     { async }: { async?: Async } = {}
-  ): MaybeAsyncResult<Async> {
+  ): MaybeAsyncResult<boolean, Async> {
     const _exec = (): boolean => {
       try {
-        const queue = this._getQueue(event);
+        const queue = this._getQueue(eventName);
         if (queue) {
-          const exec = this._getRunner(event, args);
+          const exec = this._getRunner(eventName, args);
 
           const list = queue.list.slice(0).concat(Array.from(queue.map.values()))!;
           if (!list.length) {
             return false;
           }
           list.forEach(exec as never);
-          if (queue.list.length || queue.map.size) {
+          if (list.length) {
             ConfigService.isDevMode &&
-              this._logger.log(`Emitted event: ${String(event)} ${queue.list.length + queue.map.size} times`);
+              this._logger.log(`Emitted event: ${String(eventName)} ${queue.list.length + queue.map.size} times`);
             return true;
           }
         }
@@ -132,25 +94,25 @@ export class EventEmitter1<
       }
     };
 
-    return (async ? Promise.resolve(_exec()) : _exec()) as MaybeAsyncResult<Async>;
+    return (async ? Promise.resolve(_exec()) : _exec()) as MaybeAsyncResult<boolean, Async>;
   }
 
-  private _getQueue<Key extends Event>(event: Key): EvEmitter.EventQueues<EmitEvMap[Key]> {
+  private _getQueue<Key extends EventName>(event: Key): EventEmitter.EventQueues<EmitEvMap[Key]> {
     if (this._queues[event]) {
       return this._queues[event]!;
     }
 
-    const q = new EvEmitter.EventQueues<EmitEvMap[Key]>();
+    const q = new EventEmitter.EventQueues<EmitEvMap[Key]>();
     this._queues[event] = q as never;
 
     return q;
   }
 
-  private _filter(list: EvEmitter.SubscriberData<any>[], id: string | number) {
-    return list.filter((data: EvEmitter.SubscriberData<any>) => data.id !== `l_${id}`);
+  private _filter(list: EventEmitter.SubscriberData<any>[], id: string | number) {
+    return list.filter((data: EventEmitter.SubscriberData<any>) => data.id !== `l_${id}`);
   }
 
-  private _offFor<Key extends Event>(event: Key, id: EvEmitter.Id) {
+  private _offFor<Key extends EventName>(event: Key, id: EventEmitter.Id) {
     const __queue = this._getQueue<Key>(event);
 
     if (!__queue) {
@@ -166,7 +128,7 @@ export class EventEmitter1<
     }
   }
 
-  private _clearQueue(event: Event) {
+  private _clearQueue(event: EventName) {
     const q = this._getQueue(event);
     q.map.clear();
     q.list.length = 0;
@@ -174,8 +136,8 @@ export class EventEmitter1<
     delete this._queues[event];
   }
 
-  private _getRunner<Key extends Event>(name: Key, args: EmitEvMap[Key]) {
-    return ({ listener, once, id }: EvEmitter.SubscriberData<EmitEvMap[Key]>) => {
+  private _getRunner<Key extends EventName>(name: Key, args: EmitEvMap[Key]) {
+    return ({ listener, once, id }: EventEmitter.SubscriberData<EmitEvMap[Key]>) => {
       try {
         listener(args);
         if (once) this._offFor(name, id);

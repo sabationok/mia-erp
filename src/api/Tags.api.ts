@@ -1,10 +1,10 @@
 import { ClientApi } from './client.api';
 import { TagEntity, TagItemDto } from '../types/tags.types';
 import { TagTypeEnum } from '../types/directories.types';
-import { ApiAxiosResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse } from './api.types';
 
-export class TagsApi extends ClientApi {
-  private static readonly _api = this.clientRef;
+export class TagsApi {
+  private static readonly _api = ClientApi.clientRef;
   private static readonly endpoints = ClientApi._endpoints.tags;
 
   public static getAll = (

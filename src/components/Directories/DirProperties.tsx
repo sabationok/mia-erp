@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import { IDirInTreeProps } from '../../types/dir.types';
-
 import TabSelector, { FilterOption } from '../atoms/TabSelector';
 import ButtonIcon from '../atoms/ButtonIcon';
 import { OffersService } from '../../hooks/useOffersService.hook';
@@ -15,8 +14,7 @@ import {
   PropertyLevelIsType,
 } from '../../types/offers/properties.types';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { OnlyUUID } from '../../redux/app-redux.types';
-import { MaybeNull, Values } from '../../types/utils.types';
+import { MaybeNull, OnlyUUID, Values } from '../../types/utils.types';
 import ModalBase from '../atoms/Modal';
 import { Text } from '../atoms/Text';
 import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';

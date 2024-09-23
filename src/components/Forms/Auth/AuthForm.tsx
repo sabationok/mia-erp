@@ -18,7 +18,7 @@ import { useAppRouter } from '../../../hooks';
 import { BusinessSubjectTypeEnum } from '../../../types/companies/companies.types';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { isEnum, isLabelSchema, isNameSchema, passwordFields } from '../../../schemas';
+import { IsEnum, isLabelSchema, isNameSchema, passwordFields } from '../../../schemas';
 
 export interface Props {
   helloTitle?: string;
@@ -38,7 +38,7 @@ const registerSchema: yup.ObjectSchema<IRegistrationFormData> = yup.object().sha
   label: isLabelSchema(),
   name: isNameSchema(),
   email: yup.string().required(),
-  businessType: isEnum(BusinessSubjectTypeEnum),
+  businessType: IsEnum(BusinessSubjectTypeEnum),
   ...passwordFields,
 });
 const logInSchema = registerSchema.pick(['email', 'password']);

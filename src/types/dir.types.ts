@@ -1,5 +1,5 @@
 import { ModalFormProps } from '../components/ModalForm';
-import { FinTransactionTypeEnum, ITrCategory, ITrCategoryFormData, TagTypeEnum } from './directories.types';
+import { FinCategoryEntity, FinCategoryFormData, FinTransactionTypeEnum, TagTypeEnum } from './directories.types';
 import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
 import { TabOption } from '../components/atoms/TabSelector';
 import { IBase } from '../redux/app-redux.types';
@@ -168,10 +168,10 @@ export type DirInTreeActionsCreatorType<
 };
 
 export interface DirCategoriesProps
-  extends IDirInTreeProps<ApiDirType.CATEGORIES_TR, ITrCategoryFormData, ITrCategoryFormData, ITrCategory> {}
+  extends IDirInTreeProps<ApiDirType.CATEGORIES_TR, FinCategoryFormData, FinCategoryFormData, FinCategoryEntity> {}
 
 export interface DirOfferCategoriesProps
-  extends IDirInTreeProps<ApiDirType.CATEGORIES_PROD, ITrCategoryFormData, ITrCategoryFormData, ITrCategory> {}
+  extends IDirInTreeProps<ApiDirType.CATEGORIES_PROD, FinCategoryFormData, FinCategoryFormData, FinCategoryEntity> {}
 
 // export interface DirBrandsProps
 //   extends IDirInTreeProps<ApiDirType.BRANDS, any, ICategoryFormData, ICategoryFormData, ICategory> {}
@@ -182,9 +182,9 @@ export interface IActivityFormData extends Omit<IActivity, '_id' | 'createdAt' |
 export interface DirActivitiesProps
   extends IDirInTreeProps<ApiDirType.ACTIVITIES, IActivityFormData, IActivityFormData, IActivity> {}
 
-// ? ================ PRODUCT CATEGORIES
-export interface IProductParentCategoryDirItem extends IDirItemBase<ApiDirType.CATEGORIES_PROD> {}
-export interface OfferCategoryEntity extends IDirItemBase<ApiDirType.CATEGORIES_PROD> {}
+// ? ================ OFFER CATEGORIES
+export interface OfferCategoryEntity
+  extends Pick<IDirItemBase<ApiDirType.CATEGORIES_PROD>, 'label' | 'dirType' | 'description' | 'type'> {}
 // export interface IProductCategoryDirItem extends IDirItemBase<ApiDirType.CATEGORIES_PROD> {}
 
 // ? ================ BRANDS

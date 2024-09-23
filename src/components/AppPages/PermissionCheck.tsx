@@ -32,10 +32,10 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
     const isValid = !isUndefined(permissionId) && state?.permission?._id === permissionId;
 
     if (isValid) {
-      ClientApi.setP_Token(permissionId);
+      ClientApi.setPToken(permissionId);
     } else {
       console.warn('[PermissionCheck] ACCESS DENIED');
-      ClientApi.unSetP_Token();
+      ClientApi.removePToken();
     }
     return permissionId && ClientApi.getTokens().p_token === permissionId;
   }, [permissionId, state.permission._id]);
@@ -58,12 +58,11 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   useEffect(() => {
     if (!hasPermission) {
     } else {
-      const unsubcribe = () =>
-        ClientApi.onForbidden(error => {
-          ToastService.error('Forbidden company action');
-          console.log(error);
-          clearCurrent();
-        });
+      const unsubcribe = ClientApi.onForbidden(error => {
+        ToastService.error('Forbidden company action');
+        console.log(error);
+        clearCurrent();
+      });
 
       return () => {
         unsubcribe();

@@ -1,36 +1,64 @@
-import { EventEmitter1 } from '../services';
+import { AxiosError, HttpStatusCode } from 'axios';
+import * as EvEmitter from '../services/EventEmitter';
 import { HttpApi } from './HttpApi';
 
-export class ApiEventEmitterService {
-  private static emitter = new EventEmitter1<HttpApi.DefaultEventsMap>({
-    name: ApiEventEmitterService.name,
-  });
+export enum ApiReservedEventName {
+  onUnauthorized = 'onUnauthorized',
+  onForbidden = 'onForbidden',
+  onRefreshToken = 'onRefreshToken',
+}
 
-  public static get emitterRef() {
-    return this.emitter;
+export type ApiEventsMap = {
+  [ApiReservedEventName.onUnauthorized]: AxiosError;
+  [ApiReservedEventName.onForbidden]: AxiosError;
+  [ApiReservedEventName.onRefreshToken]: {
+    _id: string;
+    access_token: string;
+    refresh_token?: string;
+  };
+};
+
+export type EventListenersMap = EvEmitter.ListenersMappedType<ApiEventsMap>;
+export type StatusEventListenersMap = EvEmitter.ListenersMappedType<
+  Record<`on_${HttpStatusCode}`, { data?: any; error?: AxiosError }>
+>;
+
+export class ApiEventEmitter extends EvEmitter.EventEmitter1<ApiEventsMap> {
+  constructor(_: { name: string }) {
+    super();
   }
 
-  protected static eventListeners: HttpApi.CreateOptions['eventListeners'] = {
-    onUnauthorized: error => this.emitter.emit(HttpApi.ReservedEventName.onUnauthorized, error),
-    onRefreshToken: data => this.emitter.emit(HttpApi.ReservedEventName.onRefreshToken, data),
-    onForbidden: data => this.emitter.emit(HttpApi.ReservedEventName.onForbidden, data),
+  public eventListeners: EventListenersMap = {
+    onUnauthorized: error => this.emit(ApiReservedEventName.onUnauthorized, error),
+    onRefreshToken: data => this.emit(ApiReservedEventName.onRefreshToken, data),
+    onForbidden: data => this.emit(ApiReservedEventName.onForbidden, data),
   };
 
-  static onUnauthorized = (listener: HttpApi.EventListenersMap['onUnauthorized']) => {
-    return this.emitter.onWith(
-      HttpApi.ReservedEventName.onUnauthorized,
-      HttpApi.ReservedEventName.onUnauthorized,
-      listener
-    );
+  public onUnauthorized = (listener: EventListenersMap['onUnauthorized']) => {
+    return this.on(ApiReservedEventName.onUnauthorized, listener);
   };
-  static onRefreshToken = (listener: HttpApi.EventListenersMap['onRefreshToken']) => {
-    return this.emitter.onWith(
-      HttpApi.ReservedEventName.onRefreshToken,
-      HttpApi.ReservedEventName.onRefreshToken,
-      listener
-    );
+  public onRefreshToken = (listener: EventListenersMap['onRefreshToken']) => {
+    return this.on(ApiReservedEventName.onRefreshToken, listener);
   };
-  static onForbidden = (listener: HttpApi.EventListenersMap['onForbidden']) => {
-    return this.emitter.onWith(HttpApi.ReservedEventName.onForbidden, HttpApi.ReservedEventName.onForbidden, listener);
+  public onForbidden = (listener: EventListenersMap['onForbidden']) => {
+    return this.on(ApiReservedEventName.onForbidden, listener);
   };
+}
+
+export abstract class ApiEventEmitterManager {
+  protected abstract _client: HttpApi.CustomAxiosInstance;
+
+  public get emitterRef(): HttpApi.CustomAxiosInstance['emitter'] | undefined {
+    return this._client?.emitter;
+  }
+
+  get onForbidden() {
+    return this._client.emitter?.onForbidden;
+  }
+  get onUnauthorized() {
+    return this._client.emitter?.onUnauthorized;
+  }
+  get onRefreshToken() {
+    return this._client.emitter?.onRefreshToken;
+  }
 }

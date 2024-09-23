@@ -5,7 +5,7 @@ import { SubmitHandler } from 'react-hook-form';
 import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
 import { ICount } from 'redux/directories/counts.types';
-import { ITrCategory } from 'types/directories.types';
+import { FinCategoryEntity } from 'types/directories.types';
 import { IContractor } from 'redux/directories/contractors.types';
 import { IProject } from 'types/finances/transactions.types';
 import { ApiDirType } from 'redux/APP_CONFIGS';
@@ -15,7 +15,7 @@ import { useAppForm } from '../../hooks';
 import { FilterOption } from '../atoms/TabSelector';
 import FlexBox from '../atoms/FlexBox';
 
-export type FilterSelectorDataType = ICount | ITrCategory | IContractor | IProject | FilterOption;
+export type FilterSelectorDataType = ICount | FinCategoryEntity | IContractor | IProject | FilterOption;
 
 export type FilterSelectorType<Key = any, DataType = any> = {
   selectorName?: Key;

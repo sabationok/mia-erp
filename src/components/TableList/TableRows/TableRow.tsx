@@ -6,11 +6,11 @@ import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
 import { IDocument, ITransaction } from '../../../types/finances/transactions.types';
 import { ICount } from '../../../redux/directories/counts.types';
 import { IContractor } from '../../../redux/directories/contractors.types';
-import { ITrCategory } from '../../../types/directories.types';
+import { FinCategoryEntity } from '../../../types/directories.types';
 import CellCheckBox from '../TebleCells/CellCheckBox';
 import { CellsMap } from '../TebleCells';
 
-export type TRowDataType = ITransaction | ICount | IContractor | ITrCategory | IDocument;
+export type TRowDataType = ITransaction | ICount | IContractor | FinCategoryEntity | IDocument;
 
 export interface TableRowProps {
   rowData: TRowDataType;

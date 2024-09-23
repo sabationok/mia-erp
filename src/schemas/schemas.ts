@@ -5,7 +5,11 @@ import { ObjectEntries, ObjectFromEntries } from '../utils';
 import { t } from '../i18e';
 
 export const IsUUID = () => YUP.string().uuid();
-export const isEnum = <T extends object | string[]>(objOrArr: T) =>
+export const IsUUIDRef = () =>
+  YUP.object().shape({
+    _id: IsUUID().required(),
+  });
+export const IsEnum = <T extends object | string[]>(objOrArr: T) =>
   YUP.string().oneOf<Values<T>>(Object.values(objOrArr), `Available values: ${Object.values(objOrArr).join(', ')}`);
 export const IsString64 = () => YUP.string().max(64);
 export const IsString255 = () => YUP.string().max(255);

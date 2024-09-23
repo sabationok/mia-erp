@@ -29,7 +29,7 @@ const PrivateRoute: React.FC<{ redirectTo: string }> = ({ redirectTo }) => {
         }),
         ClientApi.onForbidden(error => {
           console.error('[onForbidden] ==========================================', error);
-          ClientApi.unSetP_Token();
+          ClientApi.removePToken();
           pSrv.logOut();
         }),
         ClientApi.onRefreshToken(data => {

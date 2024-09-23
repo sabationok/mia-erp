@@ -52,7 +52,7 @@ export const firebaseConfig = {
 export default class ConfigService {
   public static IS_DEV_MODE = process.env.NODE_ENV === 'development';
 
-  public static isDevMode() {
+  public static get isDevMode() {
     return this.IS_DEV_MODE;
   }
   public static _react_env_keys = Object.fromEntries(Object.entries(Configs.ReactEnvKeys));

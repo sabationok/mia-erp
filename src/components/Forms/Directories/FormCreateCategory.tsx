@@ -1,7 +1,6 @@
 import ModalForm from 'components/ModalForm';
-import { ITrCategory, ITrCategoryFormData } from 'types/directories.types';
+import { FinCategoryEntity, FinCategoryFormData } from 'types/directories.types';
 import React from 'react';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
@@ -12,18 +11,14 @@ import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormA
 import { useAppForm } from '../../../hooks';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { FormInputs } from '../components/atoms';
+import { finCategorySchema } from '../../../schemas/directories';
 
 export interface FormCreateCategoryProps
   extends DirectoriesFormProps<
     ApiDirType.CATEGORIES_PROD & ApiDirType.CATEGORIES_TR,
-    ITrCategory,
-    ITrCategoryFormData
+    FinCategoryEntity,
+    FinCategoryFormData
   > {}
-
-const validation = yup.object().shape({
-  label: yup.string().required(),
-  description: yup.string().max(250).optional(),
-});
 
 const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   _id,
@@ -41,13 +36,15 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     formState: { errors, isValid },
     register,
     handleSubmit,
-  } = useAppForm<ITrCategoryFormData>({
+    formValues,
+  } = useAppForm<FinCategoryFormData>({
     defaultValues: defaultState ?? undefined,
-    resolver: yupResolver(validation),
-    reValidateMode: 'onChange',
+    resolver: yupResolver(finCategorySchema),
+    reValidateMode: 'onSubmit',
+    mode: 'onChange',
   });
 
-  const onValid = (data: ITrCategoryFormData) => {
+  const onValid = (data: FinCategoryFormData) => {
     console.log('FormCreateCategory on valid', { defaultState, data });
 
     onSubmit &&
@@ -69,7 +66,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
 
         {defaultState?.parent?._id && (
           <InputLabel label={t('parentItem')} direction={'vertical'} error={errors.type} disabled>
-            <InputText {...register('parent.label')} disabled />
+            <InputText value={formValues.parent?.label ?? undefined} disabled />
           </InputLabel>
         )}
 

@@ -2,7 +2,7 @@ import { ApiAxiosResponse, IBase } from '../../redux/app-redux.types';
 import { IContractor } from '../../redux/directories/contractors.types';
 import { IActivity } from '../../redux/directories/activities.types';
 import { ICount } from '../../redux/directories/counts.types';
-import { ITrCategory } from '../directories.types';
+import { FinCategoryEntity } from '../directories.types';
 
 export enum CurrencyCode {
   UAH = 'UAH',
@@ -33,8 +33,8 @@ export interface ITransaction extends ITransactionBase {
   subCountIn?: ICount;
   countOut?: ICount;
   subCountOut?: ICount;
-  category?: ITrCategory;
-  subCategory?: ITrCategory;
+  category?: FinCategoryEntity;
+  subCategory?: FinCategoryEntity;
   contractor?: IContractor;
   project?: IProject;
   document?: IDocument;

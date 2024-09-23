@@ -14,7 +14,7 @@ export * from './toOrderSlotForReq.helper';
 export * from './toOrderInfoReqData.helper';
 export * from './getCustomerFullNameOrLabel.helper';
 
-// const isDevMode = ConfigService.isDevMode();
+// const isDevMode = ConfigService.isDevMode;
 
 export const getIdRef = <T extends OnlyUUID>(data: T, key: '_id' = '_id'): OnlyUUID =>
   key in data ? pick(data, key) : { [key]: '' };
