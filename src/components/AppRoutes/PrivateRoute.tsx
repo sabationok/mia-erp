@@ -27,11 +27,6 @@ const PrivateRoute: React.FC<{ redirectTo: string }> = ({ redirectTo }) => {
           ClientApi.unsetToken();
           logOutUser({});
         }),
-        ClientApi.onForbidden(error => {
-          console.error('[onForbidden] ==========================================', error);
-          ClientApi.removePToken();
-          pSrv.logOut();
-        }),
         ClientApi.onRefreshToken(data => {
           console.log('[onRefreshToken] ==========================================');
           dispatch(setAccessTokensAction(data));

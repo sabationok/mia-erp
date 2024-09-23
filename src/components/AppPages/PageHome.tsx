@@ -23,7 +23,7 @@ import { CompanyQueryTypeEnum } from 'types/companies/companies.types';
 const companyFilterOptions = enumToFilterOptions(CompanyQueryTypeEnum);
 
 interface Props extends Partial<BaseAppPageProps> {}
-const PageHome: React.FC<Props> = ({ path }) => {
+const PageHome: React.FC<Props> = _props => {
   const { user } = useAuthSelector();
   const { query, ...router } = useAppRouter();
   const state = usePermissionsSelector();
@@ -74,7 +74,7 @@ const PageHome: React.FC<Props> = ({ path }) => {
 
   useEffect(() => {
     if (user) {
-      user._id && permissionsService.getAllByUserId({ data: { userId: user._id }, onLoading: setLoading });
+      user._id && permissionsService.getAllByUserId({ data: { data: { userId: user._id } }, onLoading: setLoading });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?._id]);

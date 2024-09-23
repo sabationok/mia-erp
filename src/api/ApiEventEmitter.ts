@@ -17,10 +17,10 @@ export type ApiEventsMap = {
     refresh_token?: string;
   };
 };
-
+export type HttpStatusEventType = `on_${HttpStatusCode}`;
 export type EventListenersMap = EvEmitter.ListenersMappedType<ApiEventsMap>;
 export type StatusEventListenersMap = EvEmitter.ListenersMappedType<
-  Record<`on_${HttpStatusCode}`, { data?: any; error?: AxiosError }>
+  Record<HttpStatusEventType, { data?: any; error?: AxiosError }>
 >;
 
 export class ApiEventEmitter extends EvEmitter.EventEmitter1<ApiEventsMap> {

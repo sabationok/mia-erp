@@ -17,7 +17,7 @@ import {
   UUID,
 } from './utils.types';
 import { BankAccountEntity } from './finances/bank-accounts.types';
-import { PermissionRecipientEnum } from './permissions.types';
+import { PermissionHolderEnum } from './permissions.types';
 import { OAuth } from './auth/o-auth.namespace';
 
 export enum IntegrationTypeEnum {
@@ -99,7 +99,7 @@ export namespace ExternalService {
       HasLabel,
       HasBaseCmsConfigs,
       HasFlags<'disabled' | 'isDisabled'> {
-    availableFor?: HasFlags<PermissionRecipientEnum>;
+    availableFor?: HasFlags<PermissionHolderEnum>;
   }
 }
 

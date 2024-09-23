@@ -1,5 +1,5 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
-import { PermissionEntity, PermissionRecipientEnum } from '../../../../types/permissions.types';
+import { PermissionEntity, PermissionHolderEnum } from '../../../../types/permissions.types';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { usersDirColumns } from '../../../../data/usersDir.data';
@@ -35,7 +35,7 @@ const SelectManagerModal: React.FC<SelectManagerModalProps> = ({ onSubmit, onSel
             onClick: () => {
               permission.company?._id &&
                 service.getAllByCompanyId({
-                  data: { _id: permission.company?._id, params: { recipient: PermissionRecipientEnum.user } },
+                  data: { _id: permission.company?._id, params: { recipient: PermissionHolderEnum.user } },
                 });
             },
           },

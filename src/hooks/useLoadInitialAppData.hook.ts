@@ -2,7 +2,7 @@ import usePermissionsServiceHook, { usePermissionsSelector } from './usePermissi
 import { useEffect } from 'react';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { useAppServiceProvider } from './useAppServices.hook';
-import { PermissionRecipientEnum } from '../types/permissions.types';
+import { PermissionHolderEnum } from '../types/permissions.types';
 
 const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[] = [
   // { dirType: ApiDirType.COUNTS, createTreeData: true },
@@ -48,7 +48,7 @@ const useLoadInitialAppDataHook = ({
       try {
         if (company?._id) {
           await prService.getAllByCompanyId({
-            data: { refresh: true, _id: company._id, params: { recipient: PermissionRecipientEnum.user } },
+            data: { refresh: true, _id: company._id, params: { recipient: PermissionHolderEnum.user } },
           });
         }
 

@@ -36,7 +36,7 @@ export const ClientApi = new ApiClientManager(
     name: 'DefaultClient',
     baseURL: Client.createOptions.baseURL,
     withCredentials: true,
-    refreshTokenParams: {
+    refreshParams: {
       skipPaths: [
         APP_CONFIGS.endpoints.auth.logOut(),
         APP_CONFIGS.endpoints.auth.logIn(),

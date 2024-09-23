@@ -3,27 +3,28 @@ import {
   IPermissionReqData,
   IPermissionsResData,
   PermissionEntity,
-  PermissionRecipientEnum,
+  PermissionHolderEnum,
   PermissionStatus,
 } from '../types/permissions.types';
-import { ApiAxiosResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse } from './api.types';
 import { UserEntity } from '../types/auth/auth.types';
 import { ClientApi } from './client.api';
 import { CompanyQueryType } from '../types/companies/companies.types';
+import { FormInviteUserData } from '../components/Forms/Auth/FormInviteUser';
 
 export default class PermissionsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.permissions;
 
-  public static create = (data: IPermissionForReq): Promise<ApiAxiosResponse<PermissionEntity>> => {
+  public static create = (data?: IPermissionForReq): Promise<ApiAxiosResponse<PermissionEntity>> => {
     return this.api.post(this.endpoints.create(), data);
   };
 
-  public static inviteUser = (data: IPermissionForReq): Promise<ApiAxiosResponse<PermissionEntity>> => {
+  public static inviteUser = (data?: FormInviteUserData): Promise<ApiAxiosResponse<PermissionEntity>> => {
     return this.api.post(this.endpoints.inviteUser(), data);
   };
 
-  public static deleteById = (id: string): Promise<ApiAxiosResponse<{ _id?: string; result: boolean }>> => {
+  public static deleteById = (id?: string): Promise<ApiAxiosResponse<{ _id?: string; result: boolean }>> => {
     return this.api.post(this.endpoints.deleteById(id));
   };
 
@@ -31,11 +32,13 @@ export default class PermissionsApi {
     return this.api.get(this.endpoints.getCurrent());
   };
 
-  public static updateById = ({ id, data }: IPermissionReqData): Promise<ApiAxiosResponse<PermissionEntity>> => {
+  public static updateById = ({ id, data }: Partial<IPermissionReqData> = {}): Promise<
+    ApiAxiosResponse<PermissionEntity>
+  > => {
     return this.api.post(this.endpoints.updateById(id), data);
   };
 
-  public static logIn = (id: string): Promise<ApiAxiosResponse<PermissionEntity>> => {
+  public static logIn = (id?: string): Promise<ApiAxiosResponse<PermissionEntity>> => {
     return this.api.post(this.endpoints.logIn(id));
   };
 
@@ -66,7 +69,7 @@ export default class PermissionsApi {
     query?: {
       userId?: string;
       type?: CompanyQueryType;
-      recipient?: PermissionRecipientEnum;
+      recipient?: PermissionHolderEnum;
       status?: PermissionStatus;
     };
   }): Promise<IPermissionsResData> => {
@@ -75,7 +78,7 @@ export default class PermissionsApi {
 
   public static getAllByCompanyId = (data?: {
     _id: string;
-    params?: { recipient?: PermissionRecipientEnum };
+    params?: { recipient?: PermissionHolderEnum };
   }): Promise<IPermissionsResData> => {
     return this.api.get(this.endpoints.getAll(), { params: { ...data?.params, companyId: data?._id } });
   };

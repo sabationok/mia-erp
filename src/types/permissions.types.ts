@@ -55,7 +55,7 @@ export enum PermissionStatus {
   ACCEPTED = 'ACCEPTED',
   BANED = 'BANED',
 }
-export enum PermissionRecipientEnum {
+export enum PermissionHolderEnum {
   user = 'user',
   integration = 'integration',
   company = 'company',
@@ -72,7 +72,7 @@ export interface PermissionEntity extends IBase {
   status?: PermissionStatus;
 
   expireAt?: AppDate;
-  permission_token?: string;
+
   access_token?: string;
   refresh_token?: string;
 }

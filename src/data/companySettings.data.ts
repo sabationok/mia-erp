@@ -50,8 +50,8 @@ const UsersProps: DirUsersProps = {
               Modal: Modals.FormInviteUser,
               props: {
                 title: 'Запросити користувача',
-                onSubmit: (formData, o) => {
-                  service.createInvitation({ data: { email: formData.email }, onSuccess: d => {} });
+                onSubmit: (formData, _options) => {
+                  service.createInvitation({ data: { data: { email: formData.email } }, onSuccess: _data => {} });
                   console.log('invite user formData', formData);
                 },
               },
@@ -67,7 +67,7 @@ const CustomRolesProps: DirCustomRolesProps = {
   dirType: ApiDirType.DEFAULT,
   createParentTitle: 'Створити роль',
   fillHeight: true,
-  actionsCreator: ({ service, modalService, findById }) => ({
+  actionsCreator: ({ service, modalService }) => ({
     onCreateParent: _o => {
       const modal = modalService.open({
         ModalChildren: FormCreateCustomRole,

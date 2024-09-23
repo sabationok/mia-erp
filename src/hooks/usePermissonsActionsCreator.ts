@@ -52,8 +52,8 @@ const createEnterCompanyAction = ({ ctx, router, service }: PermissionsTablesAct
 
     if (ctx.selectedRow?._id) {
       service.logIn({
-        data: { _id: ctx.selectedRow?._id },
-        onSuccess: data => {
+        data: { data: ctx.selectedRow?._id },
+        onSuccess: ({ data }) => {
           if (!data._id) return console.log('data', data);
           ToastService.success(`Welcome: "${data.company?.name?.first || data.company?.label?.base}"`);
           router.push({ pathname: `/app/${data._id}` });
@@ -164,7 +164,7 @@ builder.add('refresh', ({ ctx, service, extra }) => {
       if (extra?.userId) {
         service.getAllByUserId({
           onLoading: ctx.onRefresh,
-          data: { userId: extra?.userId, query: extra?.query },
+          data: { data: { userId: extra?.userId, query: extra?.query } },
         });
       }
     },

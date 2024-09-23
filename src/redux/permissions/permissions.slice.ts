@@ -44,62 +44,62 @@ export const permissionsSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getCurrentPermissionThunk.fulfilled, (s: IPermissionsState, a) => {
+      .addCase(getCurrentPermissionThunk.fulfilled, (s: IPermissionsState, { payload: { data } }) => {
         s.permission = {
-          ...a.payload,
-          role: { ...a.payload.role, accessKeys: getAllAccessKeys() } as never,
+          ...data,
+          role: { ...data.role, accessKeys: getAllAccessKeys() } as never,
         };
-        s.permission_token = a.payload.permission_token;
+        s.permission_token = data.permission_token;
       })
       .addCase(setMockPermissionData, (s, a) => {
         s.permission = {
           ...a.payload,
           role: { ...a.payload.role, accessKeys: getAllAccessKeys() } as never,
         };
-        s.permission_token = a.payload.permission_token;
+        s.permission_token = a.payload.access_token;
       })
       .addCase(getAllPermissionsByUserIdThunk.fulfilled, (s, a) => {
-        s.permissions = a.payload;
+        s.permissions = a.payload.data;
       })
       .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (s, a) => {
-        s.users = a.payload;
+        s.users = a.payload.data;
       })
       .addCase(createPermissionThunk.fulfilled, (s, a) => {
-        s.permissions = [a.payload, ...s.permissions];
+        s.permissions = [a.payload.data, ...s.permissions];
       })
-      .addCase(updatePermissionThunk.fulfilled, (s, a) => {})
+      .addCase(updatePermissionThunk.fulfilled, (_s, _a) => {})
       .addCase(deletePermissionByIdThunk.fulfilled, (s, a) => {
-        if (a.payload.result) {
-          s.permissions = s.permissions.filter(p => p._id !== a.payload?._id);
+        if (a.payload.data.result) {
+          s.permissions = s.permissions.filter(p => p._id !== a.payload?.data?._id);
         }
       })
       .addCase(logInPermissionThunk.fulfilled, (s, a) => {
         s.permission = {
-          ...a.payload,
-          role: { ...a.payload.role, accessKeys: initialPermission.role?.accessKeys } as never,
+          ...a.payload.data,
+          role: { ...a.payload.data.role, accessKeys: initialPermission.role?.accessKeys } as never,
         };
-        s.permission_token = a.payload.permission_token;
+        s.permission_token = a.payload.data.access_token ?? a.payload.data._id;
       })
-      .addCase(logOutPermissionThunk.fulfilled, (s, a) => {
+      .addCase(logOutPermissionThunk.fulfilled, (s, _a) => {
         s.permission = {};
         s.permission_token = '';
         s.error = null;
       })
-      .addCase(clearCurrentPermission, (s, a) => {
+      .addCase(clearCurrentPermission, (s, _a) => {
         s.permission = {};
         s.permission_token = '';
       })
       .addCase(createCompanyWithPermissionThunk.fulfilled, (s, a) => {
-        s.permissions = [a.payload, ...s.permissions];
+        s.permissions = [a.payload.data, ...s.permissions];
       })
 
       .addCase(inviteUserThunk.fulfilled, (s, a) => {
-        s.users = [a.payload, ...s.permissions];
+        s.users = [a.payload.data, ...s.permissions];
       })
       .addCase(updateCurrentCompanyThunk.fulfilled, (s, a) => {
-        s.permission.company = a.payload;
+        s.permission.company = a.payload.data;
       })
-      .addCase(deleteCompanyWithPermissionThunk.fulfilled, (s, a) => {})
+      .addCase(deleteCompanyWithPermissionThunk.fulfilled, (_s, _a) => {})
       .addMatcher(inPending, s => {
         s.isLoading = true;
         s.error = null;

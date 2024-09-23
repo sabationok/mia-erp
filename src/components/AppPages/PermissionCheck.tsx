@@ -20,7 +20,7 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   const { permissionId } = useAppParams();
 
   const {
-    permissions: { clearCurrent },
+    permissions: { clearCurrent, logOut },
     auth: { logOutUser },
   } = useAppServiceProvider();
 
@@ -62,13 +62,15 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
         ToastService.error('Forbidden company action');
         console.log(error);
         clearCurrent();
+        ClientApi.removePToken();
+        logOut({});
       });
 
       return () => {
         unsubcribe();
       };
     }
-  }, [clearCurrent, hasPermission, logOutUser, permissionId]);
+  }, [clearCurrent, hasPermission, logOut, logOutUser, permissionId]);
 
   if (loaders.isLoading?.permission) {
     return <AppLoader isLoading comment={t('Permission check, please wait')} />;

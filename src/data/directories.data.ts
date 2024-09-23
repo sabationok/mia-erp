@@ -222,7 +222,7 @@ const CounterpartiesProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
   fillWidth: true,
   dirType: ApiDirType.CONTRACTORS,
   options: counterpartyFilterOptions,
-  getTableSettings: ({ service, modalService, _type, dirType }) => ({
+  getTableSettings: ({ service, modalService, dirType }) => ({
     tableTitles: contractorsColumns,
     searchParams: contractorsSearchParams,
     actionsCreator: _ctx => [

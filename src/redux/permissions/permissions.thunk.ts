@@ -1,20 +1,10 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import {
-  IPermissionForReq,
-  IPermissionReqData,
-  PermissionEntity,
-  PermissionRecipientEnum,
-} from '../../types/permissions.types';
-import { ThunkArgs } from '../store.store';
-import { axiosErrorCheck } from 'utils';
 import { CompaniesApi, PermissionsApi } from '../../api';
-import { CompanyDto } from '../../types/companies/companies.types';
 import { buildUpdateCompanyThunk } from '../companies/companies.thunks';
-import { UserEntity } from '../../types/auth/auth.types';
-import { CompanyQueryType } from '../app-redux.types';
+import { createAppAsyncThunk } from '../createAppAsynkThunk';
 
 enum PermissionsThunkType {
   getAllPermissionsByUserId = 'permissions/getAllPermissionsByUserIdThunk',
+  getAllPermissionsByCompanyId = 'permissions/getAllPermissionsByCompanyIdThunk',
   login = 'permissions/logInPermissionThunk',
   logOut = 'permissions/logOutPermissionThunk',
   getCurrent = 'permissions/getCurrentPermissionThunk',
@@ -29,258 +19,38 @@ enum PermissionsThunkType {
   getCurrentCompanyConfigs = 'permissions/getCurrentCompanyConfigsThunk',
 }
 
-export const getAllPermissionsByUserIdThunk = createAsyncThunk<
-  PermissionEntity[],
-  ThunkArgs<{
-    userId: string;
-    query?: { type?: CompanyQueryType };
-  }>
->(PermissionsThunkType.getAllPermissionsByUserId, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
-  try {
-    const response = await PermissionsApi.getAllByUserId(data);
-    if (response) {
-      onSuccess && onSuccess(response.data.data);
-    }
-
-    onLoading && onLoading(false);
-
-    return response.data.data;
-  } catch (error) {
-    onError && onError(error);
-
-    onLoading && onLoading(false);
-
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-  }
-});
-
-export const getAllPermissionsByCompanyIdThunk = createAsyncThunk<
-  PermissionEntity[],
-  ThunkArgs<{ _id: string; params?: { recipient?: PermissionRecipientEnum } }>
->('permissions/getAllPermissionsByCompanyIdThunk', async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
-  try {
-    const response = await PermissionsApi.getAllByCompanyId(data);
-    if (response) {
-      onSuccess && onSuccess(response.data.data);
-    }
-
-    onLoading && onLoading(false);
-
-    return response.data.data;
-  } catch (error) {
-    onError && onError(error);
-
-    onLoading && onLoading(false);
-
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-  }
-});
-
-export const getCurrentPermissionThunk = createAsyncThunk<
-  Partial<{ permission_token: string } & PermissionEntity>,
-  ThunkArgs<
-    {
-      id: string;
-    },
-    { permission_token: string } & PermissionEntity
-  >
->(PermissionsThunkType.getCurrent, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
-  try {
-    const response = await PermissionsApi.getCurrent();
-    if (response) {
-      onSuccess && onSuccess(response.data.data);
-    }
-    onLoading && onLoading(false);
-
-    return response.data.data;
-  } catch (error) {
-    onError && onError(error);
-    onLoading && onLoading(false);
-
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-  }
-});
-export const logInPermissionThunk = createAsyncThunk<PermissionEntity, ThunkArgs<{ _id: string }, PermissionEntity>>(
-  PermissionsThunkType.login,
-  async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-    onLoading && onLoading(true);
-    try {
-      const response = await PermissionsApi.logIn(data?._id as string);
-      if (response) {
-        onSuccess && onSuccess(response.data.data);
-      }
-      onLoading && onLoading(false);
-
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
-
-      onLoading && onLoading(false);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    }
-  }
+export const getAllPermissionsByUserIdThunk = createAppAsyncThunk(
+  PermissionsThunkType.getAllPermissionsByUserId,
+  PermissionsApi.getAllByUserId
 );
-export const logOutPermissionThunk = createAsyncThunk<
-  { _id?: string; result: boolean; user: UserEntity },
-  ThunkArgs<
-    any,
-    {
-      _id?: string;
-      result: boolean;
-      user: UserEntity;
-    }
-  >
->(PermissionsThunkType.logOut, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
-  try {
-    const response = await PermissionsApi.logOut();
-    if (response) {
-      onSuccess && onSuccess(response.data.data);
-    }
 
-    onLoading && onLoading(false);
-
-    return response.data.data;
-  } catch (error) {
-    onError && onError(error);
-
-    onLoading && onLoading(false);
-
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-  }
-});
-export const createPermissionThunk = createAsyncThunk<PermissionEntity, ThunkArgs<IPermissionForReq, PermissionEntity>>(
-  PermissionsThunkType.create,
-  async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-    onLoading && onLoading(true);
-    try {
-      const response = await PermissionsApi.create(data as IPermissionForReq);
-      if (response) {
-        onSuccess && onSuccess(response.data.data);
-      }
-      onLoading && onLoading(false);
-
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
-      onLoading && onLoading(false);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    }
-  }
+export const getAllPermissionsByCompanyIdThunk = createAppAsyncThunk(
+  PermissionsThunkType.getAllPermissionsByCompanyId,
+  PermissionsApi.getAllByCompanyId
 );
-export const inviteUserThunk = createAsyncThunk<PermissionEntity, ThunkArgs<IPermissionForReq, PermissionEntity>>(
-  PermissionsThunkType.inviteUser,
-  async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-    onLoading && onLoading(false);
-    if (!data) return thunkAPI.rejectWithValue('invite data not passed');
-    onLoading && onLoading(true);
 
-    try {
-      const response = await PermissionsApi.inviteUser(data as IPermissionForReq);
-      if (response) {
-        onSuccess && onSuccess(response.data.data);
-      }
-      onLoading && onLoading(false);
-
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
-      onLoading && onLoading(false);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    }
-  }
+export const getCurrentPermissionThunk = createAppAsyncThunk(
+  PermissionsThunkType.getCurrent,
+  PermissionsApi.getCurrent
 );
-export const createCompanyWithPermissionThunk = createAsyncThunk<PermissionEntity, ThunkArgs<CompanyDto>>(
+export const logInPermissionThunk = createAppAsyncThunk(PermissionsThunkType.login, PermissionsApi.logIn);
+export const logOutPermissionThunk = createAppAsyncThunk(PermissionsThunkType.logOut, PermissionsApi.logOut);
+export const createPermissionThunk = createAppAsyncThunk(PermissionsThunkType.create, PermissionsApi.create);
+export const inviteUserThunk = createAppAsyncThunk(PermissionsThunkType.inviteUser, PermissionsApi.inviteUser);
+export const createCompanyWithPermissionThunk = createAppAsyncThunk(
   PermissionsThunkType.createCompanyWithPermission,
-  async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-    onLoading && onLoading(true);
-    try {
-      const response = await CompaniesApi.create({ data: data as CompanyDto });
-
-      if (response) {
-        onSuccess && onSuccess(response.data.data);
-      }
-      onLoading && onLoading(false);
-
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
-      onLoading && onLoading(false);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    }
-  }
+  CompaniesApi.create
 );
 
-export const deleteCompanyWithPermissionThunk = createAsyncThunk<
-  Partial<{ _id?: string; result: boolean }>,
-  ThunkArgs<{ _id: string }>
->(PermissionsThunkType.deleteCompanyWithPermission, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
-  try {
-    const response = await CompaniesApi.delete(data?._id as string);
-
-    if (response) {
-      onSuccess && onSuccess(response.data.data);
-    }
-    onLoading && onLoading(false);
-
-    return response.data.data;
-  } catch (error) {
-    onError && onError(error);
-    onLoading && onLoading(false);
-
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-  }
-});
-export const updatePermissionThunk = createAsyncThunk<Partial<PermissionEntity>, ThunkArgs<IPermissionReqData>>(
-  PermissionsThunkType.update,
-  async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-    onLoading && onLoading(true);
-    try {
-      const response = await PermissionsApi.updateById(data || { id: '', data: {} });
-      if (response) {
-        onSuccess && onSuccess(response.data.data);
-      }
-      onLoading && onLoading(false);
-
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
-
-      onLoading && onLoading(false);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    }
-  }
+export const deleteCompanyWithPermissionThunk = createAppAsyncThunk(
+  PermissionsThunkType.deleteCompanyWithPermission,
+  CompaniesApi.delete
 );
+export const updatePermissionThunk = createAppAsyncThunk(PermissionsThunkType.update, PermissionsApi.updateById);
 
-export const deletePermissionByIdThunk = createAsyncThunk<
-  { _id?: string; result: boolean },
-  ThunkArgs<Partial<IPermissionReqData>>
->(PermissionsThunkType.deletePermissionById, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
-  try {
-    const response = await PermissionsApi.deleteById(data?.id as string);
-
-    if (response) {
-      onSuccess && onSuccess(response.data.data);
-    }
-    onLoading && onLoading(false);
-
-    return response.data.data;
-  } catch (error) {
-    onError && onError(error);
-    onLoading && onLoading(false);
-
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-  }
-});
+export const deletePermissionByIdThunk = createAppAsyncThunk(
+  PermissionsThunkType.deletePermissionById,
+  PermissionsApi.deleteById
+);
 
 export const updateCurrentCompanyThunk = buildUpdateCompanyThunk(PermissionsThunkType.updateCurrentCompanyThunk);

@@ -1,7 +1,6 @@
 import { ApiAxiosResponse, ApiQueryParams } from './api.types';
 import { BooleanType, Keys, PartialRecord, Values } from '../types/utils.types';
 import * as Emitter from './ApiEventEmitter';
-import { ApiEventEmitter } from './ApiEventEmitter';
 import axios, {
   AxiosDefaults,
   AxiosError,
@@ -75,8 +74,6 @@ export namespace HttpApi {
     withCredentials?: boolean;
     cookiesPermission?: boolean;
 
-    eventListeners?: Partial<ApiEventEmitter['eventListeners']> & Partial<Emitter.StatusEventListenersMap>;
-
     refreshParams?: {
       skipPaths?: string[];
       url: string;
@@ -118,7 +115,8 @@ export function createApiClient2({
   name = 'default',
   baseURL,
   withCredentials = true,
-  headers, // _logger,
+  headers,
+  refreshParams,
   // useRefreshInterceptor = false, // isRefreshing = false,
 }: HttpApi.CreateOptions): HttpApi.CustomAxiosInstance {
   const client = axios.create({
@@ -129,66 +127,52 @@ export function createApiClient2({
   const headersManager = new ClientHeadersManager(client, { name });
   const queue = new AxiosQueueService(client, { name });
   const emitter = new Emitter.ApiEventEmitter({ name });
-
-  return _.assign(client, { queue, emitter, headers: headersManager });
-}
-export function createApiClient({
-  baseURL,
-  headers,
-  eventListeners: { onForbidden, onUnauthorized, onRefreshToken, ...eventListeners } = {},
-  refreshParams,
-  ...rest
-}: HttpApi.CreateOptions): AxiosInstance {
-  const _client = createApiClient2({
-    baseURL,
-    headers,
-    refreshParams,
-    ...rest,
-  });
-  const queue = _client.queue;
-
+  const { onUnauthorized, onRefreshToken, onForbidden } = emitter.eventListeners;
   const refreshRequest = async (
     refreshUrl: string
   ): Promise<ApiAxiosResponse<{ access_token: string; _id: string }>> => {
-    const refreshResult = await _client.get(refreshUrl);
+    const refreshResult = await client.get(refreshUrl);
     if (refreshResult.data.data.access_token) {
       throw new Error('[ access_token ] not received in request');
     }
 
-    _client.defaults.headers.Authorization = `Bearer ${refreshResult.data.data.access_token}`;
+    client.defaults.headers.Authorization = `Bearer ${refreshResult.data.data.access_token}`;
 
     onRefreshToken && onRefreshToken(refreshResult.data.data);
 
     await queue.processQueue();
     return refreshResult;
   };
-
-  function emitStatusEvents(error: AxiosError) {
-    if (eventListeners) {
-      const listenerKey = error.response?.status
-        ? (`on_${error.response?.status as HttpStatusCode}` as const)
-        : undefined;
-      if (listenerKey) {
-        const ls = eventListeners[listenerKey];
-        ls && ls({ data: error });
-      }
-    }
+  type StatusEventType = `on_${HttpStatusCode}`;
+  type HttpStatusIs = PartialRecord<StatusEventType, boolean>;
+  function emitStatusEvents(statusIs: HttpStatusIs, error: AxiosError) {
+    if (statusIs.on_409 && onForbidden) onForbidden(error);
   }
 
-  _client.interceptors.request.use(data => {
+  client.interceptors.request.use(data => {
     return data;
   });
 
-  _client.interceptors.response.use(
+  client.interceptors.response.use(
     async (data: ApiAxiosResponse) => {
       return data;
     },
     async (error: AxiosError) => {
+      const listenerKey = (
+        error.response?.status ? `on_${error.response?.status as HttpStatusCode}` : 'on_500'
+      ) as StatusEventType;
+      const statusIs: HttpStatusIs = { [listenerKey]: true };
       if (error.response?.status) {
-        emitStatusEvents(error);
+        emitStatusEvents(statusIs, error);
       }
 
-      if (error.response?.status === HttpStatusCode.Unauthorized && error.config) {
+      if (error.config && statusIs.on_401) {
+        const canSkip = refreshParams?.skipPaths?.some(path => {
+          return error.config?.url?.startsWith(path);
+        });
+
+        console.warn({ statusIs, canSkip });
+
         if (refreshParams?.logOutUrl && error.config.url?.startsWith(refreshParams?.logOutUrl)) {
           queue.clear();
           return Promise.reject(error);
@@ -215,5 +199,5 @@ export function createApiClient({
     }
   );
 
-  return _client;
+  return _.assign(client, { queue, emitter, headers: headersManager });
 }
