@@ -35,7 +35,7 @@ export type AppRootState = {
 };
 
 export enum AppModuleName {
-  integrations = 'integrations',
+  connections = 'connections',
   auth = 'auth',
   permissions = 'permissions',
   appSettings = 'appSettings',

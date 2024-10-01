@@ -15,7 +15,7 @@ import { usePaymentsSelector } from 'redux/selectors.store';
 import { useAppServiceProvider } from 'hooks/useAppServices.hook';
 import { AppModuleName } from 'redux/reduxTypes.types';
 import InputIntegrationsList from '../../components/InputIntegrationsList';
-import { apiCall, ExtServicesApi, IntegrationsApi } from '../../../../api';
+import { apiCall, ExtServicesApi, ConnectionsApi } from '../../../../api';
 import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
 
 export interface PaymentIntegrationsTabProps extends IntegrationTabProps {}
@@ -28,7 +28,7 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
   currentService: currentServiceData,
   ...props
 }) => {
-  const service = useAppServiceProvider()[AppModuleName.integrations];
+  const service = useAppServiceProvider()[AppModuleName.connections];
   const loaders = useLoaders<'activate' | 'getAll' | 'delete'>({
     activate: { content: t('Activating') + '...' },
     getAll: { content: t('Refreshing') + '...' },
@@ -140,7 +140,7 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
           onDelete={data => {
             if (!window.confirm(`Delete integration: "${data.label}" ?`)) return;
 
-            apiCall(IntegrationsApi.remove, {
+            apiCall(ConnectionsApi.remove, {
               onLoading: loaders.onLoading('delete'),
               data: { _id: data._id, type: 'input' },
               onSuccess: res => {

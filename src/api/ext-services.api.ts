@@ -10,10 +10,12 @@ export default class ExtServicesApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.extServices;
 
-  public static getExtServicesList = (params?: {
-    type?: ExternalServiceTypeEnum;
+  public static getExtServicesList = (config?: {
+    params?: {
+      type?: ExternalServiceTypeEnum;
+    };
   }): Promise<ApiAxiosResponse<ExtServiceBase[]>> => {
-    return this.api.get(this.endpoints.getList(), { params });
+    return this.api.get(this.endpoints.getAll(), config);
   };
 
   public static setDefaultInput = (data?: {

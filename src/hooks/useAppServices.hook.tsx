@@ -16,7 +16,7 @@ import useShipmentsService, { UseShipmentsService } from './useShipmentsService.
 import useCustomRolesServiceHook, { CustomRolesService } from './useCustomRolesService.hook';
 import useInvoicingService, { UseInvoicingService } from './useInvoicingService.hook';
 import { AppModuleName } from '../redux/reduxTypes.types';
-import useIntegrationsService, { UseIntegrationsService } from './useIntegrationsService.hook';
+import useConnectionsService, { UseConnectionsService } from './useIntegrationsService.hook';
 import UseDeliveriesServiceHook, { UseDeliveriesService } from './services/useDeliveriesService.hook';
 
 export { AppModuleName as ServiceName } from '../redux/reduxTypes.types';
@@ -36,7 +36,7 @@ export interface AppService {
   [AppModuleName.invoicing]: UseInvoicingService;
   [AppModuleName.shipments]: UseShipmentsService;
   [AppModuleName.roles]: CustomRolesService;
-  [AppModuleName.integrations]: UseIntegrationsService;
+  [AppModuleName.connections]: UseConnectionsService;
   [AppModuleName.deliveries]: UseDeliveriesService;
   get<T extends AppServiceKey = any>(module: T): AppService[T];
 }
@@ -48,7 +48,7 @@ const useAppService = (): AppService => {
   const services: Omit<Record<AppServiceKey, any>, 'get'> = {
     auth: useAppAuthHook(),
     permissions: usePermissionsServiceHook(),
-    integrations: useIntegrationsService(),
+    connections: useConnectionsService(),
     offers: useProductsServiceHook(),
     finances: useTransactionsServiceHook(),
     directories: useDirService(),

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
-import { OfferInventoryFormData } from '../../../types/warehousing';
 import { PriceEntity } from '../../../types/price-management/price-management.types';
 import { VariationEntity } from '../../../types/offers/variations.types';
 import styled from 'styled-components';
@@ -12,21 +11,22 @@ import { useOffersSelector } from '../../../redux/selectors.store';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import { t } from '../../../i18e';
-import { enumToFilterOptions } from '../../../utils/fabrics';
+import { enumToFilterOptions } from '../../../utils';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 import { transformVariationTableData } from '../../../utils/tables';
 import { createApiCall, PriceManagementApi } from '../../../api';
-import { getIdRef } from '../../../utils/data-transform';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import { useForm } from 'react-hook-form';
-import { OnlyUUID } from '../../../redux/app-redux.types';
+import { Keys, OnlyUUID } from '../../../types/utils.types';
+import { WarehouseInventoryFormData } from '../../../types/warehousing';
 
-export interface FormCreateProductInventoryProps extends Omit<ModalFormProps<OfferInventoryFormData>, 'onSubmit'> {
-  product?: OfferEntity;
+export interface FormCreateWarehouseInventoryProps
+  extends Omit<ModalFormProps<WarehouseInventoryFormData>, 'onSubmit'> {
+  offer?: OfferEntity;
 }
 
 const formCreateProductInventoryInputs: {
-  name: string;
+  name: Keys<WarehouseInventoryFormData>;
   placeholder?: string;
   label?: string;
   disabled?: boolean;
@@ -39,16 +39,17 @@ enum ReservationOptions {
   Yes = 'Yes',
   No = 'No',
 }
+
 const reservationOptions = enumToFilterOptions(ReservationOptions);
-const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({ ...props }) => {
+const FormCreateProductInventory: React.FC<FormCreateWarehouseInventoryProps> = ({ ...props }) => {
   // const modalS = useModalProvider();
   const currentProduct = useOffersSelector().currentOffer;
 
   const form = useForm({});
 
   const currentProductData = useMemo(() => {
-    return props?.product || currentProduct;
-  }, [currentProduct, props?.product]);
+    return props?.offer || currentProduct;
+  }, [currentProduct, props?.offer]);
 
   // const { products: productsS, warehouses: warehousesS } = useAppServiceProvider();
   const [loadedPrices, setLoadedPrices] = useState<PriceEntity[]>([]);
@@ -68,11 +69,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
 
   useEffect(() => {
     if (selectedVariation) {
-      createApiCall(
-        { data: { origin: getIdRef(selectedVariation) }, onSuccess: setLoadedPrices },
-        PriceManagementApi.prices.getAll,
-        PriceManagementApi
-      );
+      createApiCall({ data: {}, onSuccess: setLoadedPrices }, PriceManagementApi.prices.getAll, PriceManagementApi);
     }
   }, [selectedVariation]);
 
@@ -87,11 +84,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
 
     setSelectedVariation(variation);
 
-    createApiCall(
-      { data: { variation: origin }, onSuccess: setLoadedPrices },
-      PriceManagementApi.prices.getAll,
-      PriceManagementApi
-    );
+    createApiCall({ data: {}, onSuccess: setLoadedPrices }, PriceManagementApi.prices.getAll, PriceManagementApi);
   }, []);
 
   const handleSelectPrice: OnRowClickHandler = useCallback(data => {
@@ -101,8 +94,8 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
     setSelectedPrice(price);
   }, []);
 
-  const onValid = (data: OfferInventoryFormData) => {
-    console.log('IProductInventoryFormData', data);
+  const onValid = (data: WarehouseInventoryFormData) => {
+    console.log('WarehouseInventoryFormData', data);
   };
 
   return (
@@ -142,7 +135,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
               <InputLabel key={info?.name} label={info?.label} disabled={info?.disabled} required={info?.required}>
                 <InputText
                   name={info?.name}
-                  align={'right'}
+                  $align={'right'}
                   disabled={info?.disabled}
                   required={info?.required}
                   placeholder={info?.placeholder}

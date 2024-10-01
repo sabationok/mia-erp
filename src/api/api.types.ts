@@ -185,6 +185,7 @@ export interface ApiQueryParams<Type = any>
     TimePeriodQuery,
     StatusQueryParams,
     HasReferenceQuery {
+  ids?: UUID[];
   type?: Type;
   dirType?: ApiDirType;
   dataView?: DataView | Keys<typeof DataView>;

@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import { IsDynamicValue, IsEmail, IsString255, IsUaMobilePhone, IsUrl, IsUUID } from '../../../../schemas';
 import { OAuth } from '../../../../types/auth/o-auth.namespace';
-import { Integration } from '../../../../types/integrations.types';
+import { Connection } from '../../../../types/integrations.types';
 import { useAppDispatch } from '../../../../redux/store.store';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -58,7 +58,7 @@ export const ModalOAuthConfigsForm = ({
   conn,
   config,
 }: {
-  conn: Integration.Output.Entity;
+  conn: Connection.Output.Entity;
   config?: OAuth.Consumer.Entity;
 }) => {
   const dispatch = useAppDispatch();

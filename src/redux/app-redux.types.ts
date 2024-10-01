@@ -1,18 +1,11 @@
 import { ThunkArgs } from './store.store';
-import { ApiCallerPayload, ApiAxiosResponse } from '../api';
+import { ApiAxiosResponse, ApiCallerPayload } from '../api';
 import { ApiDirType } from './APP_CONFIGS';
 import { AppDate, MaybeNull, OnlyUUID } from '../types/utils.types';
 
 export * from '../types/global.types';
 
 export type { ApiAxiosResponse } from '../api/api.types';
-
-export type UUID = string;
-export type MagicLink = string;
-
-export interface MagicLinkRef {
-  magicLink: MagicLink;
-}
 
 export interface IFormDataValueWithID<DirType extends ApiDirType = any> extends OnlyUUID {
   label?: MaybeNull<string>;

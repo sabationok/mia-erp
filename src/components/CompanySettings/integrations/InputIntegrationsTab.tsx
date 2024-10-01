@@ -34,7 +34,7 @@ const tabsMap: Record<
   [ExtServiceTabs.fiscalization]: FiscalizationIntegrationsTab,
 };
 
-const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props }) => {
+const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = _props => {
   const [currentType, setCurrentType] = useState(tabs[0].value);
   const [providerType, setProviderType] = useState<string>();
 

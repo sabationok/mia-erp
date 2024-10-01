@@ -28,6 +28,7 @@ import { linksSlice } from './tracking/links/links.slice';
 import { counterpartiesState } from './counterparties/counterparties.slice';
 import { chatSlice } from './chat/chat.slice';
 import { warehousesDocumentsSlice } from './warehouses/warehouses-documents/warehouses-documents.slice';
+import { warehousesInventoriesSlice } from './warehouses/warehouses-inventories/warehouses-inventories.slice';
 
 const rootReducer = combineReducers({
   [authSlice.name]: persistReducer(persistorConfigs.auth, authSlice.reducer),
@@ -43,20 +44,21 @@ const rootReducer = combineReducers({
   [customRolesSlice.name]: persistReducer(persistorConfigs.customRoles, customRolesSlice.reducer),
   [priceManagementSlice.name]: persistReducer(persistorConfigs.priceLists, priceManagementSlice.reducer),
   [refundsSlice.name]: persistReducer(persistorConfigs.refunds, refundsSlice.reducer),
-  [warehousesSlice.name]: persistReducer(persistorConfigs.warehouses, warehousesSlice.reducer),
   [customersSlice.name]: persistReducer(persistorConfigs.customers, customersSlice.reducer),
   [invoicesSlice.name]: persistReducer(persistorConfigs.invoices, invoicesSlice.reducer),
   [paymentsSlice.name]: persistReducer(persistorConfigs.payments, paymentsSlice.reducer),
   [shipmentsSlice.name]: persistReducer(persistorConfigs.shipments, shipmentsSlice.reducer),
   [deliveriesSlice.name]: persistReducer(persistorConfigs.deliveries, deliveriesSlice.reducer),
-  [integrationsSlice.name]: persistReducer(persistorConfigs.integrations, integrationsSlice.reducer),
+  [integrationsSlice.name]: persistReducer(persistorConfigs.connections, integrationsSlice.reducer),
   [discountsSlice.name]: persistReducer(persistorConfigs.discounts, discountsSlice.reducer),
   [cartSlice.name]: persistReducer(persistorConfigs.cart, cartSlice.reducer),
   [tagsSlice.name]: persistReducer(persistorConfigs.tags, tagsSlice.reducer),
   [linksSlice.name]: linksSlice.reducer,
   [counterpartiesState.name]: counterpartiesState.reducer,
   [chatSlice.name]: chatSlice.reducer,
+  [warehousesSlice.name]: persistReducer(persistorConfigs.warehouses, warehousesSlice.reducer),
   [warehousesDocumentsSlice.name]: warehousesDocumentsSlice.reducer,
+  [warehousesInventoriesSlice.name]: warehousesInventoriesSlice.reducer,
 });
 
 export type RootReducerType = typeof rootReducer;

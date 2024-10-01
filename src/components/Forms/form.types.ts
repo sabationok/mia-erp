@@ -22,7 +22,7 @@ export type { FormCreateVariationProps } from './offers/variations/_FormCreateVa
 export type { CreateVariationModalProps } from '../Overlays/CreateVariationOverlay';
 // sep WAREHOUSING
 export type { FormCreateWarehouseProps } from './warehousing/FormCreateWarehouse';
-export type { FormCreateProductInventoryProps } from './warehousing/FormCreateProductInventory';
+export type { FormCreateWarehouseInventoryProps } from './warehousing/FormCreateProductInventory';
 export type { FormCreateWarehouseDocumentProps } from './warehousing/FormCreateWarehouseDocument';
 export type { FormWarehousingSettingsProps } from './warehousing/FormWarehousingSettings';
 // sep ORDERS

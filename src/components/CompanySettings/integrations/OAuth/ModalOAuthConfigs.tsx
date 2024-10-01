@@ -1,5 +1,5 @@
 import ModalBase from '../../../atoms/Modal';
-import { Integration } from '../../../../types/integrations.types';
+import { Connection } from '../../../../types/integrations.types';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
@@ -13,7 +13,7 @@ import { getAllOAuthConfigsThunk } from '../../../../redux/auth/o-auth.thunks';
 import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
 import { useTheme } from 'styled-components';
 
-export const ModalOAuthConfigs = ({ conn }: { conn: Integration.Output.Entity }) => {
+export const ModalOAuthConfigs = ({ conn }: { conn: Connection.Output.Entity }) => {
   return (
     <ModalBase title={conn.label} fillHeight>
       <OAuthConnection conn={conn} />
@@ -21,7 +21,7 @@ export const ModalOAuthConfigs = ({ conn }: { conn: Integration.Output.Entity })
   );
 };
 
-export const OAuthConnection = ({ conn }: { conn: Integration.Output.Entity }) => {
+export const OAuthConnection = ({ conn }: { conn: Connection.Output.Entity }) => {
   const modalS = useModalService();
   const dispatch = useAppDispatch();
   const theme = useTheme();

@@ -40,7 +40,7 @@ export * from './Chat.api';
 
 // * EXT SERVICES
 export * from './ext-services.api';
-export * from './integrations.api';
+export * from './connectionsApi';
 
 // sep PRICES
 export * from './Discounts.api';

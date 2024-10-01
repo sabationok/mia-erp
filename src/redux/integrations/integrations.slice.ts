@@ -1,4 +1,4 @@
-import { ExtServiceBase, Integration } from '../../types/integrations.types';
+import { Connection, ExtServiceBase } from '../../types/integrations.types';
 import { AppModuleName, StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
 import {
@@ -18,15 +18,15 @@ import { createOAuthConfigsThunk, getAllOAuthConfigsThunk } from '../auth/o-auth
 export interface IntegrationsState {
   extList: ExtServiceBase[];
   output: {
-    dataMap: Record<UUID, Integration.Output.Entity>;
+    dataMap: Record<UUID, Connection.Output.Entity>;
     keysMap: Record<UUID, ArrayOfUUID>;
-    list: Integration.Output.Entity[];
+    list: Connection.Output.Entity[];
   };
 
   input: {
-    dataMap: Record<UUID, Integration.Input.Entity>;
+    dataMap: Record<UUID, Connection.Input.Entity>;
     keysMap: Record<UUID, ArrayOfUUID>;
-    list: Integration.Input.Entity[];
+    list: Connection.Input.Entity[];
   };
 
   error: StateErrorType | null;
@@ -50,7 +50,7 @@ const initState: IntegrationsState = {
 };
 
 export const integrationsSlice = createSlice({
-  name: AppModuleName.integrations,
+  name: AppModuleName.connections,
   initialState: initState,
   reducers: {},
   extraReducers: builder => {
@@ -63,7 +63,7 @@ export const integrationsSlice = createSlice({
           const currentType = a.payload.params?.type;
 
           if (currentType) {
-            type Tp = Integration.ByType[typeof currentType];
+            type Tp = Connection.ByType[typeof currentType];
 
             let list = s[currentType].list as Tp[];
 

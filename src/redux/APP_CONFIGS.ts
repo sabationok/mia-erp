@@ -1,4 +1,4 @@
-import { Integration } from '../types/integrations.types';
+import { Connection } from '../types/integrations.types';
 import { Keys } from '../types/utils.types';
 
 export enum API_BASE_ROUTES {
@@ -107,7 +107,26 @@ function createEndpoints<Endpoints extends Record<string, string>>(
     })
   ) as Record<KeyType, () => string>;
 }
+export function createEndpoints2<
+  Namespace extends Keys<typeof API_BASE_ROUTES>,
+  Endpoints extends Record<string, (...args: any[]) => string>,
+>(entryPoint: Namespace, endpoints: Endpoints) {
+  const baseUr = API_BASE_ROUTES[entryPoint] ?? entryPoint;
 
+  return Object.assign(
+    {},
+    ...Object.entries(endpoints).map(([key, value]) => {
+      return {
+        [key]: (...args: Parameters<any>) => {
+          const endp = value(...args);
+          return baseUr + (endp.startsWith('/') ? endp : '/' + endp);
+        },
+      };
+    })
+  ) as {
+    [key in keyof Endpoints]: (...args: Parameters<Endpoints[key]>) => `/${Namespace}/${string}`;
+  };
+}
 function createMethodsEndpoints(routeBaseUrl: string) {
   return {
     ...createEndpoints(routeBaseUrl as never, {
@@ -161,8 +180,7 @@ const auth = {
   register: () => `${API_BASE_ROUTES.AUTH}/register`,
   logIn: () => `${API_BASE_ROUTES.AUTH}/logIn`,
   logOut: () => `${API_BASE_ROUTES.AUTH}/logOut`,
-  deleteById: (id?: string) => `${API_BASE_ROUTES.AUTH}/deleteById`,
-  getCurrent: (id?: string) => `${API_BASE_ROUTES.AUTH}/getCurrent`,
+  getCurrent: () => `${API_BASE_ROUTES.AUTH}/getCurrent`,
   refreshTokens: () => `${API_BASE_ROUTES.AUTH}/refresh-token`,
 
   devices: {
@@ -244,15 +262,15 @@ const offers = {
   getFullInfoById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getFullInfoById}/${id}`,
   updateDefaultsById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/update/defaults/${id}`,
 
-  propertiesApiEndpoints,
-  variationsApiEndpoints,
+  properties: propertiesApiEndpoints,
+  variations: variationsApiEndpoints,
 };
 
 const companies = createEndpoints('COMPANIES', EndpointsCRUD);
 
 const directories = {
-  getAllByType: (dirType?: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllByType}/${dirType || '_'}`,
-  getAllGrouped: (dirType?: string) => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllGrouped}`,
+  getAllByType: (dirType?: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllByType}/${dirType || ''}`,
+  getAllGrouped: () => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllGrouped}`,
   create: (dirType?: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/create/${dirType}`,
   deleteById: (dirType?: ApiDirType, id?: string) =>
     `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.deleteById}/${dirType || '_'}/${id}`,
@@ -330,18 +348,18 @@ const ordersEndpoints = {
   },
 };
 
-const refunds = {
-  getAll: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
-  getById: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
-  create: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
-  deleteById: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
-  getAllRefundSlots: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
-  addSlotToRefund: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
-  softDeleteSlotFromRefund: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
-  addItemToRefundSlot: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
-  softDeleteRefundSlotItem: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
-  getDataForNewRefundSlot: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
-};
+const refunds = createEndpoints2('REFUNDS', {
+  getAll: () => `/`,
+  getById: () => `/`,
+  create: () => `/`,
+  deleteById: () => `/`,
+  getAllRefundSlots: () => `/`,
+  addSlotToRefund: () => `/`,
+  softDeleteSlotFromRefund: () => `/`,
+  addItemToRefundSlot: () => `/`,
+  softDeleteRefundSlotItem: () => `/`,
+  getDataForNewRefundSlot: () => `/`,
+});
 
 const warehousing = {
   getById: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/getById/${id}`,
@@ -368,20 +386,19 @@ const invoices = {
   methods: createMethodsEndpoints(API_BASE_ROUTES.INVOICES),
 };
 
-const shipments = {
-  create: () => `${API_BASE_ROUTES.SHIPMENTS}/create`,
-  getAll: () => `${API_BASE_ROUTES.SHIPMENTS}/getAll`,
-  getById: (id?: string) => `${API_BASE_ROUTES.SHIPMENTS}/getById/${id}`,
-  getAllMethods: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.methods}/getAll`,
-  updateMethod: (id?: string) => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.methods}/update/${id}`,
-};
+const shipments = createEndpoints2('SHIPMENTS', {
+  create: () => `/create`,
+  getAll: () => `/getAll`,
+  getById: (id?: string) => `/getById/${id}`,
+  getAllMethods: () => `/${Endpoints.methods}/getAll`,
+  updateMethod: (id?: string) => `/${Endpoints.methods}/update/${id}`,
+});
 const deliveries = {
-  create: () => `${API_BASE_ROUTES.DELIVERY}/create`,
-  getAll: () => `${API_BASE_ROUTES.DELIVERY}/getAll`,
-  getById: (id?: string) => `${API_BASE_ROUTES.DELIVERY}/getById/${id}`,
-  getByOrderId: (id?: string) => `${API_BASE_ROUTES.DELIVERY}/getByOrderId/${id}`,
-  getAllMethods: () => `${API_BASE_ROUTES.DELIVERY}/${Endpoints.methods}/getAll`,
-  updateMethod: (id?: string) => `${API_BASE_ROUTES.DELIVERY}/${Endpoints.methods}/update/${id}`,
+  ...createEndpoints2('DELIVERY', {
+    create: () => `/create`,
+    getAll: () => `/getAll`,
+    getById: (id?: string) => `/getById/${id}`,
+  }),
   methods: createMethodsEndpoints(API_BASE_ROUTES.DELIVERY),
 };
 const customers = {
@@ -407,27 +424,19 @@ const communications = {
   methods: createMethodsEndpoints(API_BASE_ROUTES.COMMUNICATION),
 };
 const extServices = {
-  getAllIntegrationsByType: (type: 'input' | 'output' | string = '') =>
-    `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/getAll`,
   getById: (id?: string) => `${API_BASE_ROUTES.EXT_SERVICES}/service/getById/${id}`,
-  updateService: () => `${API_BASE_ROUTES.EXT_SERVICES}/service/update`,
-  getList: () => `${API_BASE_ROUTES.EXT_SERVICES}/getAll`,
+  update: () => `${API_BASE_ROUTES.EXT_SERVICES}/service/update`,
+  getAll: () => `${API_BASE_ROUTES.EXT_SERVICES}/getAll`,
   setDefaultInput: (serviceId?: string, inputId?: string) =>
     `${API_BASE_ROUTES.EXT_SERVICES}/setDefaultInput/${serviceId}/${inputId}`,
-
-  createInputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/input/create`,
-  createOutputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/output/create`,
-  updateInputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/input/update`,
-  updateOutputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/output/update`,
 };
-export type IntegrationType = Keys<typeof Integration.DirectionType>;
 
-const integrations = {
-  getAll: (type: IntegrationType | string = '') => `${API_BASE_ROUTES.INTEGRATIONS}/getAll`,
-  getById: (type?: IntegrationType, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${type}/${id}`,
-  create: (type?: IntegrationType) => `${API_BASE_ROUTES.INTEGRATIONS}/create/${type}`,
-  update: (type?: IntegrationType, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/update/${type}/${id}`,
-  delete: (type?: IntegrationType, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${type}/${id}`,
+const connections = {
+  getAll: (type?: Connection.TypeEnum) => `${API_BASE_ROUTES.INTEGRATIONS}/getAll/${type}`,
+  getById: (type?: Connection.TypeEnum, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${type}/${id}`,
+  create: (type?: Connection.TypeEnum) => `${API_BASE_ROUTES.INTEGRATIONS}/create/${type}`,
+  update: (type?: Connection.TypeEnum, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/update/${type}/${id}`,
+  delete: (type?: Connection.TypeEnum, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${type}/${id}`,
 };
 
 const tags = {
@@ -485,7 +494,7 @@ const APP_CONFIGS = {
     extServices,
     communications,
     refunds,
-    integrations,
+    connections: connections,
     tags,
     tracking,
     counterparties,

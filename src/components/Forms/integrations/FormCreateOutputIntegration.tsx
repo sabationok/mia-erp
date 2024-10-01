@@ -7,7 +7,7 @@ import InputText from '../../atoms/Inputs/InputText';
 import {
   ChatIds,
   ExtServiceBase,
-  Integration,
+  Connection,
   IntegrationFormData,
   OutputIntegrationEntity,
 } from '../../../types/integrations.types';
@@ -42,7 +42,7 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
   ...p
 }) => {
   const dispatch = useAppDispatch();
-  const form = useForm<Integration.Output.FormData>({
+  const form = useForm<Connection.Output.FormData>({
     defaultValues: { ...conn },
   });
   const [inputValueByChatProvider, setInputValueByChatProvider] = useState<Record<ChatProviderKey | string, string>>({
@@ -52,7 +52,7 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
     telegram: false,
   });
 
-  const onValid = ({ setAsDefault, ...data }: Integration.Output.FormData) => {
+  const onValid = ({ setAsDefault, ...data }: Connection.Output.FormData) => {
     const thunk = conn ? updateOutputIntegrationThunk : createOutputIntegrationThunk;
 
     dispatch(

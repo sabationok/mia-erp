@@ -1,21 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { onUserLogout } from '../../auth/auth.actions';
 import { sliceCleaner } from '../../../utils';
-import { WarehousingDocumentEntity } from '../../../types/warehousing';
-import { createWrhsDocThunk, getAllWrhsDocsThunk } from './warehouses-documents.thunks';
+import { WarehouseInventoryEntity } from '../../../types/warehousing';
+import { createWrhsDocThunk, getAllWrhsDocsThunk } from './warehouses-inventories.thunks';
 import { createStateMapsManager, StateMaps } from '../../createStateMapsManager.helper';
 
-export type WarehousesDocumentsState = StateMaps<WarehousingDocumentEntity>;
+export type WarehousesInventoriesState = StateMaps<WarehouseInventoryEntity>;
 
-const initialState: WarehousesDocumentsState = {
+const initialState: WarehousesInventoriesState = {
   dataMap: {},
   keysMap: {},
   list: [],
 };
 
 const manager = createStateMapsManager({});
-export const warehousesDocumentsSlice = createSlice({
-  name: 'warehousesDocuments',
+export const warehousesInventoriesSlice = createSlice({
+  name: 'warehousesInventories',
   reducers: {},
   initialState,
   extraReducers: builder =>

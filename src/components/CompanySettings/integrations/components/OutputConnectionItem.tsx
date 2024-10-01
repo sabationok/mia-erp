@@ -1,4 +1,4 @@
-import { Integration, OutputIntegrationEntity } from '../../../../types/integrations.types';
+import { Connection, OutputIntegrationEntity } from '../../../../types/integrations.types';
 import { useAppDispatch } from '../../../../redux/store.store';
 import { getOutputIntegrationByIdThunk } from '../../../../redux/integrations/integrations.thunk';
 import FlexBox, { FlexLi, FlexUl } from '../../../atoms/FlexBox';
@@ -14,7 +14,7 @@ import FormCreateOutputIntegration from '../../../Forms/integrations/FormCreateO
 import { ApiKeyItem } from './ApiKeyItem';
 import { ModalOAuthConfigs } from '../OAuth/ModalOAuthConfigs';
 
-export const OutputConnectionItem = ({ conn }: { conn: Integration.Output.Entity }) => {
+export const OutputConnectionItem = ({ conn }: { conn: Connection.Output.Entity }) => {
   const dispatch = useAppDispatch();
 
   const onLoadHandler = async () => {

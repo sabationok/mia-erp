@@ -21,7 +21,7 @@ const FiscalizationIntegrationsTab: React.FC<FiscalizationIntegrationsTabProps> 
   currentService: currentServiceData,
   ...props
 }) => {
-  const service = useAppServiceProvider()[AppModuleName.integrations];
+  const service = useAppServiceProvider()[AppModuleName.connections];
   const [integrationsList, setIntegrationsList] = useState<InputConnectionEntity[]>([]);
   const modalS = useModalService();
   // const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);

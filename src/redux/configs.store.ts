@@ -112,8 +112,8 @@ export const persistorConfigs: Record<
     storage: storageSession,
     whitelist: ['refunds', 'currentRefund'],
   },
-  integrations: {
-    key: 'integrations',
+  connections: {
+    key: 'connections',
     storage: storageSession,
     whitelist: ['extList'],
   },

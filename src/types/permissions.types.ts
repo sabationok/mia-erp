@@ -3,7 +3,7 @@ import { ApiAxiosResponse, IBase, OnlyUUID } from '../redux/app-redux.types';
 import { CompanyEntity } from './companies/companies.types';
 import { IUserBase, UserEntity } from './auth/auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
-import { Integration } from './integrations.types';
+import { Connection } from './integrations.types';
 import { AppDate } from './utils.types';
 import { CustomerEntity } from './customers.types';
 
@@ -24,7 +24,7 @@ export namespace Permission {
     company?: Omit<CompanyEntity, 'permissions'>;
     user?: Omit<UserEntity, 'permissions'>;
     customer?: Omit<CustomerEntity, 'permission'>;
-    integration?: Omit<Integration.Output.Entity, 'permission'>;
+    integration?: Omit<Connection.Output.Entity, 'permission'>;
   }
   export type HolderByHype<Type extends HolderType> = Holders[Type];
 
@@ -65,7 +65,7 @@ export interface PermissionEntity extends IBase {
   owner?: IUserBase;
   user?: IUserBase;
   company?: CompanyEntity;
-  integration?: Omit<Integration.Output.Entity, 'permission'>;
+  integration?: Omit<Connection.Output.Entity, 'permission'>;
   // customer?: CustomerEntity;
 
   role?: ICustomRole;

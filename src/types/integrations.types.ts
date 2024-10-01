@@ -119,16 +119,16 @@ export interface ChatIds {
   local?: UUID[];
 }
 
-export namespace Integration {
-  export enum DirectionType {
+export namespace Connection {
+  export enum TypeEnum {
     input = 'input',
     output = 'output',
   }
   export interface ByType {
-    [DirectionType.input]: Input.Entity;
-    [DirectionType.output]: Output.Entity;
+    [TypeEnum.input]: Input.Entity;
+    [TypeEnum.output]: Output.Entity;
   }
-  interface BaseEntity extends IBase, HasLabel, HasOwnerAsCompany, HasAuthor, HasEditor, HasType<DirectionType> {
+  interface BaseEntity extends IBase, HasLabel, HasOwnerAsCompany, HasAuthor, HasEditor, HasType<TypeEnum> {
     service: ExtServiceBase;
 
     publicKey?: string; // !
@@ -201,9 +201,9 @@ export namespace Integration {
   }
 }
 
-export type InputConnectionEntity = Integration.Input.Entity;
+export type InputConnectionEntity = Connection.Input.Entity;
 
-export type OutputIntegrationEntity = Integration.Output.Entity;
+export type OutputIntegrationEntity = Connection.Output.Entity;
 
 export interface IntegrationBaseDto {
   expireAt?: string;
@@ -230,7 +230,7 @@ export interface IntegrationFormData extends Partial<Omit<IntegrationBaseDto, 's
   finCount?: IFormDataValueWithID;
 }
 
-export type InputIntegrationDto = Integration.Input.CreateDto;
+export type InputIntegrationDto = Connection.Input.CreateDto;
 
 export interface CreateOutputIntegrationFormData
   extends Partial<Pick<IntegrationBaseDto, 'description' | 'expireAt' | 'label'>> {

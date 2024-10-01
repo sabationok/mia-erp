@@ -29,7 +29,7 @@ const FormCreateInputIntegration: React.FC<FormCreateInputIntegrationProps> = ({
   defaultState,
   ...p
 }) => {
-  const intServ = useAppServiceProvider()[AppModuleName.integrations];
+  const intServ = useAppServiceProvider()[AppModuleName.connections];
   const form = useAppForm<IntegrationFormData>({
     defaultValues: {
       ...defaultState,

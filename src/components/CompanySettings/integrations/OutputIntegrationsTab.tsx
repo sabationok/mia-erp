@@ -5,7 +5,7 @@ import { t } from '../../../i18e';
 import { useModalService } from '../../../Providers/ModalProvider/ModalProvider';
 import FormCreateOutputIntegration from '../../Forms/integrations/FormCreateOutputIntegration';
 import { useEffect, useMemo } from 'react';
-import { Integration, OutputIntegrationEntity } from '../../../types/integrations.types';
+import { Connection, OutputIntegrationEntity } from '../../../types/integrations.types';
 import AccordionList, { IAccordionListProps, IAccordionOptionProps } from '../../SideBarContent/AccordionList';
 import { useIntegrationsSelector } from '../../../redux/selectors.store';
 import { useAppDispatch } from '../../../redux/store.store';
@@ -37,7 +37,7 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
   useEffect(() => {
     dispatch(
       getAllIntegrationsByTypeThunk({
-        params: { type: Integration.DirectionType.output },
+        params: { type: Connection.TypeEnum.output },
       })
     );
 

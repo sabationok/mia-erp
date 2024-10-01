@@ -21,7 +21,7 @@ export class DeliveriesApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.deliveries;
   static readonly methods = DeliveryMethodsApi;
-  public static createOne = (args?: any, params?: ApiQueryParams): Promise<ApiAxiosResponse<IDelivery>> => {
+  public static createOne = (args?: any): Promise<ApiAxiosResponse<IDelivery>> => {
     return this.api.post(this.endpoints.create(), args?.data);
   };
   public static getAll = (

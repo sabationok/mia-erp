@@ -1,7 +1,7 @@
 import { IBase, OnlyUUID, PartialRecord, UUID } from 'types/utils.types';
 import { AppAuth } from './auth.namespace';
 import { UserEntity } from './auth.types';
-import { Integration } from '../integrations.types';
+import { Connection } from '../integrations.types';
 
 export namespace OAuth {
   export enum ProviderEnum {
@@ -51,7 +51,7 @@ export namespace OAuth {
       isActive?: boolean;
       status?: string;
 
-      outputConnection?: Integration.Output.Entity;
+      outputConnection?: Connection.Output.Entity;
     }
     interface _CreateDto {
       connectionId: string;

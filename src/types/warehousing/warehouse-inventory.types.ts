@@ -26,7 +26,7 @@ export interface WarehouseInventoryEntity extends IBase, WarehouseInventoryBase,
   supplierTags?: TagEntity[];
 }
 
-export interface OfferInventoryDto extends WarehouseInventoryBase {
+export interface WarehouseInventoryDto extends WarehouseInventoryBase {
   warehouseId?: UUID;
   offerId?: UUID;
   priceId?: UUID;
@@ -36,14 +36,14 @@ export interface OfferInventoryDto extends WarehouseInventoryBase {
 }
 export interface WarehouseInventoryReqData {
   _id?: UUID;
-  data: OfferInventoryDto;
+  data: WarehouseInventoryDto;
   params?: Pick<ApiQueryParams, 'limit' | 'offset' | 'offerId' | 'warehouseId' | 'price'>;
 }
 export interface HasWarehouseInventory {
   inventory?: MaybeNull<WarehouseInventoryEntity>;
 }
 
-export interface IProductInventoryFormData extends OfferInventoryDto {
+export interface WarehouseInventoryFormData extends WarehouseInventoryDto {
   offer?: Omit<OfferEntity, 'categories' | 'inventories' | 'category' | 'properties'>;
   price?: Omit<PriceEntity, 'list' | 'offer'>;
   warehouse?: WarehouseEntity;

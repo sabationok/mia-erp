@@ -52,5 +52,5 @@ export interface IWarehouseDocDto {
 export interface IWarehouseDocReqData {
   _id?: UUID;
   data?: IWarehouseDocDto;
-  params?: Omit<ApiQueryParams, 'warehouseId' | 'variationId' | 'offerId' | 'priceId' | 'list' | 'offset'>;
+  params?: Pick<ApiQueryParams, 'warehouseId' | 'variationId' | 'offerId' | 'priceId' | 'list' | 'offset'>;
 }

@@ -36,7 +36,7 @@ export const useInvoicesSelector = () =>
   useSelector<RootState, InvoicesState>((state: RootState) => state['invoicing']);
 
 export const useIntegrationsSelector = () =>
-  useSelector<RootState, IntegrationsState>((state: RootState) => state['integrations']);
+  useSelector<RootState, IntegrationsState>((state: RootState) => state['connections']);
 export const useShipmentsSelector = () => useSelector<RootState, ShipmentsState>((state: RootState) => state.shipments);
 export const useDeliveriesSelector = () =>
   useSelector<RootState, DeliveriesState>((state: RootState) => state.deliveries);
