@@ -13,7 +13,7 @@ export interface CompanyIntegrationsProps extends Omit<ModalFormProps, 'onSubmit
 
 const integrationTypeTabs = enumToFilterOptions(IntegrationTypeEnum);
 
-const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose, ...props }) => {
+const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose }) => {
   const [integrationType, setIntegrationType] = useState(integrationTypeTabs[0].value);
 
   const renderModalContent = useMemo(() => {

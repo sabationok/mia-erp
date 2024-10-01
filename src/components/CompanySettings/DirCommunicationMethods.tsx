@@ -85,10 +85,10 @@ const actionsCreatorForDirCommunicationMethods: DirInTreeActionsCreatorType<
   ICommunicationMethod
 > = ({ service, modalService: mS }) => {
   return {
-    onUpdate: (_id, data, o) => {
+    onUpdate: (_id, data) => {
       const m = mS.create(FormCreateMethod, {
         defaultState: data,
-        onSubmit: (data, o) => {
+        onSubmit: data => {
           service.updateMethod({
             data: { _id, data: { ...data, _id } },
             onSuccess: () => {

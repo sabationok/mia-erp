@@ -12,7 +12,7 @@ export function useExtServicesQuery() {
     connections: { getAllExtServices },
   } = useAppServiceProvider();
 
-  const loadExtServices = ({ params }: { params?: ApiQueryParams<ExternalServiceTypeEnum> } = {}) => {
+  const loadExtServices = ({ params }: { params?: Pick<ApiQueryParams<ExternalServiceTypeEnum>, 'type'> } = {}) => {
     return getAllExtServices({
       params: params,
       onSuccess: () => {},

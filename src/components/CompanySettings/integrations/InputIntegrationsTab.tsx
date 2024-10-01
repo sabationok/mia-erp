@@ -56,14 +56,6 @@ const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = _props => {
 
   useEffect(() => {
     loadExtServices();
-    // if (extServProviders.length === 0) {
-    // }
-    // service.getAll({
-    //   data: { type: 'input' },
-    //   onSuccess: data => {
-    //     setIntegrationsList(data);
-    //   },
-    // });
     // eslint-disable-next-line
   }, []);
 

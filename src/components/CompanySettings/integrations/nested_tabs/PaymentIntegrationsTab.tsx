@@ -6,27 +6,23 @@ import { Text } from '../../../atoms/Text';
 import { t } from 'i18e';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
-import { InputConnectionEntity } from 'types/integrations.types';
+import { Connection } from 'types/integrations.types';
 import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
-import { getIdRef, toQueriesForReq } from 'utils';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import { usePaymentsSelector } from 'redux/selectors.store';
 import { useAppServiceProvider } from 'hooks/useAppServices.hook';
 import { AppModuleName } from 'redux/reduxTypes.types';
 import InputIntegrationsList from '../../components/InputIntegrationsList';
-import { apiCall, ExtServicesApi, ConnectionsApi } from '../../../../api';
+import { apiCall, ConnectionsApi, ExtServicesApi } from '../../../../api';
 import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
+import { getIdRef, toQueriesForReq } from '../../../../utils';
 
 export interface PaymentIntegrationsTabProps extends IntegrationTabProps {}
 
 const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
-  providers,
-  onClose,
-  compId,
   infoVisible,
   currentService: currentServiceData,
-  ...props
 }) => {
   const service = useAppServiceProvider()[AppModuleName.connections];
   const loaders = useLoaders<'activate' | 'getAll' | 'delete'>({
@@ -34,7 +30,7 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
     getAll: { content: t('Refreshing') + '...' },
     delete: { content: t('Deleting') + '...' },
   });
-  const [integrationsList, setIntegrationsList] = useState<InputConnectionEntity[]>([]);
+  const [integrationsList, setIntegrationsList] = useState<Connection.Input.Entity[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
   const methodsList = useTranslatedMethodsList(usePaymentsSelector().methods);
@@ -43,14 +39,14 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
 
   const onOpenModalPress = () => {
     currentServiceData &&
-      modalS.open({
-        ModalChildren: FormCreateInputIntegration,
-        modalChildrenProps: {
+      modalS.create(
+        FormCreateInputIntegration,
+        {
           onSuccess: d => setIntegrationsList(p => [...p, d?.data]),
           service: currentServiceData,
         },
-        $settings: { closeByBackdropPress: false, closeByEscapePress: false },
-      });
+        { closeByBackdropPress: false, closeByEscapePress: false }
+      );
   };
 
   const renderPaymentMethods = useMemo(() => {
@@ -71,12 +67,12 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
     currentServiceData &&
       service.getAll({
         onLoading: loaders.onLoading('getAll'),
-        data: {
+        params: {
           type: 'input',
           serviceId: currentServiceData._id,
           ...toQueriesForReq({ service: getIdRef(currentServiceData) }),
         },
-        onSuccess: data => {
+        onSuccess: ({ data }) => {
           setIntegrationsList(data);
         },
       });
@@ -140,10 +136,10 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
           onDelete={data => {
             if (!window.confirm(`Delete integration: "${data.label}" ?`)) return;
 
-            apiCall(ConnectionsApi.remove, {
+            apiCall(ConnectionsApi.Client.integrations.remove, {
               onLoading: loaders.onLoading('delete'),
               data: { _id: data._id, type: 'input' },
-              onSuccess: res => {
+              onSuccess: () => {
                 setIntegrationsList(prev => {
                   return prev.filter(pr => pr._id !== data._id);
                 });

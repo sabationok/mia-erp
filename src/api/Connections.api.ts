@@ -1,12 +1,17 @@
 import { ApiAxiosResponse, ApiQueryParams, ClientApi } from './index';
 import {
+  Connection,
   InputConnectionEntity,
   InputIntegrationDto,
-  Connection,
   OutputIntegrationDto,
 } from '../types/integrations.types';
 
 export namespace ConnectionsApi {
+  export type GetAllQueries<Type extends Connection.TypeEnum = Connection.TypeEnum> = Partial<
+    Pick<ApiQueryParams, 'warehouseId' | 'serviceId'>
+  > & {
+    type?: Type;
+  };
   export interface GetOneQuery {
     _id?: string;
   }
@@ -23,26 +28,23 @@ export namespace ConnectionsApi {
 
     public static getAll = (
       _data?: unknown,
-      params?: GetAllIntegrationsQueries
+      params?: GetAllQueries
     ): Promise<ApiAxiosResponse<(Connection.Input.Entity | Connection.Output.Entity)[]>> => {
-      return this._client.get(this.endpoints.getAll(params?.type), { params });
+      return this._client.get(this.endpoints.getAll(), { params: { ...params } });
     };
 
     public static integrations = {
       remove: (data?: {
-        type: 'input' | 'output' | undefined;
+        type: keyof typeof Connection.TypeEnum;
         _id: string | undefined;
       }): Promise<ApiAxiosResponse<{ result: boolean }>> => {
-        return this._client.delete(this.endpoints.delete(data?.type, data?._id));
+        return this._client.delete(this.endpoints.delete(Connection.TypeEnum[data?.type || 'input'], data?._id));
       },
     };
 
     public static input = {
-      getAll: (
-        _data?: unknown,
-        params?: GetAllIntegrationsQueries
-      ): Promise<ApiAxiosResponse<Connection.Input.Entity[]>> => {
-        return this._client.get(this.endpoints.getAll('input'), { params });
+      getAll: (_data?: unknown, params?: GetAllQueries): Promise<ApiAxiosResponse<Connection.Input.Entity[]>> => {
+        return this._client.get(this.endpoints.getAll(), { params: { type: Connection.TypeEnum.input, ...params } });
       },
       create: (data?: {
         data: InputIntegrationDto;
@@ -67,29 +69,20 @@ export namespace ConnectionsApi {
         return this._client.get(this.endpoints.getById(Connection.TypeEnum.output, params?._id), { params });
       },
 
-      getAll: (
-        _data?: unknown,
-        params?: GetAllIntegrationsQueries
-      ): Promise<ApiAxiosResponse<Connection.Output.Entity[]>> => {
-        return this._client.get(this.endpoints.getAll('output'), { params });
+      getAll: (_data?: unknown, params?: GetAllQueries): Promise<ApiAxiosResponse<Connection.Output.Entity[]>> => {
+        return this._client.get(this.endpoints.getAll(), { params: { ...params, type: Connection.TypeEnum.output } });
       },
       create: (data?: {
         data: OutputIntegrationDto;
         params?: { setAsDefault?: boolean };
       }): Promise<ApiAxiosResponse<InputConnectionEntity>> => {
-        return this._client.post(this.endpoints.create('output'), data?.data, {
+        return this._client.post(this.endpoints.create(Connection.TypeEnum.output), data?.data, {
           params: data?.params,
         });
       },
       update: (data?: { data: OutputIntegrationDto }): Promise<ApiAxiosResponse<Connection.Input.Entity>> => {
-        return this._client.post(this.endpoints.update('output'), data?.data);
+        return this._client.post(this.endpoints.update(Connection.TypeEnum.output), data?.data);
       },
     };
   }
 }
-
-export type GetAllIntegrationsQueries<Type extends Connection.TypeEnum = Connection.TypeEnum> = Partial<
-  Pick<ApiQueryParams, 'warehouseId' | 'serviceId'>
-> & {
-  type: Type;
-};

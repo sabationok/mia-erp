@@ -42,7 +42,7 @@ export enum API_BASE_ROUTES {
   COMMUNICATION = '/communications',
   COUNTERPARTIES = '/counterparties',
   EXT_SERVICES = '/ext-services',
-  INTEGRATIONS = '/integrations',
+  CONNECTIONS = '/connections',
   TRACK_LINKS = 'tracking-links',
   CHAT = '/chat',
   CHAT_MESSAGES = '/chat/messages',
@@ -431,13 +431,13 @@ const extServices = {
     `${API_BASE_ROUTES.EXT_SERVICES}/setDefaultInput/${serviceId}/${inputId}`,
 };
 
-const connections = {
-  getAll: (type?: Connection.TypeEnum) => `${API_BASE_ROUTES.INTEGRATIONS}/getAll/${type}`,
-  getById: (type?: Connection.TypeEnum, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${type}/${id}`,
-  create: (type?: Connection.TypeEnum) => `${API_BASE_ROUTES.INTEGRATIONS}/create/${type}`,
-  update: (type?: Connection.TypeEnum, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/update/${type}/${id}`,
-  delete: (type?: Connection.TypeEnum, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${type}/${id}`,
-};
+const connections = createEndpoints2('CONNECTIONS', {
+  getAll: () => `/getAll`,
+  getById: (type?: Connection.TypeEnum, id?: string) => `/${type}/${id}`,
+  create: (type?: Connection.TypeEnum) => `/create/${type}`,
+  update: (type?: Connection.TypeEnum, id?: string) => `/update/${type}/${id}`,
+  delete: (type?: Connection.TypeEnum, id?: string) => `/${type}/${id}`,
+});
 
 const tags = {
   getAll: () => `${API_BASE_ROUTES.TAGS}/getAll`,

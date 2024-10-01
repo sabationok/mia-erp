@@ -9,8 +9,8 @@ import { Connection, OutputIntegrationEntity } from '../../../types/integrations
 import AccordionList, { IAccordionListProps, IAccordionOptionProps } from '../../SideBarContent/AccordionList';
 import { useIntegrationsSelector } from '../../../redux/selectors.store';
 import { useAppDispatch } from '../../../redux/store.store';
-import { getAllIntegrationsByTypeThunk } from '../../../redux/integrations/integrations.thunk';
 import { OutputConnectionItem } from './components/OutputConnectionItem';
+import { getAllIntegrationsByTypeThunk } from '../../../redux/integrations/integrations.thunk';
 
 export interface OutputIntegrationsTabProps {}
 
@@ -37,10 +37,9 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
   useEffect(() => {
     dispatch(
       getAllIntegrationsByTypeThunk({
-        params: { type: Connection.TypeEnum.output },
+        data: { params: { type: Connection.TypeEnum.output } },
       })
     );
-
     // eslint-disable-next-line
   }, []);
 
