@@ -20,7 +20,7 @@ import { IDelivery } from '../deliveries.types';
 import { IPayment } from '../payments.types';
 import { ICreateOrderInfoDto } from './createOrderInfo.dto';
 import { ICreateOrderInfoFormState } from './createOrderInfoFormState.type';
-import { IOrderTempSlot, OrderSlotEntity, SaleOrderSlotDto } from './order-slot.types';
+import { IOrderTempSlot, OrderSlotDto, OrderSlotEntity } from './order-slot.types';
 
 export * from './createOrderInfo.dto';
 export * from './createOrderInfoFormState.type';
@@ -89,7 +89,7 @@ export interface IOrderReqData {
 }
 
 export interface SaleOrdersGroupDto {
-  slots?: SaleOrderSlotDto[];
+  slots?: OrderSlotDto[];
   info?: ICreateOrderInfoDto;
 }
 

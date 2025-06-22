@@ -24,7 +24,7 @@ export const getOrderSlotsThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_
 export const getOrderSlotThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_getOne, OrdersApi.slots.getAll);
 export const addOrderSlotThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_add, OrdersApi.slots.create);
 export const updateOrderSlotThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_update, OrdersApi.slots.update);
-export const removeOrderSlotThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_remove, OrdersApi.slots.update);
+export const removeOrderSlotThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_remove, OrdersApi.slots.remove);
 
 // export const softRemoveOrderThunk = createAppAsyncThunk(
 //   OrdersThunkType.getPaymentsList,

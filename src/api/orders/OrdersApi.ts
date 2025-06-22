@@ -2,7 +2,7 @@ import { ICreateOrderInfoDto, OrderEntity, SaleOrdersGroupDto } from '../../type
 import { ApiAxiosResponse, OnlyUUID } from '../../redux/app-redux.types';
 import { ApiQueryParams, ApiQuerySearchParams, ApiQuerySortParams } from '../index';
 import { ClientApi } from '../client.api';
-import { OrderSlotEntity, SaleOrderSlotDto, UpdateSaleOrderSlotDto } from '../../types/orders/order-slot.types';
+import { OrderSlotDto, OrderSlotEntity, UpdateSaleOrderSlotDto } from '../../types/orders/order-slot.types';
 import { OrdersSortParam, SaleOrdersSearchParam } from '../../data';
 import { PartialRecord, UUID } from '../../types/utils.types';
 
@@ -21,7 +21,7 @@ export class OrderSlotsApi {
     return this.api.get(this.endpoints.getAll(), { params: input?.params });
   };
 
-  public static create = (input?: { data: SaleOrderSlotDto }): Promise<ApiAxiosResponse<OrderSlotEntity>> => {
+  public static create = (input?: { data: OrderSlotDto }): Promise<ApiAxiosResponse<OrderSlotEntity>> => {
     return this.api.post(this.endpoints.create(), input?.data);
   };
 

@@ -20,3 +20,5 @@ export * from './useCartService.hook';
 
 export { default as useScrollTo } from './useScrollTo.hook';
 export * from './useListData.hook';
+
+export * from './useHook.hook';

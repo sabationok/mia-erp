@@ -14,6 +14,7 @@ import {
   MaybeNull,
   OnlyUUID,
   PartialRecord,
+  UUID,
 } from '../utils.types';
 import { HasBaseCmsConfigs } from '../cms.types';
 import { OrderStatusEnum } from './orders.types';
@@ -78,15 +79,17 @@ export interface OrderSlotEntity extends IBase, IOrderSlotBase, HasOwnerAsCompan
   discounts?: PriceEntity['discounts'];
 }
 
-export interface SaleOrderSlotDto extends HasSku, HasLabel, HasQuantity, HasCurrencyCode, HasImgPreview {
+export interface OrderSlotDto extends HasSku, HasLabel, HasQuantity, HasCurrencyCode, HasImgPreview {
   fromRef?: string;
 
-  offer?: OnlyUUID;
-  variation?: OnlyUUID;
-  origin?: OnlyUUID;
-  inventory?: OnlyUUID;
-  warehouse?: OnlyUUID;
+  offerId?: UUID;
+  variationId?: UUID;
+  originId?: UUID;
+  inventoryId?: UUID;
+  warehouseId?: UUID;
+
+  isSelected?: boolean;
 
   discounts?: (PriceDiscountRecord | OnlyUUID)[];
 }
-export interface UpdateSaleOrderSlotDto extends OnlyUUID, SaleOrderSlotDto {}
+export interface UpdateSaleOrderSlotDto extends OnlyUUID, OrderSlotDto {}

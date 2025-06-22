@@ -42,7 +42,7 @@ const useCartActions = () => {
 
   class Actions {
     static setChecked({ tempId, checked, orderId }: { orderId?: UUID; tempId?: UUID; checked: boolean }) {
-      // dispatch(AppCart.setCheckedStatusAction({ tempId, checked, orderId }));
+      // dispatch(updateOrderSlotThunk({ data: { data: { data: {  } } } }));
     }
 
     static setCartId(_id?: UUID, _customer?: CustomerEntity) {

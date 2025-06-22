@@ -77,7 +77,6 @@ function createFlexBoxStyles({ query, key }: { query?: string; key?: MediaStyles
     border: ${({ border, ...p }) => (key && p[key]?.border) || border};
 
     gap: ${({ gap = 0, ...p }) => (key && p[key]?.gap) ?? gap}px;
-    stroke: ${p => []};
     padding: ${({ padding = 0, ...p }) => (key && p[key]?.padding) ?? padding};
     margin: ${({ margin = 0, ...p }) => (key && p[key]?.margin) ?? margin};
 

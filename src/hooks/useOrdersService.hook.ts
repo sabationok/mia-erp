@@ -23,7 +23,7 @@ import {
   ToRequestDataOptions,
 } from '../utils';
 import { EmptyFn, EntityPath } from '../types/utils.types';
-import { IOrderTempSlot, SaleOrderSlotDto } from '../types/orders/order-slot.types';
+import { IOrderTempSlot, OrderSlotDto } from '../types/orders/order-slot.types';
 
 export interface OrdersService {
   createOne: EmptyFn | ServiceDispatcherAsync<IOrderReqData, OrderEntity>;
@@ -48,7 +48,7 @@ export interface OrdersService {
   toOrderSlotsReqData: (
     slots: IOrderTempSlot[],
     options?: toOrderSlotsRequestDataOptions
-  ) => SaleOrderSlotDto[] | undefined;
+  ) => OrderSlotDto[] | undefined;
 }
 
 const useOrdersServiceHook = (): OrdersService => {
