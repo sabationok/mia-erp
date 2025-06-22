@@ -16,9 +16,9 @@ export interface IUserInfoProps {
 }
 
 const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
-  const { logOutUser, setLoggedUser } = useAppAuthHook();
+  const { logOutUser } = useAppAuthHook();
   const { user } = useAuthSelector();
-  const { permissionLogOut, clearCurrent } = useAppServiceProvider().get(ServiceName.permissions);
+  const { logOut, clearCurrent } = useAppServiceProvider().get(ServiceName.permissions);
   const { permission, permission_token } = usePermissionsSelector();
 
   function onBackdropClick(ev: React.MouseEvent) {
@@ -62,10 +62,9 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
                 variant={'textSmall'}
                 endIcon={'logOut'}
                 onClick={() =>
-                  permissionLogOut({
-                    onSuccess: data => {
-                      setLoggedUser(data.user);
-
+                  logOut({
+                    onSuccess: ({ data }) => {
+                      console.log(data);
                       clearCurrent();
                     },
                     onError() {

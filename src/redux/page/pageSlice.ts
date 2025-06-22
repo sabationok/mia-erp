@@ -1,15 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import {
-  actionSetPage,
-  actionSetMobile,
-  actionSetIndexPage,
-  actionSetPageGrid,
-  actionSetSearchParams,
-  actionSetPageGridChange,
   actionResetPageSettings,
+  actionSetIndexPage,
+  actionSetMobile,
+  actionSetPage,
+  actionSetPageGrid,
+  actionSetPageGridChange,
   actionSetPageObjData,
+  actionSetSearchParams,
 } from './pageActions';
+import { AppModuleName } from '../reduxTypes.types';
 
 export interface IPage {
   title?: string;
@@ -22,7 +23,7 @@ export interface ISearchParams {
   order: string | null;
   refund: string | null;
 }
-export interface IPageInitialState {
+export interface PageState {
   page: IPage;
   indexPage: string;
   pageObjData: any; // !!!!
@@ -43,7 +44,7 @@ const searchParams: ISearchParams = {
   refund: null,
 };
 
-const initialState: IPageInitialState = {
+const initialState: PageState = {
   page: pageState,
   indexPage: 'orders',
   pageObjData: null, // !!!!
@@ -54,7 +55,7 @@ const initialState: IPageInitialState = {
 };
 
 export const appPageSlice = createSlice({
-  name: 'appPage',
+  name: AppModuleName.appPage,
   initialState,
   reducers: {},
   extraReducers: builder =>

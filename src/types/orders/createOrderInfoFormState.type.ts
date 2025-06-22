@@ -1,11 +1,11 @@
 import { ICustomerBase } from '../customers.types';
 import { IUserBase } from '../auth/auth.types';
-import { AddressDto, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
+import { IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
 import { AppDate, FormDataLocationRefs, HasEmbeddedType } from '../utils.types';
 import { PaymentInternalTypeEnum } from '../integrations.types';
+import { AddressDto } from '../addresses/addresses.types';
 
 export interface ICreateOrderInfoFormState {
-  cartId?: string;
   customer?: ICustomerBase;
   receiver?: ICustomerBase;
 

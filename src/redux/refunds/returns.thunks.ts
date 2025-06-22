@@ -4,7 +4,7 @@ import { ApiQueryParams, createApiCall, RefundsApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { isAxiosError } from 'axios';
 import { OnlyUUID } from '../app-redux.types';
-import { IRefund, IRefundReqData } from './refunds.types';
+import { IRefund, IRefundReqData } from './returns.types';
 
 export const getAllRefundsThunk = createAsyncThunk<
   { refresh?: boolean; data?: IRefund[] },

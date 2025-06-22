@@ -1,4 +1,4 @@
-import { Connection } from '../types/integrations.types';
+import { Connections } from '../types/integrations.types';
 import { Keys } from '../types/utils.types';
 
 export enum API_BASE_ROUTES {
@@ -431,14 +431,16 @@ const extServices = {
     `${API_BASE_ROUTES.EXT_SERVICES}/setDefaultInput/${serviceId}/${inputId}`,
 };
 
-const connections = createEndpoints2('CONNECTIONS', {
-  getAll: () => `/getAll`,
-  getById: (type?: Connection.TypeEnum, id?: string) => `/${type}/${id}`,
-  create: (type?: Connection.TypeEnum) => `/create/${type}`,
-  update: (type?: Connection.TypeEnum, id?: string) => `/update/${type}/${id}`,
-  delete: (type?: Connection.TypeEnum, id?: string) => `/${type}/${id}`,
-});
-
+const connections = {
+  ...createEndpoints2('CONNECTIONS', {
+    getAll: () => `/getAll`,
+    getById: (type: Connections.TypeEnum, id?: string) => `/${type}/${id}`,
+    create: (type: Connections.TypeEnum) => `/create/${type}`,
+    update: (type: Connections.TypeEnum, id?: string) => `/update/${type}/${id}`,
+    delete: (type: Connections.TypeEnum, id?: string) => `/${type}/${id}`,
+    generateKeys: (type: Connections.TypeEnum, id: string) => `/${type}/keys/generate/${id}`,
+  }),
+};
 const tags = {
   getAll: () => `${API_BASE_ROUTES.TAGS}/getAll`,
   create: () => `${API_BASE_ROUTES.TAGS}/create`,

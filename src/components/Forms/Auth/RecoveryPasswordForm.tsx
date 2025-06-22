@@ -75,16 +75,16 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
       <FormInputs>
         {recovery ? (
           <>
-            <AuthInputLabel icon="lock_O" error={errors.password}>
+            <AuthInputLabel icon="lock_O" $error={errors.password}>
               <InputText placeholder="Новий пароль" type="password" {...register('password')} />
             </AuthInputLabel>
-            <AuthInputLabel icon="lock_O" error={errors.approvePassword}>
+            <AuthInputLabel icon="lock_O" $error={errors.approvePassword}>
               <InputText placeholder="Повторіть пароль" type="password" {...register('approvePassword')} />
             </AuthInputLabel>
           </>
         ) : (
           <>
-            <AuthInputLabel icon="email" error={errors.email}>
+            <AuthInputLabel icon="email" $error={errors.email}>
               <InputText placeholder="Електронна пошта" {...register('email')} />
             </AuthInputLabel>
           </>

@@ -32,7 +32,7 @@ const FormInviteUser: React.FC<FormInviteUserProps> = ({ onSubmit, ...props }) =
   return (
     <ModalForm isValid={isValid} {...props} onSubmit={handleSubmit(onValidSubmit)}>
       <FormInputs>
-        <InputLabel label={'Емейл'} error={errors.email} required>
+        <InputLabel label={'Емейл'} $error={errors.email} required>
           <InputText
             {...register('email', { required: true })}
             type={'email'}
@@ -42,7 +42,7 @@ const FormInviteUser: React.FC<FormInviteUserProps> = ({ onSubmit, ...props }) =
           />
         </InputLabel>
 
-        <InputLabel label={'Роль'} error={errors.role}>
+        <InputLabel label={'Роль'} $error={errors.role}>
           <CustomSelect {...registerSelect('role', { options: roles, placeholder: 'Оберіть роль для користувача' })} />
         </InputLabel>
       </FormInputs>

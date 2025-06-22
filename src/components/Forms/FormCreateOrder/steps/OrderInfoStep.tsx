@@ -341,7 +341,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
                   <InputLabel
                     key={`dest-addr-${label}`}
                     label={label}
-                    error={errors?.deliveryInfo?.destination ? errors?.deliveryInfo?.destination[name] : undefined}
+                    $error={errors?.deliveryInfo?.destination ? errors?.deliveryInfo?.destination[name] : undefined}
                     required={required}
                   >
                     <InputText

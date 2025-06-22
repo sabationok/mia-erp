@@ -3,7 +3,7 @@ import { AuthErrorType } from 'redux/reduxTypes.types';
 // import { actionLogInUser, actionLogOutUser, actionSetCurrentUser } from './authActions';
 import { getAllUsersThunk } from './users.thunks';
 import { checks, sliceCleaner } from '../../utils';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 
 export interface UsersState {
   users: any[];
@@ -39,7 +39,7 @@ export const usersSlice = createSlice({
         state.isLoading = false;
         state.error = null;
       })
-      .addMatcher(onUserLogout, sliceCleaner(initialState));
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initialState));
   },
 });
 

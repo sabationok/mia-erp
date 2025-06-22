@@ -1,91 +1,95 @@
-import { RootState } from './store.store';
 import { useSelector } from 'react-redux';
 import { ApiDirType } from './APP_CONFIGS';
 import { IAuthState } from '../types/auth/auth.types';
-import { IFinTransactionsState } from './finances/finances.slice';
-import { ICustomRolesState } from './customRoles/customRoles.slice';
+import { FinancesState } from './finances/finances.slice';
+import { CustomRolesState } from './customRoles/customRoles.slice';
 import { IUsersState } from './users/users.types';
 import { AppSettingsState } from './appSettings/appSettings.slice';
 import { OffersState } from './products/offers.slice';
-import { PricesState } from './priceManagement/priceManagement.slice';
+import { PriceManagementState } from './priceManagement/priceManagement.slice';
 import { IDirItemBase } from '../types/dir.types';
 import { DirectoriesState } from './directories/directories.slice';
 import { OrdersState } from './orders/orders.slice';
-import { IRefundsState } from './refunds/refunds.slice';
+import { ReturnsState } from './refunds/returns.slice';
 import { WarehousingState } from './warehouses/warehouses.slice';
 import { IPermissionsState } from '../types/permissions.types';
 import { CustomersState } from './customers/customers.slice';
 import { PaymentsState } from './payments/payments.slice';
 import { InvoicesState } from './invoices/invoices.slice';
 import { ShipmentsState } from './shipments/shipments.slice';
-import { IntegrationsState } from './integrations/integrations.slice';
+import { ConnectionsState } from './integrations/integrations.slice';
 import { DeliveriesState } from './deliveries/deliveries.slice';
 import { DiscountsState } from './priceManagement/discounts/discounts.slice';
-import { CartState } from './cart/cart.slice';
 import { TagsState } from './tags/tags.slice';
 import { LinksState } from './tracking/links/links.slice';
 import { ChatState } from './chat/chat.slice';
 import { CompaniesState } from './companies/companies.slice';
+import { OAuthState } from './auth/o-auth.slice';
+import { AppRootState } from './reduxTypes.types';
 
-export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
-export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
+export const useAuthSelector = () => useSelector<AppRootState, IAuthState>((state: AppRootState) => state.auth);
+export const useUsersSelector = () => useSelector<AppRootState, IUsersState>((state: AppRootState) => state.users);
 export const useAppSettingsSelector = () =>
-  useSelector<RootState, AppSettingsState>((state: RootState) => state.appSettings);
-export const usePaymentsSelector = () => useSelector<RootState, PaymentsState>((state: RootState) => state.payments);
+  useSelector<AppRootState, AppSettingsState>((state: AppRootState) => state.appSettings);
+export const usePaymentsSelector = () =>
+  useSelector<AppRootState, PaymentsState>((state: AppRootState) => state.payments);
 export const useInvoicesSelector = () =>
-  useSelector<RootState, InvoicesState>((state: RootState) => state['invoicing']);
+  useSelector<AppRootState, InvoicesState>((state: AppRootState) => state['invoicing']);
 
-export const useIntegrationsSelector = () =>
-  useSelector<RootState, IntegrationsState>((state: RootState) => state['connections']);
-export const useShipmentsSelector = () => useSelector<RootState, ShipmentsState>((state: RootState) => state.shipments);
+export const useConnectionsSelector = () =>
+  useSelector<AppRootState, ConnectionsState>((state: AppRootState) => state['connections']);
+export const useOAuthSelector = () => useSelector<AppRootState, OAuthState>((state: AppRootState) => state['oauth']);
+export const useShipmentsSelector = () =>
+  useSelector<AppRootState, ShipmentsState>((state: AppRootState) => state.shipments);
 export const useDeliveriesSelector = () =>
-  useSelector<RootState, DeliveriesState>((state: RootState) => state.deliveries);
-export const useCustomersSelector = () => useSelector<RootState, CustomersState>((state: RootState) => state.customers);
+  useSelector<AppRootState, DeliveriesState>((state: AppRootState) => state.deliveries);
+export const useCustomersSelector = () =>
+  useSelector<AppRootState, CustomersState>((state: AppRootState) => state.customers);
 export const useCommunicationSelector = () =>
-  useSelector<RootState, CustomersState>((state: RootState) => state['customers']);
-export const useAppPageSettingsSelector = () => useSelector((state: RootState) => state.appPage);
-export const useTransactionsSelector = (): IFinTransactionsState =>
-  useSelector<RootState, IFinTransactionsState>((state: RootState): IFinTransactionsState => state.transactions);
+  useSelector<AppRootState, CustomersState>((state: AppRootState) => state['customers']);
+export const useAppPageSettingsSelector = () => useSelector((state: AppRootState) => state.appPage);
+export const useTransactionsSelector = (): FinancesState =>
+  useSelector<AppRootState, FinancesState>((state: AppRootState): FinancesState => state.finances);
 
-export const useFinancesSelector = (): IFinTransactionsState =>
-  useSelector<RootState, IFinTransactionsState>((state: RootState): IFinTransactionsState => state.transactions);
+export const useFinancesSelector = (): FinancesState =>
+  useSelector<AppRootState, FinancesState>((state: AppRootState): FinancesState => state.finances);
 
 export const useOffersSelector = () =>
-  useSelector<RootState, OffersState>((state: RootState): OffersState => state?.['products']);
+  useSelector<AppRootState, OffersState>((state: AppRootState): OffersState => state?.['offers']);
 export const usePropertiesSelector = () =>
-  useSelector<RootState, OffersState['properties']>(
-    (state: RootState): OffersState['properties'] => state?.['products']?.properties
+  useSelector<AppRootState, OffersState['properties']>(
+    (state: AppRootState): OffersState['properties'] => state?.['offers']?.properties
   );
 export const useOrdersSelector = () =>
-  useSelector<RootState, OrdersState>((state: RootState): OrdersState => state.orders);
+  useSelector<AppRootState, OrdersState>((state: AppRootState): OrdersState => state.orders);
 
 export const usePermissionsSelector = () =>
-  useSelector<RootState, IPermissionsState>((state: RootState): IPermissionsState => state['permissions']);
+  useSelector<AppRootState, IPermissionsState>((state: AppRootState): IPermissionsState => state['permissions']);
 export const useCompaniesSelector = () =>
-  useSelector<RootState, CompaniesState>((state: RootState): CompaniesState => state['companies']);
+  useSelector<AppRootState, CompaniesState>((state: AppRootState): CompaniesState => state['companies']);
 export const useRefundsSelector = () =>
-  useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state['refunds']);
+  useSelector<AppRootState, ReturnsState>((state: AppRootState): ReturnsState => state.returns);
 export const usePriceManagementSelector = () =>
-  useSelector<RootState, PricesState>((state: RootState): PricesState => state.priceLists);
+  useSelector<AppRootState, PriceManagementState>((state: AppRootState): PriceManagementState => state.priceManagement);
 
 export const usePriceDiscountsSelector = () =>
-  useSelector<RootState, DiscountsState>((state: RootState): DiscountsState => state?.['discounts']);
-
+  useSelector<AppRootState, DiscountsState>((state: AppRootState): DiscountsState => state?.['discounts']);
 export const useWarehousesSelector = () =>
-  useSelector<RootState, WarehousingState>((state: RootState): WarehousingState => state.warehouses);
+  useSelector<AppRootState, WarehousingState>((state: AppRootState): WarehousingState => state.warehouses);
 export const useCustomRolesSelector = () =>
-  useSelector<RootState, ICustomRolesState>((state: RootState) => state.customRoles);
+  useSelector<AppRootState, CustomRolesState>((state: AppRootState) => state.customRoles);
 
-export const useCartSelector = (): CartState =>
-  useSelector<RootState, CartState>((state: RootState) => state?.['cart']);
+export const useCartsSelector = (): OrdersState =>
+  useSelector<AppRootState, OrdersState>((state: AppRootState) => state?.['orders']);
 
 export const useTagsSelector = (): TagsState =>
-  useSelector<RootState, TagsState>((state: RootState) => state?.['tags']);
+  useSelector<AppRootState, TagsState>((state: AppRootState) => state?.['tags']);
 
 export const useLinksSelector = (): LinksState =>
-  useSelector<RootState, LinksState>((state: RootState) => state?.['tracking/links']);
+  useSelector<AppRootState, LinksState>((state: AppRootState) => state?.['tracking_links']);
 
-export const useChatSelector = (): ChatState => useSelector<RootState, ChatState>((state: RootState) => state.chat);
+export const useChatSelector = (): ChatState =>
+  useSelector<AppRootState, ChatState>((state: AppRootState) => state.chat);
 
 export const useDirectorySelector = <DT extends ApiDirType = any>(
   dirType: DT
@@ -94,7 +98,7 @@ export const useDirectorySelector = <DT extends ApiDirType = any>(
   error?: DirectoriesState['error'];
   isLoading?: DirectoriesState['isLoading'];
 } => {
-  const state = useSelector((state: RootState) => state.directories);
+  const state = useSelector((state: AppRootState) => state.directories);
 
   return { directory: state.directories[dirType] };
 };

@@ -10,7 +10,7 @@ import {
 import { IDirItemBase } from '../../types/dir.types';
 import { DefaultDirectoryType } from '../../types/directories.types';
 import { enumToArray, sliceCleaner } from '../../utils';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 import { isString } from 'lodash';
 
 export interface DirectoriesState extends Record<string, any> {
@@ -76,7 +76,7 @@ export const directoriesSlice = createSlice({
         s.isLoading = false;
         s.error = a.payload;
       })
-      .addMatcher(onUserLogout, sliceCleaner(initialState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initialState)),
 });
 
 function isDirectoriesCase(type: string) {

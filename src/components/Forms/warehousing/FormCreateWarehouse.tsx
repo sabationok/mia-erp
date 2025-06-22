@@ -74,31 +74,31 @@ const FormCreateWarehouse: React.FC<FormCreateWarehouseProps> = ({ defaultState,
     >
       <FormInputs>
         <FlexBox style={{ display: 'grid', gridTemplateColumns: '1fr 125px' }} gap={8}>
-          <InputLabel label={t('label')} error={errors.label} required>
+          <InputLabel label={t('label')} $error={errors.label} required>
             <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
           </InputLabel>
 
-          <InputLabel label={t('code')} error={errors.code} required>
+          <InputLabel label={t('code')} $error={errors.code} required>
             <InputText placeholder={t('insertCode')} {...register('code', { required: true })} required />
           </InputLabel>
         </FlexBox>
 
         <FlexBox fxDirection={'row'} gap={8}>
-          <InputLabel label={t('email')} error={errors.email}>
+          <InputLabel label={t('email')} $error={errors.email}>
             <InputText placeholder={t('email')} {...register('email')} />
           </InputLabel>
 
-          <InputLabel label={t('phone')} error={errors.phone}>
+          <InputLabel label={t('phone')} $error={errors.phone}>
             <InputText placeholder={t('phone')} {...register('phone')} />
           </InputLabel>
         </FlexBox>
 
         <FlexBox fxDirection={'row'} gap={8}>
-          <InputLabel label={t('longitude')} error={errors.location}>
+          <InputLabel label={t('longitude')} $error={errors.location}>
             <InputText placeholder={t('longitude')} {...register('location.longitude', { valueAsNumber: true })} />
           </InputLabel>
 
-          <InputLabel label={t('latitude')} error={errors.location}>
+          <InputLabel label={t('latitude')} $error={errors.location}>
             <InputText placeholder={t('latitude')} {...register('location.latitude', { valueAsNumber: true })} />
           </InputLabel>
         </FlexBox>

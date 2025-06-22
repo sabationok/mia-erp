@@ -2,11 +2,11 @@ import { ClientApi } from './client.api';
 import { ApiAxiosResponse, OnlyUUID } from '../redux/app-redux.types';
 import {
   ICreatePriceReqData,
-  IPriceListReqData,
   IUpdatePriceReqData,
   PriceEntity,
+  PriceListApiReqConfig,
   PriceListEntity,
-} from '../types/price-management/price-management.types';
+} from '../types/price-management';
 import { ApiQueryParams } from './index';
 import { DiscountsApi } from './Discounts.api';
 
@@ -19,11 +19,11 @@ export class PriceListsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.priceManagementEndpoints;
 
-  public static create = async (data?: IPriceListReqData): Promise<ApiAxiosResponse<PriceListEntity>> => {
+  public static create = async (data?: PriceListApiReqConfig): Promise<ApiAxiosResponse<PriceListEntity>> => {
     return this.api.post(this.endpoints.createList(), data?.data);
   };
 
-  public static update = async (data?: IPriceListReqData): Promise<ApiAxiosResponse<PriceListEntity>> => {
+  public static update = async (data?: PriceListApiReqConfig): Promise<ApiAxiosResponse<PriceListEntity>> => {
     return this.api.patch(this.endpoints.updateList(data?._id || ''), data?.data);
   };
 

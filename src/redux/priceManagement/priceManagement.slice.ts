@@ -1,37 +1,38 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { StateErrorType } from 'redux/reduxTypes.types';
-import { PriceEntity, PriceListEntity } from '../../types/price-management/price-management.types';
+import { AppModuleName, SliceMap, StateErrorType } from 'redux/reduxTypes.types';
+import { PriceDiscountEntity, PriceEntity, PriceListEntity } from '../../types/price-management';
 import * as thunks from './priceManagement.thunks';
 import { PartialRecord, UUID } from '../../types/utils.types';
 import { omit } from 'lodash';
-import { PriceDiscountEntity } from '../../types/price-management/discounts';
 import { onCreateDiscountMather, onGetDiscountsMatcher, onRemoveDiscountCase } from './discounts/discounts.matchers';
 import { Action } from '../store.store';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
 
-export interface PricesState {
-  lists: PriceListEntity[];
-  filteredLists?: PriceListEntity[];
-  current?: PriceListEntity | null;
+export interface PriceListsState extends SliceMap<UUID, UUID, PriceListEntity> {}
+export interface PriceManagementState {
+  lists: PriceListsState;
   isLoading: boolean;
   error: StateErrorType;
   dataMap: PartialRecord<UUID, PriceEntity>;
   keysMap: PartialRecord<UUID, UUID[]>;
 }
 
-const initialState: PricesState = {
+const initialState: PriceManagementState = {
   isLoading: false,
   error: null,
-  lists: [],
-  // currentRoot: null,
-  filteredLists: [],
+  lists: {
+    dataMap: {},
+    keysMap: {},
+    ids: [],
+    list: [],
+  },
   dataMap: {},
   keysMap: {},
 };
 
 export const priceManagementSlice = createSlice({
-  name: 'priceLists',
+  name: AppModuleName.priceManagement,
   initialState,
   reducers: {},
   extraReducers: builder =>
@@ -41,58 +42,41 @@ export const priceManagementSlice = createSlice({
         const inputArr = a?.payload?.data && Array.isArray(a?.payload?.data) ? a?.payload?.data : [];
 
         if (a.payload?.refresh) {
-          s.lists = [...inputArr];
+          s.lists.list = [...inputArr];
           return;
         }
-        s.lists = [...inputArr, ...s.lists];
+        s.lists.list = [...inputArr, ...(s.lists.list ?? [])];
       })
       .addCase(thunks.createPriceListThunk.fulfilled, (s, a) => {
         s.isLoading = false;
         if (a.payload) {
-          s.lists = [a.payload, ...s.lists];
+          s.lists.list = [a.payload, ...(s.lists.list ?? [])];
         }
       })
       .addCase(thunks.refreshPriceListByIdThunk.fulfilled, (s, a) => {
-        const idx = s.lists.findIndex(l => l._id === a.payload?._id);
-        if (idx >= 0 && a.payload) {
-          s.lists.splice(idx, 1, a.payload);
-        }
-        if (s.current?._id === a.payload?._id) {
-          s.current = a.payload;
-        }
+        const id = a.payload?._id;
+        if (!id || !a.payload) return;
+        s.lists.dataMap[id] = a.payload;
       })
       .addCase(thunks.updatePriceListByIdThunk.fulfilled, (s, a) => {
-        const idx = s.lists.findIndex(l => l._id === a.payload?._id);
-        if (idx >= 0 && a.payload) {
-          s.lists.splice(idx, 1, a.payload);
-        }
+        const id = a.payload?._id;
+        if (!id || !a.payload) return;
+        s.lists.dataMap[id] = a.payload;
       })
       .addCase(thunks.getPriceListByIdThunk.fulfilled, (s, a) => {
-        if (a.payload.refreshCurrent && s.current) {
-          s.current = { ...s.current, ...a.payload.data };
-        } else {
-          s.current = a.payload.data;
-        }
+        const id = a.payload.data?._id;
+        if (!id || !a.payload.data) return;
+        s.lists.dataMap[id] = a.payload.data;
       })
       .addCase(thunks.getPriceThunk.fulfilled, (st, a) => {
         ManagePricesStateMap(st, { data: a.payload.data });
       })
       .addCase(thunks.createPriceThunk.fulfilled, (s, a) => {
-        if (s?.current) {
-          if (a.payload.data) {
-            s.current = {
-              ...s.current,
-              prices: s.current?.prices ? [...s.current?.prices, a.payload?.data] : [a.payload.data],
-            };
-          } else if (a.payload?.refreshCurrent && a.payload?.data) {
-          }
-        }
+        const id = a.payload.data?._id;
+        if (!id || !a.payload.data) return;
+        s.dataMap[id] = a.payload.data;
       })
       .addCase(thunks.getAllPricesThunk.fulfilled, (s, a) => {
-        if (a.payload.refreshCurrent) {
-          s.current = { ...(s.current as PriceListEntity), prices: a.payload?.data };
-        }
-
         let discounts: PriceDiscountEntity[] = [];
 
         a.payload?.data.forEach(price => {
@@ -154,10 +138,10 @@ export const priceManagementSlice = createSlice({
           }
         }
       )
-      .addMatcher(onUserLogout, sliceCleaner(initialState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initialState)),
 });
 function ManagePricesStateMap(
-  st: PricesState,
+  st: PriceManagementState,
   input: { data?: PriceEntity; removeId?: string },
   options?: { refresh?: boolean; isForList?: boolean; setDiscounts?: boolean }
 ) {

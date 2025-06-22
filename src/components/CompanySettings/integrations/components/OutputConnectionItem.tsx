@@ -1,6 +1,9 @@
-import { Connection, OutputIntegrationEntity } from '../../../../types/integrations.types';
+import { Connections, OutputIntegrationEntity } from '../../../../types/integrations.types';
 import { useAppDispatch } from '../../../../redux/store.store';
-import { getOutputIntegrationByIdThunk } from '../../../../redux/integrations/integrations.thunk';
+import {
+  getOutputConnectionThunk,
+  regenerateKeysOutputConnectionThunk,
+} from '../../../../redux/integrations/integrations.thunk';
 import FlexBox, { FlexLi, FlexUl } from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
 import { t } from '../../../../i18e';
@@ -12,13 +15,13 @@ import { useModalService } from '../../../../Providers/ModalProvider/ModalProvid
 import styled, { useTheme } from 'styled-components';
 import FormCreateOutputIntegration from '../../../Forms/integrations/FormCreateOutputIntegration';
 import { ApiKeyItem } from './ApiKeyItem';
-import { ModalOAuthConfigs } from '../OAuth/ModalOAuthConfigs';
+import { ModalOAuthConnectionsList } from '../OAuth/ModalOAuthConnectionsList';
 
-export const OutputConnectionItem = ({ conn }: { conn: Connection.Output.Entity }) => {
+export const OutputConnectionItem = ({ conn }: { conn: Connections.Output.Entity }) => {
   const dispatch = useAppDispatch();
 
   const onLoadHandler = async () => {
-    dispatch(getOutputIntegrationByIdThunk({ params: { _id: conn._id } }));
+    dispatch(getOutputConnectionThunk({ params: { _id: conn._id } }));
   };
   return (
     <FlexBox fillWidth padding={'8px 2px'} gap={12}>
@@ -75,11 +78,12 @@ export const OutputConnectionItem = ({ conn }: { conn: Connection.Output.Entity 
 const ActionsList = ({ conn }: { conn: OutputIntegrationEntity }) => {
   const modalS = useModalService();
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   return (
     <FlexUl>
       <ListItem>
         <StButton
-          onClick={() => modalS.create(ModalOAuthConfigs, { conn })}
+          onClick={() => modalS.create(ModalOAuthConnectionsList, { conn })}
           endIcon={'arrowRight'}
           endIconSize={'16px'}
         >
@@ -94,6 +98,19 @@ const ActionsList = ({ conn }: { conn: OutputIntegrationEntity }) => {
           endIconSize={'16px'}
         >
           {t('Edit')}
+        </StButton>
+      </ListItem>
+
+      <ListItem>
+        <StButton
+          onClick={() => {
+            dispatch(regenerateKeysOutputConnectionThunk({ data: { data: { params: { _id: conn._id } } } }));
+          }}
+          endIcon={'arrowRight'}
+          endIconSize={'16px'}
+          danger
+        >
+          <Text color={theme.globals.colors.warning}>{t('Regenerate keys')}</Text>
         </StButton>
       </ListItem>
 

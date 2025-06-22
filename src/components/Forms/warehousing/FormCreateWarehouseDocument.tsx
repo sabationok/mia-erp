@@ -202,7 +202,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
     >
       <Content padding={'0 0 8px'} overflow={'auto'} gap={8}>
         <FlexBox fillWidth alignItems={'stretch'}>
-          <InputLabel label={t('Select warehouse')} error={errors.warehouse}>
+          <InputLabel label={t('Select warehouse')} $error={errors.warehouse}>
             <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'} padding={'0 2px'}>
               <TableList
                 tableTitles={warehousesTableColumns}
@@ -213,7 +213,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
             </FlexBox>
           </InputLabel>
 
-          <InputLabel label={t('Select variation')} error={errors.variation}>
+          <InputLabel label={t('Select variation')} $error={errors.variation}>
             <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'} padding={'0 2px'}>
               <TableList
                 tableTitles={variationsTableTitles}
@@ -224,7 +224,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
             </FlexBox>
           </InputLabel>
 
-          <InputLabel label={t('Select price')} error={errors.price}>
+          <InputLabel label={t('Select price')} $error={errors.price}>
             <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'} padding={'0 2px'}>
               <TableList
                 tableTitles={pricesColumnsForProductReview}

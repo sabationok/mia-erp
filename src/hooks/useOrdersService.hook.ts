@@ -1,11 +1,6 @@
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
-import {
-  __ServiceDispatcherAsync,
-  OnlyUUID,
-  ServiceDispatcher,
-  ServiceDispatcherAsync,
-} from '../redux/app-redux.types';
+import { __ServiceDispatcherAsync, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/app-redux.types';
 import {
   ICreateOrderInfoDto,
   ICreateOrderInfoFormState,
@@ -19,14 +14,7 @@ import {
   UpdateCurrentGroupFormInfoDataAction,
   UpdateSlotInGroupAction,
 } from '../redux/orders/orders.actions';
-import {
-  getAllDeliveriesByOrderThunk,
-  getAllInvoicesByOrderThunk,
-  getAllOrdersThunk,
-  getAllPaymentsByOrderThunk,
-  getOrderSlotsThunk,
-  getOrderThunk,
-} from '../redux/orders/orders.thunks';
+import { getAllOrdersThunk, getOrderSlotsThunk, getOrderThunk } from '../redux/orders/orders.thunks';
 import {
   defaultThunkPayload,
   toOrderSlotsReqData,
@@ -34,10 +22,8 @@ import {
   toReqData,
   ToRequestDataOptions,
 } from '../utils';
-import { EntityPath } from '../types/utils.types';
+import { EmptyFn, EntityPath } from '../types/utils.types';
 import { IOrderTempSlot, SaleOrderSlotDto } from '../types/orders/order-slot.types';
-
-type EmptyFn = (...args: any[]) => Promise<any>;
 
 export interface OrdersService {
   createOne: EmptyFn | ServiceDispatcherAsync<IOrderReqData, OrderEntity>;
@@ -46,13 +32,6 @@ export interface OrdersService {
   getById: __ServiceDispatcherAsync<typeof getOrderThunk>;
   getAll: __ServiceDispatcherAsync<typeof getAllOrdersThunk>;
   getSlots: __ServiceDispatcherAsync<typeof getOrderSlotsThunk>;
-
-  getPaymentsByOrderId: __ServiceDispatcherAsync<typeof getAllPaymentsByOrderThunk>;
-
-  getInvoicesByOrderId: __ServiceDispatcherAsync<typeof getAllInvoicesByOrderThunk>;
-  getDeliveriesByOrderId: __ServiceDispatcherAsync<typeof getAllDeliveriesByOrderThunk>;
-
-  getShipmentsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
 
   updateCurrentGroupFormInfoData: ServiceDispatcher<ICreateOrderInfoFormState>;
   clearCurrentGroupFormData: ServiceDispatcher;
@@ -85,11 +64,6 @@ const useOrdersServiceHook = (): OrdersService => {
       updateOne: async () => dispatch(() => {}),
 
       getSlots: args => dispatch(getOrderSlotsThunk(defaultThunkPayload(args))),
-
-      getPaymentsByOrderId: args => dispatch(getAllPaymentsByOrderThunk(args)),
-      getInvoicesByOrderId: args => dispatch(getAllInvoicesByOrderThunk(args)),
-      getDeliveriesByOrderId: args => dispatch(getAllDeliveriesByOrderThunk(args)),
-      getShipmentsByOrderId: async () => dispatch(() => {}),
 
       addTempSlot: args => dispatch(AddSlotToGroupAction(args)),
       removeTempSlot: args => dispatch(RemoveSlotFromGroupAction(args)),

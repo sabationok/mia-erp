@@ -59,21 +59,21 @@ const FormCreateOfferCategory: React.FC<FormCreateOfferCategoryProps> = ({
         })}
       >
         <FormInputs>
-          <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
+          <InputLabel label={t('type')} direction={'vertical'} $error={errors.type} disabled>
             <InputText defaultValue={type ? t(type).toUpperCase() : type} disabled />
           </InputLabel>
 
           {parent?._id && (
-            <InputLabel label={t('parentItem')} direction={'vertical'} error={errors.type} disabled>
+            <InputLabel label={t('parentItem')} direction={'vertical'} $error={errors.type} disabled>
               <InputText value={formValues.parent?.label ?? undefined} disabled />
             </InputLabel>
           )}
 
-          <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
+          <InputLabel label={t('label')} direction={'vertical'} $error={errors.label} required>
             <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
           </InputLabel>
 
-          <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
+          <InputLabel label={t('comment')} direction={'vertical'} $error={errors.description}>
             <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
           </InputLabel>
         </FormInputs>

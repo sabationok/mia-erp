@@ -46,10 +46,10 @@ const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({ _id, edi
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <Inputs>
-        <InputLabel label="Назва" error={errors.label}>
+        <InputLabel label="Назва" $error={errors.label}>
           <InputText placeholder="Введіть назву" {...register('label')} />
         </InputLabel>
-        <InputLabel label="Коментар" error={errors.description}>
+        <InputLabel label="Коментар" $error={errors.description}>
           <TextareaPrimary placeholder="Введіть коментар" {...register('description')} />
         </InputLabel>
       </Inputs>

@@ -20,7 +20,6 @@ import { useMediaQuery } from 'react-responsive';
 import { Text } from '../../atoms/Text';
 import { t } from '../../../i18e';
 import { toPrice } from '../../../utils/numbers';
-import { CART_DEFAULT_ID } from '../../../redux/cart/cart.slice';
 import { enumToTabs } from '../../../utils';
 import TabSelector from '../../atoms/TabSelector';
 
@@ -130,7 +129,7 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
   const modalSrv = useModalService();
   const router = useAppRouter();
   const theme = useTheme();
-  const Cart = cartSrv.actions.getCurrentCart(cartId || CART_DEFAULT_ID);
+  const Cart = cartSrv.actions.getCurrentCart(cartId);
 
   const renderOrders = useMemo(() => {
     const ordersIds = Cart?.ordersIds;

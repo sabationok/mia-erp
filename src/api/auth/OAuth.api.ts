@@ -23,16 +23,16 @@ export class OAuthApi {
     return res;
   };
   public static configs = {
-    create: (data?: OAuth.Consumer.CreateDto): Promise<ApiAxiosResponse<OAuth.Consumer.Entity>> => {
+    create: (data?: OAuth.Connection.CreateDto): Promise<ApiAxiosResponse<OAuth.Connection.Entity>> => {
       return this._api.post(this._endps.configs.create(), data);
     },
-    update: (data?: OAuth.Consumer.CreateDto): Promise<ApiAxiosResponse<OAuth.Consumer.Entity>> => {
+    update: (data?: OAuth.Connection.CreateDto): Promise<ApiAxiosResponse<OAuth.Connection.Entity>> => {
       return this._api.patch(this._endps.configs.update(), data);
     },
     getAll: (
       _?: undefined,
-      params?: OAuth.Consumer.GetAllQuery
-    ): Promise<ApiAxiosResponse<OAuth.Consumer.Entity[]>> => {
+      params?: OAuth.Connection.GetAllQuery
+    ): Promise<ApiAxiosResponse<OAuth.Connection.Entity[]>> => {
       return this._api.get(this._endps.configs.getAll(), { params });
     },
   };

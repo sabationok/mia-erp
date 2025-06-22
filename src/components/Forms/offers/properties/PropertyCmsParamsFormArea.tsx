@@ -59,7 +59,7 @@ export const PropertyCmsParamsFormArea = (_: {
       isOpen={Object.values(formValues?.cmsConfigs ?? {}).some(el => !!el)}
       onSubmit={handleSubmit(onValid)}
     >
-      <InputLabel label={t('Cms key')} error={errors?.cmsConfigs?.key}>
+      <InputLabel label={t('Cms key')} $error={errors?.cmsConfigs?.key}>
         <InputText placeholder={'Key'} {...register('cmsConfigs.key', { maxLength: 32, minLength: 1 })} />
       </InputLabel>
 
@@ -93,7 +93,7 @@ export const PropertyCmsParamsFormArea = (_: {
         />
       </InputLabel>
 
-      <InputLabel disabled label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.[langKey]}>
+      <InputLabel disabled label={t('Label by lang key')} $error={errors?.cmsConfigs?.labels?.[langKey]}>
         <InputText
           placeholder={'Label'}
           {...register(`cmsConfigs.labels.${langKey}`, { maxLength: 128, minLength: 1 })}

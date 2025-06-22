@@ -3,7 +3,7 @@ import * as thunks from './tags.thunks';
 import { TagEntity } from '../../types/tags.types';
 import { TagTypeEnum } from '../../types/directories.types';
 import { ObjectValues, sliceCleaner } from '../../utils';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 
 export interface TagsState {
   list: TagEntity[];
@@ -78,5 +78,5 @@ export const tagsSlice = createSlice({
         }
         return st;
       })
-      .addMatcher(onUserLogout, sliceCleaner(initState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initState)),
 });

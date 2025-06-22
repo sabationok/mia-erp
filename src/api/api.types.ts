@@ -170,7 +170,6 @@ export interface ApiQuerySortParams<DataPath = any, DataKey = any> {
 
 export interface ApiQuerySearchParams<Path extends string = string> {
   searchPath?: Path;
-  // dataKey?: DataKey | string;
   search?: string;
 }
 

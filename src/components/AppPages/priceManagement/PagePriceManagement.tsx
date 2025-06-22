@@ -9,7 +9,7 @@ import { ApiQuerySortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import usePriceManagementServiceHook from '../../../hooks/usePriceManagementService.hook';
 import usePriceManagementActionsCreatorHook from '../../../hooks/usePriceManagementActionsCreator.hook';
-import { PriceListEntity } from '../../../types/price-management/price-management.types';
+import { PriceListEntity } from '../../../types/price-management';
 import { useNavigate } from 'react-router-dom';
 import { BaseAppPageProps } from '../index';
 import { priceListColumns } from '../../../data/priceManagement.data';

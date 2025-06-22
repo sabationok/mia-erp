@@ -1,5 +1,5 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
-import { PriceListEntity } from '../../types/price-management/price-management.types';
+import { PriceListEntity } from '../../types/price-management';
 
 const useStorageFilterSelectors = (): FilterSelectorType<keyof PriceListEntity>[] => {
   // const transactionTypes = [

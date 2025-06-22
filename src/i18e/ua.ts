@@ -4,7 +4,7 @@ import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../types/companies/c
 import { WarehouseDocumentType } from '../types/warehousing';
 import { OrderStatusEnum } from '../types/orders/orders.types';
 import { PaymentInternalTypeEnum } from '../types/integrations.types';
-import { OfferPriceTypeEnum } from '../types/price-management/price-management.types';
+import { OfferPriceTypeEnum } from '../types/price-management';
 import { MeasurementUnit } from '../types/enums.types';
 
 export enum LangTextPrefix {

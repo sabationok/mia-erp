@@ -91,12 +91,12 @@ export const PropertyInfoFormArea = ({
         </InputLabel>
       )}
 
-      <InputLabel label={t('label')} error={errors.label} required>
+      <InputLabel label={t('label')} $error={errors.label} required>
         <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus required />
       </InputLabel>
 
       {currentLevelIs?.prop && formValues?._id && (
-        <InputLabel label={'Доступно для формування варіацій'} error={errors.isSelectable}>
+        <InputLabel label={'Доступно для формування варіацій'} $error={errors.isSelectable}>
           <ButtonSwitch name={'isSelectable'} value={formValues?.isSelectable} onChange={selectableHandler} />
         </InputLabel>
       )}

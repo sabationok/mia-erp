@@ -1,6 +1,6 @@
 import { ApiAxiosResponse, OnlyUUID } from '../redux/app-redux.types';
 import { OfferEntity } from '../types/offers/offers.types';
-import { IAllRefundsRes, IRefund, IRefundRes, IRefundSlot } from '../redux/refunds/refunds.types';
+import { IAllRefundsRes, IRefund, IRefundRes, IRefundSlot } from '../redux/refunds/returns.types';
 import { ClientApi } from './client.api';
 
 export default class RefundsApi {

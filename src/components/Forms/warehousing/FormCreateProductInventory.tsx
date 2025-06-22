@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
-import { PriceEntity } from '../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../types/price-management';
 import { VariationEntity } from '../../../types/offers/variations.types';
 import styled from 'styled-components';
 import { useOffersSelector } from '../../../redux/selectors.store';

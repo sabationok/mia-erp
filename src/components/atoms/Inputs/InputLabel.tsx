@@ -17,9 +17,13 @@ export interface InputLabelCustomProps {
   uppercase?: boolean;
   textTransform?: Property.TextTransform;
   align?: Property.AlignItems;
-  error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
+  $error?:
+    | FieldError
+    | Merge<FieldError, FieldErrorsImpl<any>>
+    | Merge<FieldError, (FieldError | undefined)[]>
+    | undefined;
 
-  success?: string;
+  $success?: string;
   loading?: boolean;
   stateIs?: InputStateIs;
 
@@ -45,8 +49,8 @@ const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabel
     direction = 'vertical',
     uppercase,
     helperText,
-    error,
-    success,
+    $error,
+    $success,
     children,
     loading,
     align,
@@ -60,7 +64,8 @@ const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabel
 ) => {
   // const form = useFormContext() as Partial<UseFormReturn>;
   // const field = form?.getFieldState && inputName ? form?.getFieldState(inputName) : undefined;
-  const myError = error;
+  const myError = $error;
+
   return (
     <Box className={className} disabled={disabled} {...props} ref={ref} gap={8}>
       <Wrapper $isLabel={!!label} $direction={direction}>
@@ -81,10 +86,10 @@ const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabel
         <InputBox>{children}</InputBox>
       </Wrapper>
 
-      {(helperText || myError?.message || success || loading) && (
-        <HelperText $error={!!myError} $success={!!success} $loading={loading}>
+      {(helperText || myError?.message || $success || loading) && (
+        <HelperText $error={!!myError} $success={!!$success} $loading={loading}>
           {(typeof myError?.message === 'string' && myError?.message) ||
-            success ||
+            $success ||
             (loading && 'Loading...') ||
             helperText}
         </HelperText>
@@ -149,7 +154,7 @@ const InputBox = styled.div`
 `;
 
 const HelperText = styled.div<InputStateIs>`
-  padding: 2px 6px;
+  padding: 4px 8px;
   min-height: 13px;
 
   font-size: 11px;
@@ -168,12 +173,11 @@ const HelperText = styled.div<InputStateIs>`
     ($success && theme.globals.colors.success) ||
     theme.globals.colors.default};
 
-  background-color: ${({ theme, $error, $success }) =>
-    ($error && theme.globals.colors.errorLight) ||
-    ($success && theme.globals.colors.successLight) ||
-    theme.globals.colors.defaultLight};
-
   cursor: default;
 `;
+// background-color: ${({ theme, $error, $success }) =>
+//   ($error && theme.globals.colors.errorLight) ||
+//   ($success && theme.globals.colors.successLight) ||
+//   theme.globals.colors.defaultLight};
 
 export default forwardRef(InputLabel);

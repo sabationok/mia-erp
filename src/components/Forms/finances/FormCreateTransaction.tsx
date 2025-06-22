@@ -149,7 +149,7 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
               placeholder: translate('countOut'),
               required: true,
               options: parentOptions,
-              error: errors.countOut,
+              $error: errors.countOut,
             },
             { childName: 'subCountOut' }
           )}
@@ -158,7 +158,7 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
           <CustomSelect
             label={translate('subCountOut')}
             placeholder={translate('subCountOut')}
-            {...registerSelect('subCountOut', { options: childOptions, error: errors.subCountOut })}
+            {...registerSelect('subCountOut', { options: childOptions, $error: errors.subCountOut })}
           />
         )}
       </>

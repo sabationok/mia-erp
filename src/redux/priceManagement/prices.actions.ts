@@ -1,7 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit';
 import * as thunks from './priceManagement.thunks';
 import { Action } from '../store.store';
-import { PriceEntity } from '../../types/price-management/price-management.types';
+import { PriceEntity } from '../../types/price-management';
 
 export function onCreatePriceMather(a: Action<{ data: PriceEntity }>) {
   return a.type === thunks.createPriceThunk.fulfilled;

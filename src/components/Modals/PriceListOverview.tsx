@@ -1,7 +1,7 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import TableList, { ITableListProps } from '../TableList/TableList';
 import { useEffect, useMemo, useState } from 'react';
-import { PriceEntity, PriceListEntity } from '../../types/price-management/price-management.types';
+import { PriceEntity, PriceListEntity } from '../../types/price-management';
 import { UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 import { usePriceListOverviewActionsCreator } from '../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';

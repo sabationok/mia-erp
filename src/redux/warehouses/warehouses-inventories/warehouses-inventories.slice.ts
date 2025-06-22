@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { onUserLogout } from '../../auth/auth.actions';
+import { onUserLogoutMatch } from '../../auth/auth.actions';
 import { sliceCleaner } from '../../../utils';
 import { WarehouseInventoryEntity } from '../../../types/warehousing';
 import { createWrhsDocThunk, getAllWrhsDocsThunk } from './warehouses-inventories.thunks';
@@ -28,5 +28,5 @@ export const warehousesInventoriesSlice = createSlice({
       .addCase(createWrhsDocThunk.fulfilled, (st, { payload: { data, params } }) => {
         return manager.update(st, data, { parentIds: [params?.warehouseId] });
       })
-      .addMatcher(onUserLogout, sliceCleaner(initialState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initialState)),
 });

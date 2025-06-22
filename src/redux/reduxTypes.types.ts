@@ -1,42 +1,41 @@
 import type { AppDispatch, RootState } from './store.store';
 import type { AxiosError } from 'axios';
 import type { PartialRecord, UUID } from '../types/utils.types';
+import type { AuthState } from './auth/auth.slice';
 import type { CompaniesState } from './companies/companies.slice';
 import type { AppSettingsState } from './appSettings/appSettings.slice';
 import type { DirectoriesState } from './directories/directories.slice';
-import type { OffersState } from './products/offers.slice';
+import { OffersState } from './products/offers.slice';
 import type { TagsState } from './tags/tags.slice';
 import type { OrdersState } from './orders/orders.slice';
 import type { InvoicesState } from './invoices/invoices.slice';
 import type { PaymentsState } from './payments/payments.slice';
 import type { DeliveriesState } from './deliveries/deliveries.slice';
 import type { CustomersState } from './customers/customers.slice';
-import type { CounterpartiesState } from './counterparties/counterparties.slice';
+import { CounterpartiesState } from './counterparties/counterparties.slice';
 import type { WarehousingState } from './warehouses/warehouses.slice';
 import type { DiscountsState } from './priceManagement/discounts/discounts.slice';
-import type { AuthState } from './auth/auth.slice';
-
-export type AppRootState = {
-  auth: AuthState;
-  companies: CompaniesState;
-  appSettings: AppSettingsState;
-  permissions: PermissionState;
-  directories: DirectoriesState;
-  offers: OffersState;
-  tags: TagsState;
-  orders: OrdersState;
-  invoicing: InvoicesState;
-  payments: PaymentsState;
-  deliveries: DeliveriesState;
-  customers: CustomersState;
-  counterparty: CounterpartiesState;
-  warehouses: WarehousingState;
-  discounts: DiscountsState;
-};
+import { CartsState } from './cart/carts.slice';
+import { CartState } from './cart/cart.slice';
+import { PermissionsState } from './permissions/permissions.slice';
+import { FinancesState } from './finances/finances.slice';
+import { PageState } from './page/pageSlice';
+import { PriceManagementState } from './priceManagement/priceManagement.slice';
+import { ShipmentsState } from './shipments/shipments.slice';
+import { ReturnsState } from './refunds/returns.slice';
+import { ConnectionsState } from './integrations/integrations.slice';
+import { CustomRolesState } from './customRoles/customRoles.slice';
+import { OAuthState } from './auth/o-auth.slice';
+import { UsersState } from './users/users.slice';
+import { LinksState } from './tracking/links/links.slice';
+import { ChatState } from './chat/chat.slice';
+import { WarehousesInventoriesState } from './warehouses/warehouses-inventories/warehouses-inventories.slice';
+import { WarehousesDocumentsState } from './warehouses/warehouses-documents/warehouses-documents.slice';
 
 export enum AppModuleName {
   connections = 'connections',
   auth = 'auth',
+  oauth = 'oauth',
   permissions = 'permissions',
   appSettings = 'appSettings',
   appPage = 'appPage',
@@ -51,8 +50,10 @@ export enum AppModuleName {
   payments = 'payments',
   shipments = 'shipments',
   deliveries = 'deliveries',
-  refunds = 'refunds',
+  returns = 'returns',
   warehouses = 'warehouses',
+  warehousesInventories = 'warehousesInventories',
+  warehousesDocuments = 'warehousesDocuments',
   customers = 'customers',
   priceLists = 'priceLists',
   customRoles = 'customRoles',
@@ -62,7 +63,44 @@ export enum AppModuleName {
   invoicing = 'invoicing',
   discounts = 'discounts',
   cart = 'cart',
+  carts = 'carts',
+  tracking_links = 'tracking_links',
 }
+
+export type AppRootState = {
+  auth: AuthState;
+  companies: CompaniesState;
+  appSettings: AppSettingsState;
+  permissions: PermissionsState;
+  directories: DirectoriesState;
+  offers: OffersState;
+  tags: TagsState;
+  orders: OrdersState;
+  invoicing: InvoicesState;
+  payments: PaymentsState;
+  deliveries: DeliveriesState;
+  customers: CustomersState;
+  counterparty: CounterpartiesState;
+  warehouses: WarehousingState;
+  discounts: DiscountsState;
+  carts: CartsState;
+  cart: CartState;
+  finances: FinancesState;
+  appPage: PageState;
+  invoices: InvoicesState;
+  priceManagement: PriceManagementState;
+  shipments: ShipmentsState;
+  returns: ReturnsState;
+  connections: ConnectionsState;
+  customRoles: CustomRolesState;
+  oauth: OAuthState;
+  users: UsersState;
+  tracking_links: LinksState;
+  counterparties: CounterpartiesState;
+  chat: ChatState;
+  warehousesInventories: WarehousesInventoriesState;
+  warehousesDocuments: WarehousesDocumentsState;
+};
 
 export type AsyncThunkConfig = {
   state: RootState;
@@ -111,4 +149,5 @@ export type SliceMap<RefKey extends string, InverseKey extends string, DataType,
   keysMap: Record<RefKey, InverseKey[]>;
   ids: RefKey[];
   extra?: Extra;
+  list?: DataType[];
 };

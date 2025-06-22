@@ -102,14 +102,14 @@ const DeliveryPolicyTab = ({
 
           {formValues?.[current]?.insurance?.allowed && (
             <FlexBox fxDirection={'row'} gap={8} alignItems={'flex-end'}>
-              <InputLabel label={t(`Amount`)} error={form.getFieldState(`${current}.insurance.amount`).error}>
+              <InputLabel label={t(`Amount`)} $error={form.getFieldState(`${current}.insurance.amount`).error}>
                 <InputText
                   $align={'center'}
                   {...form.register(`${current}.insurance.amount`, { valueAsNumber: true })}
                 />
               </InputLabel>
 
-              <InputLabel label={t(`Percentage`)} error={form.getFieldState(`${current}.insurance.percentage`).error}>
+              <InputLabel label={t(`Percentage`)} $error={form.getFieldState(`${current}.insurance.percentage`).error}>
                 <InputText
                   $align={'center'}
                   {...form.register(`${current}.insurance.percentage`, { valueAsNumber: true })}

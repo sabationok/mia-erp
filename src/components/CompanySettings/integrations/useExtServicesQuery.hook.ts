@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { ExternalServiceTypeEnum } from '../../../types/integrations.types';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { ApiQueryParams } from '../../../api';
-import { useIntegrationsSelector } from '../../../redux/selectors.store';
+import { useConnectionsSelector } from '../../../redux/selectors.store';
 
 export function useExtServicesQuery() {
-  const state = useIntegrationsSelector();
+  const state = useConnectionsSelector();
 
   const [isLoading, setIsLoading] = useState(false);
   const {

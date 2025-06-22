@@ -13,9 +13,9 @@ export interface AuthInputLabelProps {
   };
 }
 
-const AuthInputLabel: React.FC<AuthInputLabelProps & Omit<InputLabelProps, 'success'>> = ({
+const AuthInputLabel: React.FC<AuthInputLabelProps & Omit<InputLabelProps, '$success'>> = ({
   icon,
-  error,
+  $error,
   success,
   helperText,
   children,
@@ -30,15 +30,15 @@ const AuthInputLabel: React.FC<AuthInputLabelProps & Omit<InputLabelProps, 'succ
 
         <SvgIcon
           size={'30px'}
-          icon={!error ? (success ? 'success' : undefined) : 'error'}
-          isError={!!error}
+          icon={!$error ? (success ? 'success' : undefined) : 'error'}
+          isError={!!$error}
           isSuccess={!!success}
         />
       </FlexBox>
 
-      {(error?.message || success?.message || helperText) && (
-        <HelperText isError={!!error} isSuccess={!!success}>
-          {(typeof error?.message === 'string' && error?.message) || success?.message || helperText}
+      {($error?.message || success?.message || helperText) && (
+        <HelperText isError={!!$error} isSuccess={!!success}>
+          {(typeof $error?.message === 'string' && $error?.message) || success?.message || helperText}
         </HelperText>
       )}
     </FlexLabel>

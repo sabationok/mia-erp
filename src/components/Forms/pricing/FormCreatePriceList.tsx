@@ -1,9 +1,4 @@
-import {
-  IPriceListReqData,
-  PriceListDto,
-  PriceListEntity,
-  PriceListType,
-} from '../../../types/price-management/price-management.types';
+import { PriceListApiReqConfig, PriceListDto, PriceListEntity, PriceListType } from '../../../types/price-management';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../hooks';
@@ -19,7 +14,7 @@ export interface FormCreatePriceListProps extends Omit<ModalFormProps<PriceListT
   defaultData?: Partial<PriceListEntity>;
   edit?: boolean;
   onSubmit?: AppSubmitHandler<
-    IPriceListReqData,
+    PriceListApiReqConfig,
     {
       onSuccess?: (data: PriceListEntity) => void;
       onError?: () => void;
@@ -67,21 +62,21 @@ const FormCreatePriceList: React.FC<FormCreatePriceListProps> = ({
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FlexBox fxDirection={'column'} padding={'0 2px 12px'}>
-        <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
+        <InputLabel label={t('label')} direction={'vertical'} $error={errors.label} required>
           <InputText placeholder={t('label')} {...register('label')} required autoFocus />
         </InputLabel>
 
         <FlexBox fxDirection={'row'} gap={8}>
-          <InputLabel label={t('timeFrom')} direction={'vertical'} error={errors.timeFrom} required>
+          <InputLabel label={t('timeFrom')} direction={'vertical'} $error={errors.timeFrom} required>
             <InputText placeholder={t('timeFrom')} type={'datetime-local'} {...register('timeFrom')} />
           </InputLabel>
 
-          <InputLabel label={t('timeTo')} direction={'vertical'} error={errors.timeTo} required>
+          <InputLabel label={t('timeTo')} direction={'vertical'} $error={errors.timeTo} required>
             <InputText placeholder={t('timeTo')} type={'datetime-local'} {...register('timeTo')} />
           </InputLabel>
         </FlexBox>
 
-        <InputLabel label={t('description')} direction={'vertical'} error={errors.description}>
+        <InputLabel label={t('description')} direction={'vertical'} $error={errors.description}>
           <TextareaPrimary placeholder={t('description')} {...register('description')} />
         </InputLabel>
       </FlexBox>

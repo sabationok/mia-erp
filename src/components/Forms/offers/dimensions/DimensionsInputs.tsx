@@ -35,7 +35,7 @@ const DimensionsInputs = <TContext = any,>({
     <Box fillWidth>
       {dimensionsInputsProps.map(input => {
         return (
-          <InputLabel key={input.name} label={input.label} error={errors && errors[input.name]}>
+          <InputLabel key={input.name} label={input.label} $error={errors && errors[input.name]}>
             <InputText
               placeholder={input.placeholder}
               min={1}

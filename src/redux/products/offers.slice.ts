@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { StateErrorType } from 'redux/reduxTypes.types';
+import { AppModuleName, StateErrorType } from 'redux/reduxTypes.types';
 import { IOfferRelatedDefaultFields, OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
 import * as thunks from './offers.thunks';
 import {
@@ -13,8 +13,8 @@ import { PartialRecord, SKU, UUID } from '../../types/utils.types';
 import { VariationEntity } from '../../types/offers/variations.types';
 import { onCreatePriceMather, onUpdatePriceMatcher } from '../priceManagement/prices.actions';
 import { Action, ActionPayload } from '../store.store';
-import { PriceEntity } from '../../types/price-management/price-management.types';
-import { onUserLogout } from '../auth/auth.actions';
+import { PriceEntity } from '../../types/price-management';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
 
 type OfferDefaultsKey = keyof IOfferRelatedDefaultFields;
@@ -66,7 +66,7 @@ const initialState: OffersState = {
 };
 
 export const offersSlice = createSlice({
-  name: 'products',
+  name: AppModuleName.offers,
   initialState,
   reducers: {
     setOfferDefaultsAction: (
@@ -205,7 +205,7 @@ export const offersSlice = createSlice({
           s.dataMap[offerId] = current;
         }
       })
-      .addMatcher(onUserLogout, sliceCleaner(initialState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initialState)),
   // .addMatcher(onGetPricesCase, (s, a: Action<{ data: PriceEntity[] }>) => {
   //   console.log('onGetPricesCase', a);
   // }),

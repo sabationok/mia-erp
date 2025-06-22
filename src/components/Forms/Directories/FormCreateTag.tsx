@@ -79,7 +79,7 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
           value={formValues.type ? [formValues.type] : undefined}
         />
 
-        <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
+        <InputLabel label={t('label')} direction={'vertical'} $error={errors.label} required>
           <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
         </InputLabel>
       </FormInputs>

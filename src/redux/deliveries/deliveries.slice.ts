@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getAllDeliveriesThunk, getAllDeliveryMethodsThunk, updateDeliveryMethodThunk } from './deliveries.thunks';
 import { IDeliveryMethod } from '../../types/integrations.types';
 import { IDelivery } from '../../types/deliveries.types';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
 
 export interface DeliveriesState {
@@ -39,5 +39,5 @@ export const deliveriesSlice = createSlice({
           s.deliveries = a.payload?.data;
         }
       })
-      .addMatcher(onUserLogout, sliceCleaner(initState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initState)),
 });

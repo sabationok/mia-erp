@@ -94,23 +94,23 @@ const FormCreateBankAccount: React.FC<FormCreateBankAccountProps> = ({ defaultSt
   return (
     <ModalBase {...props}>
       <AccordionForm label={'Main info'} {...registerFormArea('main')}>
-        <InputLabel label={t('label')} error={errors.label} required>
+        <InputLabel label={t('label')} $error={errors.label} required>
           <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
         </InputLabel>
 
-        <InputLabel label={t('IBAN')} error={errors.iban} required>
+        <InputLabel label={t('IBAN')} $error={errors.iban} required>
           <InputText placeholder={t('IBAN')} {...register('iban')} required />
         </InputLabel>
 
-        <InputLabel label={t('Account holder')} error={errors.holder}>
+        <InputLabel label={t('Account holder')} $error={errors.holder}>
           <InputText placeholder={t('Holder')} {...register('holder')} />
         </InputLabel>
 
-        <InputLabel label={t('Tax ID')} error={errors.taxCode}>
+        <InputLabel label={t('Tax ID')} $error={errors.taxCode}>
           <InputText placeholder={t('Tax ID')} {...register('taxCode')} />
         </InputLabel>
 
-        <InputLabel label={t('Select type')} error={errors.type}>
+        <InputLabel label={t('Select type')} $error={errors.type}>
           <TagButtonsFilter
             options={BankAccountTypeFilterOptions}
             value={formValues.type ?? undefined}
@@ -137,15 +137,15 @@ const FormCreateBankAccount: React.FC<FormCreateBankAccountProps> = ({ defaultSt
           {t('Bank details')}
         </Text>
 
-        <InputLabel label={t('label')} error={errors.bank?.label}>
+        <InputLabel label={t('label')} $error={errors.bank?.label}>
           <InputText placeholder={t('insertLabel')} {...register('bank.label')} />
         </InputLabel>
 
-        <InputLabel label={t('Country')} error={errors.bank?.label}>
+        <InputLabel label={t('Country')} $error={errors.bank?.label}>
           <InputText placeholder={t('Country')} {...register('bank.country')} />
         </InputLabel>
 
-        <InputLabel label={t('Tax ID')} error={errors.bank?.taxCode}>
+        <InputLabel label={t('Tax ID')} $error={errors.bank?.taxCode}>
           <InputText placeholder={t('Tax ID')} {...register('bank.taxCode')} />
         </InputLabel>
       </AccordionForm>

@@ -1,6 +1,6 @@
 import { AccordionForm, AccordionFormAreaProps } from '../../atoms/FormArea/AccordionForm';
 import { OfferEntity } from '../../../types/offers/offers.types';
-import { PriceEntity } from '../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../types/price-management';
 import { useCurrentPrice } from '../../../hooks';
 import { useAppDispatch } from '../../../redux/store.store';
 import { usePriceDiscountsSelector } from '../../../redux/selectors.store';

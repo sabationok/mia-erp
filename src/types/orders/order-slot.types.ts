@@ -13,31 +13,30 @@ import {
   IBase,
   MaybeNull,
   OnlyUUID,
+  PartialRecord,
 } from '../utils.types';
 import { HasBaseCmsConfigs } from '../cms.types';
 import { OrderStatusEnum } from './orders.types';
 import { OfferEntity } from '../offers/offers.types';
 import { WarehouseEntity, WarehouseInventoryEntity } from '../warehousing';
-import { IPriceBase, PriceEntity } from '../price-management/price-management.types';
+import { IPriceBase, PriceEntity } from '../price-management';
 import { VariationEntity } from '../offers/variations.types';
 import { PriceDiscountRecord } from '../price-management/discounts';
-import { CartId, CartOrderId, CartSlotId } from '../../redux/cart/cart.slice';
 
 export enum TempSlotTypeEnum {
   Cart = 'Cart',
   Ordering = 'Ordering',
 }
+export type AmountAndPercentageFieldsKey = 'discount' | 'bonus' | 'cashback' | 'tax';
 
-export interface IOrderSlotPrice extends Partial<Omit<IPriceBase, 'discounts' | 'type'>> {
-  discount?: { amount?: string; percentage?: string };
-  bonus?: { amount?: string; percentage?: string };
-  cashback?: { amount?: string; percentage?: string };
-  tax?: { amount?: string; percentage?: string };
-}
+export type AmountAndPercentageFields = PartialRecord<
+  AmountAndPercentageFieldsKey,
+  { amount?: string; percentage?: string }
+>;
+export interface IOrderSlotPrice extends Partial<Omit<IPriceBase, 'discounts' | 'type'>>, AmountAndPercentageFields {}
 
 export interface IOrderSlotBase
-  extends Partial<IBase>,
-    IOrderSlotPrice,
+  extends IOrderSlotPrice,
     HasStatus<OrderStatusEnum>,
     HasLabel,
     HasSku,
@@ -58,9 +57,7 @@ export interface IOrderSlotBase
 }
 
 export interface IOrderTempSlotMeta extends HasType<TempSlotTypeEnum | string> {
-  cartId?: CartId;
-  cartOrderId?: CartOrderId;
-  tempId?: CartSlotId;
+  tempId?: string;
 
   isSelected?: boolean;
   isInCart?: boolean;
@@ -70,9 +67,9 @@ export interface IOrderTempSlotMeta extends HasType<TempSlotTypeEnum | string> {
   discounts?: PriceEntity['discounts'] | PriceDiscountRecord[];
 }
 
-export interface IOrderTempSlot extends IOrderSlotBase, IOrderTempSlotMeta {}
+export interface IOrderTempSlot extends Partial<IBase>, IOrderSlotBase, IOrderTempSlotMeta {}
 
-export interface OrderSlotEntity extends IOrderSlotBase, HasOwnerAsCompany, IOrderSlotPrice {
+export interface OrderSlotEntity extends IBase, IOrderSlotBase, HasOwnerAsCompany, IOrderSlotPrice {
   delivery?: OnlyUUID;
   invoice?: OnlyUUID;
   order?: OnlyUUID;

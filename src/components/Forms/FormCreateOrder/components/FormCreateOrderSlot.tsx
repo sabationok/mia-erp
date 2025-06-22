@@ -9,7 +9,7 @@ import { t } from '../../../../i18e';
 import { createTableTitlesFromProperties, enumToFilterOptions, getIdRef, useStepsHandler } from '../../../../utils';
 import TabSelector from '../../../atoms/TabSelector';
 import { VariationEntity } from '../../../../types/offers/variations.types';
-import { PriceEntity } from '../../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../../types/price-management';
 import styled from 'styled-components';
 import { ModalHeader } from '../../../atoms';
 import FlexBox from '../../../atoms/FlexBox';

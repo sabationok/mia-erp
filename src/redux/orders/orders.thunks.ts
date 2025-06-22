@@ -1,43 +1,30 @@
 import { OrdersApi } from '../../api';
-import { buildGetAllInvoicesThunk } from '../invoices/invoicing.thunks';
-import { buildGetAllDeliveriesThunk } from '../deliveries/deliveries.thunks';
-import { buildGetAllPaymentsThunk } from '../payments/payments.thunks';
 import { createAppAsyncThunk } from '../createAppAsynkThunk';
 
 enum OrdersThunkTypeEnum {
-  getAll = 'orders/getAllOrdersThunk',
-  createOne = 'orders/createOrderThunk',
-  getAllInvoices = 'orders/getAllInvoicesByOrderThunk',
-  getAllDeliveries = 'orders/getAllDeliveriesByOrderThunk',
-  getAllPayments = 'orders/getAllPaymentsByOrderThunk',
-  getSlots = 'orders/getOrderSlotsThunk',
+  getOne = 'orders/get/one/Thunk',
+  getAll = 'orders/get/all/Thunk',
+  create = 'orders/create/one/Thunk',
+
+  reject_request = 'orders/reject/request/Thunk',
+  reject_abort = 'orders/reject/abort/Thunk',
+  reject_confirm = 'orders/reject/confirm/Thunk',
+
+  slots_add = 'orders/slots/add/thunk',
+  slots_getAll = 'orders/slots/get/all/thunk',
+  slots_getOne = 'orders/slots/get/one/thunk',
+  slots_remove = 'orders/slots/remove/thunk',
+  slots_update = 'orders/slots/update/thunk',
 }
 
-export enum OrdersThunkType {
-  addGroup = 'orders/addGroupThunk',
-  getListByQuery = 'orders/getListThunk',
-  getOne = 'orders/getOneThunk',
-  getOneById = 'orders/getOneByIdThunk',
-  getPaymentsList = 'orders/getPaymentsListThunk',
-  getDeliveryById = 'orders/getDeliveriesInfoThunk',
-  reject = 'orders/rejectThunk',
-  confirmReject = 'orders/confirmRejectThunk',
-  abortReject = 'orders/abortRejectThunk',
-}
-
-export const addOrdersGroup = createAppAsyncThunk(OrdersThunkType.addGroup, OrdersApi.groups.createByWarehouse);
-
-export const getOrdersListByQueryThunk = createAppAsyncThunk(OrdersThunkType.getListByQuery, OrdersApi.getAll);
-
-// export const getOrderThunk = createAppAsyncThunk(OrdersThunkType.getOneByQuery, OrdersApi.getOne);
-
-export const getOrderThunk = createAppAsyncThunk(OrdersThunkType.getOne, OrdersApi.getOne);
+export const getOrderThunk = createAppAsyncThunk(OrdersThunkTypeEnum.getOne, OrdersApi.getOne);
 export const getAllOrdersThunk = createAppAsyncThunk(OrdersThunkTypeEnum.getAll, OrdersApi.getAll);
 
-export const getOrderSlotsThunk = createAppAsyncThunk(OrdersThunkTypeEnum.getSlots, OrdersApi.slots.getAll);
-export const getAllInvoicesByOrderThunk = buildGetAllInvoicesThunk(OrdersThunkTypeEnum.getAllInvoices);
-export const getAllDeliveriesByOrderThunk = buildGetAllDeliveriesThunk(OrdersThunkTypeEnum.getAllDeliveries);
-export const getAllPaymentsByOrderThunk = buildGetAllPaymentsThunk(OrdersThunkTypeEnum.getAllPayments);
+export const getOrderSlotsThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_getAll, OrdersApi.slots.getAll);
+export const getOrderSlotThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_getOne, OrdersApi.slots.getAll);
+export const addOrderSlotThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_add, OrdersApi.slots.create);
+export const updateOrderSlotThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_update, OrdersApi.slots.update);
+export const removeOrderSlotThunk = createAppAsyncThunk(OrdersThunkTypeEnum.slots_remove, OrdersApi.slots.update);
 
 // export const softRemoveOrderThunk = createAppAsyncThunk(
 //   OrdersThunkType.getPaymentsList,

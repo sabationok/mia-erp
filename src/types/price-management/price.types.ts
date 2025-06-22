@@ -1,38 +1,22 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
-import { TabOption } from '../../components/atoms/TabSelector';
-import { OfferEntity } from '../offers/offers.types';
-import { VariationEntity } from '../offers/variations.types';
+import { OfferEntity, VariationEntity } from '../offers';
 import { ApiQueryParams } from '../../api';
 import { ICompanyBase } from '../companies/companies.types';
 import { IUserBase } from '../auth/auth.types';
 import {
   EntityPath,
-  HasDescription,
   HasLabel,
-  HasStatus,
   HasType,
+  IBase,
   MaybeNull,
+  OnlyUUID,
   PartialRecord,
   UUID,
   WithPeriod,
 } from '../utils.types';
 import { PriceDiscountEntity, PriceDiscountRecord } from './discounts';
 import { Path } from 'react-hook-form';
-
-export enum PriceListTypeEnum {
-  PURCHASES = 'purchases',
-  SALES = 'sales',
-}
-
-export interface HasPrice {
-  price?: MaybeNull<PriceEntity>;
-}
-
-export type PriceListStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
-
-export type PriceListType = 'purchases' | 'sales';
-
-export type PriceListFilterOption = TabOption<PriceListType>;
+import { PriceListEntity } from './price-list.types';
+import { IFormDataValueWithID } from '../../redux/app-redux.types';
 
 export enum OfferPriceTypeEnum {
   fixed = 'fixed',
@@ -40,36 +24,14 @@ export enum OfferPriceTypeEnum {
   onContract = 'onContract',
 }
 
-export interface PriceListDto
-  extends WithPeriod,
-    HasLabel,
-    HasDescription,
-    HasStatus<PriceListStatus>,
-    HasType<PriceListType> {
-  customerTags?: string[];
-  supplierTags?: string[];
-}
-
-export interface PriceListEntity extends IBase {
-  label: string;
-  status?: PriceListStatus;
-
-  prices?: PriceEntity[];
-  discounts?: PriceDiscountEntity[];
-
-  timeFrom?: string;
-  timeTo?: string;
-  description?: string;
-  type?: PriceListType;
-}
-
 export interface AmountAndPercentage {
   amount?: number | string;
   percentage?: number | string;
 }
-export enum PriceAmountAndPercentageFieldsEnum {
+export enum PriceAmountFieldsKeyEnum {
   commission = 'commission',
   markup = 'markup',
+
   // discount = 'discount',
   // cashback = 'cashback',
   // bonus = 'bonus',
@@ -77,10 +39,9 @@ export enum PriceAmountAndPercentageFieldsEnum {
   // vat = 'vat',
 }
 
-export type PriceAmountAndPercentageFieldsKey = keyof typeof PriceAmountAndPercentageFieldsEnum;
+export type PriceAmountFieldsKey = keyof typeof PriceAmountFieldsKeyEnum;
 
-export interface PriceAmountAndPercentageFields
-  extends PartialRecord<PriceAmountAndPercentageFieldsKey, AmountAndPercentage> {}
+export interface PriceAmountAndPercentageFields extends PartialRecord<PriceAmountFieldsKey, AmountAndPercentage> {}
 
 export interface IPriceBase extends PriceAmountAndPercentageFields, HasLabel, HasType<OfferPriceTypeEnum> {
   in?: number | string;
@@ -127,11 +88,6 @@ export interface IPriceFormData extends Omit<CreatePriceDto, 'product' | 'variat
   // discounts?: (PriceDiscountRecord | OnlyUUID)[];
 }
 export type PriceFormDataPath = Path<IPriceFormData>;
-export interface IPriceListReqData {
-  _id?: string;
-  data: PriceListDto;
-  params?: ApiQueryParams;
-}
 
 export interface IPriceListItemReqData {
   _id?: string;
@@ -148,4 +104,7 @@ export interface IUpdatePriceReqData {
   _id?: string;
   data: UpdatePriceDto;
   params?: ApiQueryParams;
+}
+export interface HasPrice {
+  price?: MaybeNull<PriceEntity>;
 }

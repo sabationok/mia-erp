@@ -1,5 +1,5 @@
 import { AppModuleName } from '../reduxTypes.types';
-import { ExtServicesApi, ConnectionsApi } from '../../api';
+import { ConnectionsApi, ExtServicesApi } from '../../api';
 import { createAppAsyncThunk } from '../createAppAsynkThunk';
 
 const IntegrationsThunkType = {
@@ -12,6 +12,7 @@ const IntegrationsThunkType = {
   output: {
     create: `${AppModuleName.connections}/output/createThunk`,
     update: `${AppModuleName.connections}/output/updateThunk`,
+    regenerateKeys: `${AppModuleName.connections}/output/regenerateKeysThunk`,
     getOne: `${AppModuleName.connections}/output/getOneThunk`,
     getById: `${AppModuleName.connections}/output/getByIdThunk`,
   },
@@ -43,18 +44,22 @@ export const updateOutputIntegrationThunk = createAppAsyncThunk(
   IntegrationsThunkType.output.update,
   ConnectionsApi.Client.output.update
 );
-export const getOutputIntegrationByIdThunk = createAppAsyncThunk(
+export const regenerateKeysOutputConnectionThunk = createAppAsyncThunk(
+  IntegrationsThunkType.output.regenerateKeys,
+  ConnectionsApi.Client.output.regenerateKeys
+);
+export const getOutputConnectionThunk = createAppAsyncThunk(
   IntegrationsThunkType.output.getById,
   ConnectionsApi.Client.output.getById
 );
 
 // * INPUT =============================>>>>>>>>>>>>>>
 
-export const createInputIntegrationThunk = createAppAsyncThunk(
+export const createInputConnectionThunk = createAppAsyncThunk(
   IntegrationsThunkType.input.create,
   ConnectionsApi.Client.input.create
 );
-export const getInputIntegrationByIdThunk = createAppAsyncThunk(
+export const getInputConnectionByIdThunk = createAppAsyncThunk(
   IntegrationsThunkType.input.getById,
   ConnectionsApi.Client.input.getById
 );

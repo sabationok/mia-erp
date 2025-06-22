@@ -119,7 +119,7 @@ export interface ChatIds {
   local?: UUID[];
 }
 
-export namespace Connection {
+export namespace Connections {
   export enum TypeEnum {
     input = 'input',
     output = 'output',
@@ -168,7 +168,7 @@ export namespace Connection {
       corsPolicy?: {
         origins?: string[];
       };
-      oAuth?: OAuth.Consumer.Entity[];
+      oAuth?: OAuth.Connection.Entity[];
     }
     export interface CreateDto extends BaseDto, Partial<Pick<Entity, 'chatIds' | 'redirectBaseUrl' | 'corsPolicy'>> {
       roleId?: UUID;
@@ -201,9 +201,9 @@ export namespace Connection {
   }
 }
 
-export type InputConnectionEntity = Connection.Input.Entity;
+export type InputConnectionEntity = Connections.Input.Entity;
 
-export type OutputIntegrationEntity = Connection.Output.Entity;
+export type OutputIntegrationEntity = Connections.Output.Entity;
 
 export interface IntegrationBaseDto {
   expireAt?: string;
@@ -230,7 +230,7 @@ export interface IntegrationFormData extends Partial<Omit<IntegrationBaseDto, 's
   finCount?: IFormDataValueWithID;
 }
 
-export type InputIntegrationDto = Connection.Input.CreateDto;
+export type InputIntegrationDto = Connections.Input.CreateDto;
 
 export interface CreateOutputIntegrationFormData
   extends Partial<Pick<IntegrationBaseDto, 'description' | 'expireAt' | 'label'>> {

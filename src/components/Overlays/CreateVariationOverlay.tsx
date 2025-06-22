@@ -311,7 +311,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
                       key={name}
                       className={name}
                       label={title}
-                      error={errors?.[name]}
+                      $error={errors?.[name]}
                       required={required}
                       flex={flex}
                     >

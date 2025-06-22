@@ -116,19 +116,19 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
       <Inputs>
         {registration && (
           <>
-            <AuthInputLabel icon="personOutlined" error={errors.name?.first}>
+            <AuthInputLabel icon="personOutlined" $error={errors.name?.first}>
               <InputText placeholder="І'мя" {...register('name.first')} />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="personOutlined" error={errors.name?.second}>
+            <AuthInputLabel icon="personOutlined" $error={errors.name?.second}>
               <InputText placeholder="Прізвище" {...register('name.second')} />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="email" error={errors.email}>
+            <AuthInputLabel icon="email" $error={errors.email}>
               <InputText placeholder={'Електронна адреса'} {...register('email')} />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="lock_O" error={errors.password}>
+            <AuthInputLabel icon="lock_O" $error={errors.password}>
               <SecurityInputControlHOC
                 renderInput={props => (
                   <InputText {...props} key={'regster_password'} placeholder="Пароль" {...register('password')} />
@@ -138,7 +138,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
 
             <AuthInputLabel
               icon="lock_O"
-              error={errors.passwordCheck}
+              $error={errors.passwordCheck}
               success={
                 !!formValues.password && formValues.password === formValues.passwordCheck
                   ? { message: 'Passwords are equals' }
@@ -156,11 +156,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
 
         {!registration && (
           <>
-            <AuthInputLabel icon="email" error={errors.email}>
+            <AuthInputLabel icon="email" $error={errors.email}>
               <InputText placeholder="Електронна адреса" {...register('email')} />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="lock_O" error={errors.password}>
+            <AuthInputLabel icon="lock_O" $error={errors.password}>
               <SecurityInputControlHOC
                 renderInput={props => (
                   <InputText {...props} key={'login_password'} placeholder="Пароль" {...register('password')} />

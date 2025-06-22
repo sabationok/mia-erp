@@ -1,11 +1,11 @@
 import * as yup from 'yup';
 import { IsDynamicValue, IsEmail, IsString255, IsUaMobilePhone, IsUrl, IsUUID } from '../../../../schemas';
 import { OAuth } from '../../../../types/auth/o-auth.namespace';
-import { Connection } from '../../../../types/integrations.types';
+import { Connections } from '../../../../types/integrations.types';
 import { useAppDispatch } from '../../../../redux/store.store';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createOAuthConfigsThunk, updateOAuthConfigsThunk } from '../../../../redux/auth/o-auth.thunks';
+import { createOAuthConnectionThunk, updateOAuthConnectionThunk } from '../../../../redux/auth/o-auth.thunks';
 import { arrayToFilterOptions, enumToArray, enumToFilterOptions, ObjectValues, toReqData } from '../../../../utils';
 import ModalBase from '../../../atoms/Modal';
 import FlexBox, { FlexForm } from '../../../atoms/FlexBox';
@@ -19,22 +19,22 @@ import { omit, pick } from 'lodash';
 import { useEffect, useMemo } from 'react';
 import { debounceCallback } from '../../../../utils/lodash.utils';
 import { StorageService } from '../../../../services';
-import ProviderEnum = OAuth.ProviderEnum;
+import ProviderEnum = OAuth.Provider.TypeEnum;
 
-const endpointNames = enumToArray(OAuth.Consumer.EndpointName);
-const requiredEndpoints = ObjectValues(pick(OAuth.Consumer.EndpointName, ['auth', 'terms', 'privacyPolicy']));
-const optionalEndpoints = ObjectValues(omit(OAuth.Consumer.EndpointName, requiredEndpoints));
-const providersList = enumToFilterOptions(OAuth.ProviderEnum);
+const endpointNames = enumToArray(OAuth.Connection.EndpointName);
+const requiredEndpoints = ObjectValues(pick(OAuth.Connection.EndpointName, ['auth', 'terms', 'privacyPolicy']));
+const optionalEndpoints = ObjectValues(omit(OAuth.Connection.EndpointName, requiredEndpoints));
+const providersList = enumToFilterOptions(ProviderEnum);
 
 const formSchema = yup.object().shape({
   label: IsString255().required(),
   connectionId: IsUUID().optional(),
   domain: IsUrl({ require_protocol: true }).required(),
+  origin: IsUrl({ require_protocol: true }).required(),
   supportInfo: yup.object().shape({
     email: IsEmail().optional(),
     phone: IsUaMobilePhone(),
   }),
-
   publicKey: IsString255().when('provider', ([value], schema) => {
     return value === 'mia' ? schema.strip() : schema.required();
   }),
@@ -42,6 +42,12 @@ const formSchema = yup.object().shape({
     return value === 'mia' ? schema.strip() : schema.required();
   }),
 
+  // endpoints: ObjectFromEntries(
+  //   endpointNames.map(key => {
+  //     return [key, IsUrl({ require_protocol: true })] as const;
+  //   })
+  // ),
+  // scopes: yup.array().of(IsString64().required()),
   endpoints: yup
     .object()
     .shape(
@@ -51,22 +57,22 @@ const formSchema = yup.object().shape({
         ...optionalEndpoints.map(key => ({ [key]: IsUrl().optional() }))
       )
     ),
-  scopes: IsDynamicValue('provider', OAuth.ScopesByProvider).required(),
+  scopes: IsDynamicValue('provider', OAuth.Provider.ScopesByType).required('At least one value in scopes is required'),
 });
 
-export const ModalOAuthConfigsForm = ({
+export const ModalOAuthConnectionForm = ({
   conn,
   config,
 }: {
-  conn: Connection.Output.Entity;
-  config?: OAuth.Consumer.Entity;
+  conn: Connections.Output.Entity;
+  config?: OAuth.Connection.Entity;
 }) => {
   const dispatch = useAppDispatch();
 
   const {
     formState: { errors },
     ...form
-  } = useForm<OAuth.Consumer.CreateDto>({
+  } = useForm<OAuth.Connection.CreateDto>({
     defaultValues: { provider: ProviderEnum.mia, ...config, connectionId: conn._id },
     resolver: yupResolver(formSchema),
     mode: 'onBlur',
@@ -74,14 +80,12 @@ export const ModalOAuthConfigsForm = ({
   });
 
   const FV = form.watch();
-  const onValid = (fData: OAuth.Consumer.CreateDto) => {
-    const thunk = config ? updateOAuthConfigsThunk : createOAuthConfigsThunk;
-
-    StorageService.setToLocal('created_oauth_config', toReqData(fData));
+  const onValid = (fData: OAuth.Connection.CreateDto) => {
+    const thunk = config ? updateOAuthConnectionThunk : createOAuthConnectionThunk;
 
     dispatch(
       thunk({
-        data: { data: toReqData(fData) as OAuth.Consumer.CreateDto },
+        data: { data: toReqData(fData) as OAuth.Connection.CreateDto },
         onSuccess: ({ data }) => {
           StorageService.setToLocal('prepared_oauth_config', data);
         },
@@ -90,7 +94,8 @@ export const ModalOAuthConfigsForm = ({
   };
 
   const scopes = useMemo(() => {
-    const array = FV.provider && OAuth.ScopesByProvider[FV.provider] ? OAuth.ScopesByProvider[FV.provider] || [] : [];
+    const array =
+      FV.provider && OAuth.Provider.ScopesByType[FV.provider] ? OAuth.Provider.ScopesByType[FV.provider] || [] : [];
 
     return arrayToFilterOptions(array);
   }, [FV.provider]);
@@ -111,11 +116,11 @@ export const ModalOAuthConfigsForm = ({
     }
     return (
       <FormAccordionItem title={'Api keys'} expandable={false} open>
-        <InputLabel label={t('Public key')} error={form.getFieldState('publicKey').error} required>
+        <InputLabel label={t('Public key')} $error={form.getFieldState('publicKey').error} required>
           <InputText placeholder={t('Public key')} {...form.register('publicKey', { required: true })} />
         </InputLabel>
 
-        <InputLabel label={t('Private key')} error={form.getFieldState('privateKey').error} required>
+        <InputLabel label={t('Private key')} $error={form.getFieldState('privateKey').error} required>
           <InputText placeholder={t('Private key')} {...form.register('privateKey', { required: true })} />
         </InputLabel>
       </FormAccordionItem>
@@ -123,18 +128,18 @@ export const ModalOAuthConfigsForm = ({
   }, [FV.provider, form]);
 
   return (
-    <ModalBase title={'OAuth configs'} fillHeight>
+    <ModalBase title={'OAuth connection'} fillHeight>
       <FlexForm
         gap={12}
         flex={1}
         onSubmit={form.handleSubmit(onValid, errors => {
-          console.warn('[OAuth configs]', errors);
+          console.error('[OAuth configs]', errors);
         })}
       >
         <FlexBox flex={1} overflow={'auto'}>
           <FormAccordionItem title={t('Main')} expandable={false} open>
             <FlexBox padding={'0 0 16px'}>
-              <InputLabel label={'Provider'} error={errors.provider}>
+              <InputLabel label={'Provider'} $error={errors.provider}>
                 <TagButtonsFilter
                   options={providersList}
                   placeholder={t('Please select provider')}
@@ -146,7 +151,7 @@ export const ModalOAuthConfigsForm = ({
                 />
               </InputLabel>
 
-              <InputLabel label={'Permissions'} error={errors.scopes?.root}>
+              <InputLabel label={t('Scopes')} $error={errors.scopes}>
                 <TagButtonsFilter
                   options={scopes}
                   multiple
@@ -157,16 +162,19 @@ export const ModalOAuthConfigsForm = ({
                 />
               </InputLabel>
 
-              <InputLabel label={t('Label')} error={errors.label}>
+              <InputLabel label={t('Label')} $error={errors.label}>
                 <InputText placeholder={t('Label')} {...form.register('label')} />
               </InputLabel>
 
-              <InputLabel label={t('Domain')} error={errors.domain}>
+              <InputLabel label={t('Domain')} $error={errors.domain}>
                 <InputText placeholder={t('Domain')} {...form.register('domain')} />
               </InputLabel>
+              <InputLabel label={t('Origin')} $error={errors.origin}>
+                <InputText placeholder={t('Origin')} {...form.register('origin')} />
+              </InputLabel>
 
-              <InputLabel label={t('Support email')} error={errors.supportInfo?.email}>
-                <InputText placeholder={t('Support email')} {...form.register('supportInfo.email')} />
+              <InputLabel label={t('Support email')} $error={errors.supportInfo?.email}>
+                <InputText type={'email'} placeholder={t('Support email')} {...form.register('supportInfo.email')} />
               </InputLabel>
             </FlexBox>
           </FormAccordionItem>
@@ -177,14 +185,14 @@ export const ModalOAuthConfigsForm = ({
             <FlexBox padding={'8px 0'}>
               {requiredEndpoints.map(name => {
                 return (
-                  <InputLabel textTransform={'capitalize'} label={t(name)} required error={errors.endpoints?.[name]}>
+                  <InputLabel textTransform={'capitalize'} label={t(name)} required $error={errors.endpoints?.[name]}>
                     <InputText placeholder={t(name)} {...form.register(`endpoints.${name}`, { required: false })} />
                   </InputLabel>
                 );
               })}
               {optionalEndpoints.map(name => {
                 return (
-                  <InputLabel textTransform={'capitalize'} label={t(name)} error={errors.endpoints?.[name]}>
+                  <InputLabel textTransform={'capitalize'} label={t(name)} $error={errors.endpoints?.[name]}>
                     <InputText placeholder={t(name)} {...form.register(`endpoints.${name}`)} />
                   </InputLabel>
                 );

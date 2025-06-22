@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { IInvoice } from '../../types/invoices.types';
 import { getAllInvoiceMethodsThunk, getAllInvoicesThunk, updateInvoicingMethodThunk } from './invoicing.thunks';
 import { IInvoicingMethod } from '../../types/integrations.types';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
 
 export interface InvoicesState {
@@ -38,5 +38,5 @@ export const invoicesSlice = createSlice({
           s.invoices = a.payload.data;
         }
       })
-      .addMatcher(onUserLogout, sliceCleaner(initState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initState)),
 });

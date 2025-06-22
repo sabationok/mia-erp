@@ -3,7 +3,7 @@ import { StateErrorType } from 'redux/reduxTypes.types';
 import { WarehouseEntity, WarehouseInventoryEntity } from '../../types/warehousing';
 import { createWarehouseThunk, getAllWarehousesThunk, getWarehouseByIdThunk } from './warehouses.thunks';
 import { sliceCleaner } from '../../utils';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 import { isString } from 'lodash';
 import { UUID } from '../../types/utils.types';
 
@@ -72,7 +72,7 @@ export const warehousesSlice = createSlice({
         // s.isLoading = false;
         s.error = a.payload;
       })
-      .addMatcher(onUserLogout, sliceCleaner(initialState));
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initialState));
   },
 });
 function isWarehousingCase(type: string) {

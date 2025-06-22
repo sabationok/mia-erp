@@ -19,7 +19,7 @@ const NavMenu: React.FC = () => {
   const location = router.location;
   const pages = useAppPages({ permissionId });
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { warehouses, priceLists, permissions } = useAppSelector();
+  const { warehouses, priceManagement, permissions } = useAppSelector();
 
   const currentPageData = useMemo(() => {
     const currentPageData = pages.find(
@@ -33,14 +33,14 @@ const NavMenu: React.FC = () => {
     setIsOpen(p => !p);
   };
 
-  const onNavLinkClick = useCallback((page: IPage) => {
+  const onNavLinkClick = useCallback((_page: IPage) => {
     handleToggleIsOpen();
   }, []);
 
   const renderLinks = useMemo(() => {
     const dataMap: Record<AppPagesEnum | string, any[] | undefined> = {
-      [AppPagesEnum.warehouses]: warehouses.warehouses,
-      [AppPagesEnum.priceLists]: priceLists.lists,
+      [AppPagesEnum.warehouses]: warehouses.list,
+      [AppPagesEnum.priceLists]: priceManagement.lists.list,
       [AppPagesEnum.companies]: permissions.permissions,
     };
 
@@ -56,7 +56,14 @@ const NavMenu: React.FC = () => {
         />
       );
     });
-  }, [currentPageData?.path, onNavLinkClick, pages, permissions.permissions, priceLists.lists, warehouses.warehouses]);
+  }, [
+    currentPageData?.path,
+    onNavLinkClick,
+    pages,
+    permissions.permissions,
+    priceManagement.lists.list,
+    warehouses.list,
+  ]);
 
   useCloseByEscape(setIsOpen);
   useCloseByBackdropClick(setIsOpen, 'data-nav-menu');
@@ -193,7 +200,7 @@ const NavMenuContainer = styled(FlexBox)<MenuState>`
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
 
-  box-shadow: ${({ isOpen, theme }) =>
+  box-shadow: ${({ isOpen }) =>
     isOpen ? '0 6px 18px 0px rgba(21, 21, 21, 0.15), 0 6px 18px 0px rgba(211, 211, 211, 0.15)' : ''};
 
   border-radius: 4px;
@@ -203,7 +210,7 @@ const NavMenuContainer = styled(FlexBox)<MenuState>`
   pointer-events: ${({ isOpen }) => (isOpen ? 'all' : 'none')};
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   transform-origin: top center;
-  //transform: scaleY(${({ isOpen, theme }) => (isOpen ? 1 : 0.8)});
+  //transform: scaleY(${({ isOpen }) => (isOpen ? 1 : 0.8)});
 
   transition: all ${({ theme }) => theme.globals.timingFnMain};
 `;

@@ -4,11 +4,12 @@ import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../../types/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
 import { usePaymentsSelector } from '../../redux/selectors.store';
 import { IPaymentMethod, PaymentInternalTypeEnum } from '../../types/integrations.types';
 import { t } from '../../i18e';
 import { FormPaymentMethod } from '../Forms/methods/FormPaymentMethod';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../redux/reduxTypes.types';
 
 export interface DirPaymentMethodsProps
   extends IDirInTreeProps<MethodDirType, IPaymentMethod, IPaymentMethod, IPaymentMethod> {
@@ -29,7 +30,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
   creating,
   ...props
 }) => {
-  const service = usePaymentsServiceHook();
+  const service = useAppServiceProvider().get(AppModuleName.payments);
   const modalService = useModalProvider();
   const methods = usePaymentsSelector().methods;
   const [providerId, setProviderId] = useState<string | 'default'>();
@@ -130,7 +131,7 @@ const actionsCreatorForDirPaymentMethods: DirInTreeActionsCreatorType<
   IPaymentMethod
 > = controls => {
   return {
-    onUpdate: (id, data, options) => {
+    onUpdate: (_id, data, _options) => {
       controls.modalService.create(FormPaymentMethod, {
         defaultState: data,
       });

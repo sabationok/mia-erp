@@ -17,6 +17,10 @@ import InputText from '../../atoms/Inputs/InputText';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import FlexBox from '../../atoms/FlexBox';
 import LangButtonsGroup from '../../atoms/LangButtonsGroup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as YUP from 'yup';
+
+const paymentMethodSchema: YUP.ObjectSchema<IPaymentMethodFormData> = YUP.object().shape({});
 
 export interface FormPaymentMethodProps extends Omit<ModalFormProps<any, any, IPaymentMethod>, 'onSubmit'> {
   _id?: string;
@@ -38,7 +42,7 @@ export const FormPaymentMethod = ({ defaultState, onClose, title, ...props }: Fo
 
   const formMethods = useAppForm<IPaymentMethodFormData>({
     defaultValues: { ...omit(defaultState, ['isDefault', 'author', 'owner', 'editor', 'parent', 'value']) },
-    // resolver: yupResolver(validation),
+    resolver: yupResolver(paymentMethodSchema),
     reValidateMode: 'onSubmit',
   });
   const {
@@ -68,12 +72,12 @@ export const FormPaymentMethod = ({ defaultState, onClose, title, ...props }: Fo
       : undefined;
 
     const reqData = pickPaths ? pick(fData, ['_id', ...pickPaths]) : omitPaths ? omit(fData, omitPaths) : fData;
-    console.log('fData', fData);
+
     dispatch(
       updatePaymentMethodThunk({
         onLoading: loaders.onLoading(areaName || 'main'),
         data: {
-          data: toReqData(reqData, { uuidFieldKeysMap: { service: 'serviceId' } }),
+          data: toReqData(reqData, { toUUIDKeys: { service: 'serviceId' } }),
         },
       })
     );
@@ -105,7 +109,7 @@ export const FormPaymentMethod = ({ defaultState, onClose, title, ...props }: Fo
       <AccordionForm label={t('Main info')} {...registerFormArea()}>
         <InputLabel
           label={t('label')}
-          error={errors.label}
+          $error={errors.label}
           // disabled={defaultState?.isDefault}
           required={!defaultState?.isDefault}
         >
@@ -136,17 +140,17 @@ export const FormPaymentMethod = ({ defaultState, onClose, title, ...props }: Fo
           </InputLabel>
         </FlexBox>
 
-        <InputLabel label={t('Disabled for all')} error={errors?.disabledFor?.all}>
+        <InputLabel label={t('Disabled for all')} $error={errors?.disabledFor?.all}>
           <ButtonSwitch {...registerSwitch('all')} />
         </InputLabel>
 
-        <InputLabel label={t('Disabled for customer')} error={errors?.disabledFor?.customer}>
+        <InputLabel label={t('Disabled for customer')} $error={errors?.disabledFor?.customer}>
           <ButtonSwitch {...registerSwitch('customer')} />
         </InputLabel>
       </AccordionForm>
 
       <AccordionForm label={t('Cms params')} {...registerFormArea('cmsConfigs')}>
-        <InputLabel label={t('Custom key')} error={errors?.cmsConfigs?.key}>
+        <InputLabel label={t('Custom key')} $error={errors?.cmsConfigs?.key}>
           <InputText placeholder={'Key'} {...register('cmsConfigs.key')} />
         </InputLabel>
 
@@ -154,7 +158,7 @@ export const FormPaymentMethod = ({ defaultState, onClose, title, ...props }: Fo
         {/*  <InputText placeholder={'Reference'} {...register('cmsConfigs.extRef')} />*/}
         {/*</InputLabel>*/}
 
-        <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
+        <InputLabel label={t('Language key')} $error={errors?.cmsConfigs?.key}>
           <LangButtonsGroup
             onChange={key => {
               setLangKey(key);
@@ -165,7 +169,7 @@ export const FormPaymentMethod = ({ defaultState, onClose, title, ...props }: Fo
         </InputLabel>
 
         {langKey && (
-          <InputLabel disabled={!langKey} label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.[langKey]}>
+          <InputLabel disabled={!langKey} label={t('Label by lang key')} $error={errors?.cmsConfigs?.labels?.[langKey]}>
             {langInputs.map(key => {
               return (
                 <InputText

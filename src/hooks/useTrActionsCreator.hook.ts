@@ -8,12 +8,12 @@ import { ITransaction } from '../types/finances/transactions.types';
 import { useTransactionsSelector } from '../redux/selectors.store';
 import { toast } from 'react-toastify';
 import { Modals } from '../components/Modals/Modals';
-import { IFinTransactionsState } from '../redux/finances/finances.slice';
+import { FinancesState } from '../redux/finances/finances.slice';
 
 export interface TransactionsTablesActionProps {
   ctx: ITableListContext<ITransaction>;
   service: UseFinancesService;
-  state: IFinTransactionsState;
+  state: FinancesState;
   modalService: IModalProviderContext;
 }
 export type ITransactionsTableAction = ITableAction<string>;

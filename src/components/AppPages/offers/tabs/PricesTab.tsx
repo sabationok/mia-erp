@@ -1,7 +1,7 @@
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
-import { PriceEntity } from 'types/price-management/price-management.types';
+import { PriceEntity } from 'types/price-management';
 import { useModalProvider } from '../../../../Providers/ModalProvider/ModalProvider';
 import { OnlyUUID } from 'redux/app-redux.types';
 import { useAppParams, useCurrentOffer } from '../../../../hooks';

@@ -14,16 +14,16 @@ import { IBase } from '../../types/utils.types';
 
 type LogoutResponse = Pick<LoginUserDto, 'email'> & { result: boolean };
 export default class AuthApi {
-  private static api = ClientApi.clientRef;
+  private static _client = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.auth;
   public static devices = Device.Api;
   public static oAuth = OAuthApi;
   public static register = (data?: RegisterDto): Promise<IRegisteredUserInfoRes> => {
-    return this.api.post(this.endpoints[Endpoints.register](), data);
+    return this._client.post(this.endpoints[Endpoints.register](), data);
   };
 
   public static logInUser = async (data?: LoginUserDto): Promise<ILoggedUserInfoRes> => {
-    const res: ILoggedUserInfoRes = await this.api.post(this.endpoints.logIn(), data);
+    const res: ILoggedUserInfoRes = await this._client.post(this.endpoints.logIn(), data);
     if (res.data.data.access_token) {
       ClientApi.setToken(res.data.data.access_token);
     }
@@ -31,14 +31,14 @@ export default class AuthApi {
   };
 
   public static logOutUser = async (): Promise<ApiAxiosResponse<LogoutResponse>> => {
-    const res: ApiAxiosResponse<LogoutResponse> = await this.api.post(this.endpoints.logOut());
+    const res: ApiAxiosResponse<LogoutResponse> = await this._client.post(this.endpoints.logOut());
     ClientApi.unsetToken();
 
     return res;
   };
 
   public static getCurrentUser = (): Promise<ApiAxiosResponse<UserEntity>> => {
-    return this.api.get(this.endpoints.getCurrent());
+    return this._client.get(this.endpoints.getCurrent());
   };
 }
 

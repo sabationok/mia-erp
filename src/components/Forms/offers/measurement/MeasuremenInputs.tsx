@@ -50,7 +50,7 @@ const MeasurementInputs = ({
             disabled={disabled}
           />
         ) : (
-          <InputLabel key={input.name} label={input.label} error={appForm?.formState?.errors[input.name as never]}>
+          <InputLabel key={input.name} label={input.label} $error={appForm?.formState?.errors[input.name as never]}>
             <InputText
               placeholder={input.placeholder}
               min={input?.type === 'number' ? 1 : undefined}

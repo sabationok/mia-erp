@@ -2,6 +2,7 @@ import { persistStore } from 'redux-persist';
 import { AnyAction, configureStore } from '@reduxjs/toolkit';
 import rootReducer, { RootReducerType } from './rootReducer.store';
 import { useDispatch, useSelector } from 'react-redux';
+import { AppRootState } from './reduxTypes.types';
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -37,5 +38,6 @@ export interface ThunkArgs<Data = any, Return = any, Error = any | unknown, Meta
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export type RootState = ReturnType<RootReducerType>;
 
-export const useAppSelector = (): RootState => useSelector((state: RootState): RootState => state) as RootState;
+export const useAppSelector = (): AppRootState =>
+  useSelector((state: AppRootState): AppRootState => state) as AppRootState;
 export const persistor = persistStore(store);

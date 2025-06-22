@@ -4,16 +4,16 @@ import { StateErrorType } from 'redux/reduxTypes.types';
 import { rolesMockData } from 'data/customRoles.data';
 import { ICustomRole, ModuleWithActions } from 'redux/customRoles/customRoles.types';
 import { checks, sliceCleaner } from '../../utils';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 
-export interface ICustomRolesState {
+export interface CustomRolesState {
   customRoles: ICustomRole[];
   isLoading: boolean;
   modules: ModuleWithActions[];
   error: StateErrorType;
 }
 
-const initialState: ICustomRolesState = {
+const initialState: CustomRolesState = {
   isLoading: false,
   modules: [],
   error: null,
@@ -44,7 +44,7 @@ export const customRolesSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
-      .addMatcher(onUserLogout, sliceCleaner(initialState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initialState)),
 });
 
 export function isCustomRolesCase(type: string) {

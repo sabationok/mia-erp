@@ -1,6 +1,6 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createTransactionThunk, getAllTransactionsThunk } from 'redux/finances/transactions.thunks';
-import { StateErrorType } from 'redux/reduxTypes.types';
+import { AppModuleName, StateErrorType } from 'redux/reduxTypes.types';
 import { ITransaction } from 'types/finances/transactions.types';
 import { checks } from '../../utils';
 import { FinAccountEntity } from '../../types/finances/fin-accounts.types';
@@ -11,7 +11,7 @@ import {
   updateBankAccountThunk,
 } from './bank-accounts/bank-accounts.thunks';
 
-export interface IFinTransactionsState {
+export interface FinancesState {
   transactions: ITransaction[];
   filteredTransactions?: ITransaction[];
   bankAccounts: BankAccountEntity[];
@@ -20,7 +20,7 @@ export interface IFinTransactionsState {
   error: StateErrorType;
 }
 
-const initialState: IFinTransactionsState = {
+const initialState: FinancesState = {
   isLoading: false,
   error: null,
   transactions: [],
@@ -30,7 +30,7 @@ const initialState: IFinTransactionsState = {
 };
 
 export const financesSlice = createSlice({
-  name: 'transactions',
+  name: AppModuleName.finances,
   initialState,
   reducers: {},
   extraReducers: builder =>

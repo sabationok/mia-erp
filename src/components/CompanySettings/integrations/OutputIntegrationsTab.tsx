@@ -5,9 +5,9 @@ import { t } from '../../../i18e';
 import { useModalService } from '../../../Providers/ModalProvider/ModalProvider';
 import FormCreateOutputIntegration from '../../Forms/integrations/FormCreateOutputIntegration';
 import { useEffect, useMemo } from 'react';
-import { Connection, OutputIntegrationEntity } from '../../../types/integrations.types';
+import { Connections, OutputIntegrationEntity } from '../../../types/integrations.types';
 import AccordionList, { IAccordionListProps, IAccordionOptionProps } from '../../SideBarContent/AccordionList';
-import { useIntegrationsSelector } from '../../../redux/selectors.store';
+import { useConnectionsSelector } from '../../../redux/selectors.store';
 import { useAppDispatch } from '../../../redux/store.store';
 import { OutputConnectionItem } from './components/OutputConnectionItem';
 import { getAllIntegrationsByTypeThunk } from '../../../redux/integrations/integrations.thunk';
@@ -18,7 +18,7 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
   const modalS = useModalService();
   // const service = useAppServiceProvider()[AppModuleName.integrations];
 
-  const state = useIntegrationsSelector().output;
+  const state = useConnectionsSelector().output;
   const integrationsList = state.list;
   const dispatch = useAppDispatch();
   const handleCreateOne = () => {
@@ -37,7 +37,7 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
   useEffect(() => {
     dispatch(
       getAllIntegrationsByTypeThunk({
-        data: { params: { type: Connection.TypeEnum.output } },
+        data: { params: { type: Connections.TypeEnum.output } },
       })
     );
     // eslint-disable-next-line

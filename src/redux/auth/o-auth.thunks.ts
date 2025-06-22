@@ -9,6 +9,6 @@ export enum OAuthConfigsThunk {
   create = 'integrations/output/configs/createThunk',
   update = 'integrations/output/configs/updateThunk',
 }
-export const createOAuthConfigsThunk = createAppAsyncThunk(OAuthConfigsThunk.create, OAuthApi.configs.create);
-export const updateOAuthConfigsThunk = createAppAsyncThunk(OAuthConfigsThunk.update, OAuthApi.configs.update);
-export const getAllOAuthConfigsThunk = createAppAsyncThunk(OAuthConfigsThunk.getAll, OAuthApi.configs.getAll);
+export const createOAuthConnectionThunk = createAppAsyncThunk(OAuthConfigsThunk.create, OAuthApi.configs.create);
+export const updateOAuthConnectionThunk = createAppAsyncThunk(OAuthConfigsThunk.update, OAuthApi.configs.update);
+export const getAllOAuthConnectionsThunk = createAppAsyncThunk(OAuthConfigsThunk.getAll, OAuthApi.configs.getAll);

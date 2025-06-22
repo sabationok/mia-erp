@@ -8,7 +8,7 @@ import { useRefundsSelector } from '../../../redux/selectors.store';
 import { ApiQuerySortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { ordersTableColumns } from '../../../data/orders.data';
-import { IRefund } from '../../../redux/refunds/refunds.types';
+import { IRefund } from '../../../redux/refunds/returns.types';
 import useOrdersServiceHook from '../../../hooks/useOrdersService.hook';
 import { BaseAppPageProps } from '../index';
 
@@ -26,7 +26,7 @@ export const useOrderTableConfigs = () => {
 
   const tableConfig = useMemo(
     (): ITableListProps<IRefund> => ({
-      tableData: state.refunds,
+      tableData: state.returns,
       tableTitles: ordersTableColumns as never,
       // tableSortParams: ordersSearchParams.filter(el => el.sort),
       hasFilter: true,
@@ -46,7 +46,7 @@ export const useOrderTableConfigs = () => {
         }).then();
       },
     }),
-    [filterParams, getAll, sortParams, state.refunds]
+    [filterParams, getAll, sortParams, state.returns]
   );
 
   // useEffect(() => {

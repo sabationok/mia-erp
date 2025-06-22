@@ -1,7 +1,7 @@
 import { usePriceDiscountsSelector, usePriceManagementSelector } from '../redux/selectors.store';
 import { useAppParams, useAppQuery } from './index';
 import { PriceDiscountEntity } from '../types/price-management/discounts';
-import { PriceEntity } from '../types/price-management/price-management.types';
+import { PriceEntity } from '../types/price-management';
 import { OnlyUUID } from '../types/utils.types';
 
 export const useCurrentPrice = (input?: Partial<OnlyUUID>): PriceEntity | undefined => {

@@ -1,5 +1,5 @@
 import { Action } from '../../store.store';
-import { PriceEntity } from '../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../types/price-management';
 import * as thunks from './discounts.thunks';
 import { AnyAction } from '@reduxjs/toolkit';
 

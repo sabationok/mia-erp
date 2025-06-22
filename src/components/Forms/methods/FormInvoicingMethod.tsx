@@ -90,7 +90,7 @@ const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, def
           <>
             <InputLabel
               label={t('label')}
-              error={errors.label}
+              $error={errors.label}
               disabled={formValues.isDefault}
               required={!formValues.isDefault}
             >
@@ -105,7 +105,7 @@ const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, def
 
             <InputLabel
               label={t('Type')}
-              error={errors.label}
+              $error={errors.label}
               disabled={formValues.isDefault}
               required={!formValues.isDefault}
             >
@@ -119,11 +119,11 @@ const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, def
           </>
         )}
 
-        <InputLabel label={t('Disabled')} error={errors?.disabledFor?.all}>
+        <InputLabel label={t('Disabled')} $error={errors?.disabledFor?.all}>
           <ButtonSwitch {...registerSwitch('all')} />
         </InputLabel>
 
-        <InputLabel label={t('Disabled for customer')} error={errors?.disabledFor?.customer}>
+        <InputLabel label={t('Disabled for customer')} $error={errors?.disabledFor?.customer}>
           <ButtonSwitch {...registerSwitch('customer')} />
         </InputLabel>
 
@@ -167,15 +167,15 @@ const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, def
           </Text>
         </BorderedBox>
 
-        <InputLabel label={t('Cms key')} error={errors?.cmsConfigs?.key}>
+        <InputLabel label={t('Cms key')} $error={errors?.cmsConfigs?.key}>
           <InputText placeholder={'Key'} {...register('cmsConfigs.key')} />
         </InputLabel>
 
-        <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
+        <InputLabel label={t('Language key')} $error={errors?.cmsConfigs?.key}>
           <LangButtonsGroup />
         </InputLabel>
 
-        <InputLabel label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.ua}>
+        <InputLabel label={t('Label by lang key')} $error={errors?.cmsConfigs?.labels?.ua}>
           <InputText placeholder={'Label'} {...register('cmsConfigs.labels.ua')} />
         </InputLabel>
       </Inputs>

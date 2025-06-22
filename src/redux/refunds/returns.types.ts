@@ -1,5 +1,5 @@
 import { ApiAxiosResponse, IBase, OnlyUUID } from '../app-redux.types';
-import { PriceEntity } from '../../types/price-management/price-management.types';
+import { PriceEntity } from '../../types/price-management';
 import { CompanyEntity } from '../../types/companies/companies.types';
 import { IManager } from '../../types/auth/auth.types';
 import { SupplierDirEntity } from '../../types/dir.types';

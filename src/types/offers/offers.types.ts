@@ -1,5 +1,5 @@
 import { OfferCategoryEntity } from '../dir.types';
-import { PriceEntity } from '../price-management/price-management.types';
+import { PriceEntity } from '../price-management';
 import { WarehouseEntity, WarehouseInventoryEntity } from '../warehousing';
 import { IBrand } from '../../redux/directories/brands.types';
 import type { ApiQueryParams, FilesApi } from '../../api';

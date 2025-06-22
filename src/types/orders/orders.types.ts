@@ -1,4 +1,4 @@
-import { AmountAndPercentage } from '../price-management/price-management.types';
+import { AmountAndPercentage, PriceDiscountType } from '../price-management';
 import { ICustomerBase } from '../customers.types';
 import { ApiQueryParams } from '../../api';
 import { ICommunicationMethod } from '../integrations.types';
@@ -20,7 +20,6 @@ import { IDelivery } from '../deliveries.types';
 import { IPayment } from '../payments.types';
 import { ICreateOrderInfoDto } from './createOrderInfo.dto';
 import { ICreateOrderInfoFormState } from './createOrderInfoFormState.type';
-import { PriceDiscountType } from 'types/price-management/discounts';
 import { IOrderTempSlot, OrderSlotEntity, SaleOrderSlotDto } from './order-slot.types';
 
 export * from './createOrderInfo.dto';
@@ -29,14 +28,7 @@ export * from './createOrderInfoFormState.type';
 export enum OrderTypeEnum {
   Order = 'Order',
   Group = 'Group',
-}
-
-export interface HasOrdersGroup {
-  group?: MaybeNull<OrdersGroupEntity>;
-}
-
-export interface HasOrder {
-  order?: MaybeNull<OrderEntity>;
+  Cart = 'Cart',
 }
 
 export enum OrderStatusEnum {
@@ -53,20 +45,6 @@ export enum OrderStatusEnum {
 
 // export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface OrdersGroupEntity extends Omit<OrderEntity, 'group'> {
-  orders?: MaybeNull<OrderEntity[]>;
-  strategy?: MaybeNull<string>;
-}
-export type OrderSummaryType = HasCurrencyCode & {
-  brutto: number;
-  netto: number;
-  hold: number;
-  received: number;
-  slotsCount: number;
-  [PriceDiscountType.bonus]?: string | number;
-  [PriceDiscountType.discount]?: string | number;
-  [PriceDiscountType.cashback]?: string | number;
-};
 export interface OrderEntity
   extends IBase,
     HasOwnerAsCompany,
@@ -77,8 +55,9 @@ export interface OrderEntity
     HasStatus<OrderStatusEnum>,
     HasSummary<OrderSummaryType>,
     HasEmbeddedReferences<string, string> {
-  group?: MaybeNull<OrdersGroupEntity>;
+  group?: MaybeNull<OrderEntity>;
 
+  strategy?: MaybeNull<string>;
   number?: MaybeNull<number>;
 
   receiver?: MaybeNull<ICustomerBase>;
@@ -99,10 +78,8 @@ export interface OrderEntity
 }
 
 export interface ICreateOrdersGroupFormState {
-  slots: IOrderTempSlot[];
+  slots?: IOrderTempSlot[];
   info?: ICreateOrderInfoFormState;
-
-  orders: OrderEntity[];
 }
 
 export interface IOrderReqData {
@@ -116,6 +93,16 @@ export interface SaleOrdersGroupDto {
   info?: ICreateOrderInfoDto;
 }
 
+export type OrderSummaryType = HasCurrencyCode & {
+  brutto: number;
+  netto: number;
+  hold: number;
+  received: number;
+  slotsCount: number;
+  [PriceDiscountType.bonus]?: string | number;
+  [PriceDiscountType.discount]?: string | number;
+  [PriceDiscountType.cashback]?: string | number;
+};
 export interface OrderSummary extends HasCurrencyCode {
   discount?: AmountAndPercentage;
 

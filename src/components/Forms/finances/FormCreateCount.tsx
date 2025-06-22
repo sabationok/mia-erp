@@ -80,7 +80,7 @@ const FormCreateCount: React.FC<FormCreateFinAccountProps> = ({
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FormInputs>
-        <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
+        <InputLabel label={t('type')} direction={'vertical'} $error={errors.type} disabled>
           <InputText placeholder={type ? translate(type) : type} disabled />
         </InputLabel>
 
@@ -90,15 +90,15 @@ const FormCreateCount: React.FC<FormCreateFinAccountProps> = ({
           </InputLabel>
         )}
 
-        <InputLabel label={t('label')} direction={'vertical'} error={errors.label}>
+        <InputLabel label={t('label')} direction={'vertical'} $error={errors.label}>
           <InputText placeholder={translate('insertLabel')} {...register('label')} autoFocus />
         </InputLabel>
 
-        <InputLabel label={t('startBalance')} direction={'vertical'} error={errors.balance}>
+        <InputLabel label={t('startBalance')} direction={'vertical'} $error={errors.balance}>
           <InputText placeholder={translate('insertStartBalance')} {...register('balance')} type="number" />
         </InputLabel>
 
-        <InputLabel label={t('currency')} direction={'vertical'} error={errors.currency} disabled>
+        <InputLabel label={t('currency')} direction={'vertical'} $error={errors.currency} disabled>
           <InputText placeholder={translate('selectCurrency')} {...register('currency')} disabled />
         </InputLabel>
 

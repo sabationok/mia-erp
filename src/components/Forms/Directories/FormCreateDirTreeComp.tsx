@@ -60,23 +60,23 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
       >
         <FormInputs>
           {props.options && (
-            <InputLabel label={t('type')} error={errors.type} disabled>
+            <InputLabel label={t('type')} $error={errors.type} disabled>
               <InputText defaultValue={type ? t(`${type}s` as any).toUpperCase() : type} disabled />
             </InputLabel>
           )}
 
           {defaultState?.parent?._id && (
-            <InputLabel label={t('parentItem')} error={errors.type} disabled>
+            <InputLabel label={t('parentItem')} $error={errors.type} disabled>
               <InputText defaultValue={defaultState?.parent?.label ?? ''} disabled />
             </InputLabel>
           )}
 
-          <InputLabel label={t('label')} error={errors.label} required>
+          <InputLabel label={t('label')} $error={errors.label} required>
             <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
           </InputLabel>
 
           {dirType === ApiDirType.BRANDS && (
-            <InputLabel label={t('manufacturer')} error={errors.manufacturer}>
+            <InputLabel label={t('manufacturer')} $error={errors.manufacturer}>
               <InputText placeholder={t('manufacturer')} {...register('manufacturer')} />
             </InputLabel>
           )}
@@ -85,7 +85,7 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
           {/*  <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus />*/}
           {/*</InputLabel>*/}
 
-          <InputLabel label={t('comment')} error={errors.description}>
+          <InputLabel label={t('comment')} $error={errors.description}>
             <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
           </InputLabel>
         </FormInputs>

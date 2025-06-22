@@ -1,12 +1,7 @@
 import { useModalProvider } from '../Providers/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { TableActionsCreator } from '../components/TableList/tableTypes.types';
-import {
-  IPriceListItemReqData,
-  PriceEntity,
-  PriceListEntity,
-  PriceListTypeEnum,
-} from '../types/price-management/price-management.types';
+import { IPriceListItemReqData, PriceEntity, PriceListEntity, PriceListTypeEnum } from '../types/price-management';
 import FormCreatePriceList from '../components/Forms/pricing/FormCreatePriceList';
 import { omit } from 'lodash';
 import { getIdRef } from '../utils/data-transform';

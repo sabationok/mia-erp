@@ -9,7 +9,7 @@ import {
   updateCustomerThunk,
 } from './customers.thunks';
 import { ICommunicationMethod } from '../../types/integrations.types';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
 
 export interface CustomersState {
@@ -51,5 +51,5 @@ export const customersSlice = createSlice({
       .addCase(updateCommunicationMethodThunk.fulfilled, (s, a) => {
         s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? { ...mtd, ...a.payload } : mtd));
       })
-      .addMatcher(onUserLogout, sliceCleaner(initialState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initialState)),
 });

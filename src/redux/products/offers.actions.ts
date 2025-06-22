@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import { VariationEntity } from '../../types/offers/variations.types';
-import { PriceEntity } from '../../types/price-management/price-management.types';
+import { PriceEntity } from '../../types/price-management';
 import { WarehouseInventoryEntity } from '../../types/warehousing';
 
 export const clearCurrentOfferAction = createAction<undefined, 'products/clearCurrent'>('products/clearCurrent');

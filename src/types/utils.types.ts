@@ -4,7 +4,7 @@ import { LangPack } from '../i18e';
 import { Path } from 'react-hook-form';
 import { MeasurementUnit } from './enums.types';
 import { AddressDto } from './addresses/addresses.types';
-import { PermissionEntity } from './permissions.types';
+import { PermissionEntity, PermissionHolderEnum } from './permissions.types';
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}` | string;
 
@@ -66,6 +66,7 @@ export type MaybeNull<T = any> = T | null;
 
 export type MaybeArr<T = any> = T extends (infer U)[] ? U[] : T;
 
+export type EmptyFn = (...args: any[]) => Promise<any>;
 export interface HasCurrencyCode {
   currency?: MaybeNull<CurrencyCode | string>;
 }
@@ -144,6 +145,12 @@ export interface HasDestinationRefs {
   destinationRefs?: Record<keyof AddressDto, OnlyUUID>;
 }
 
+export interface HasDisableFor {
+  disabledFor?: MaybeNull<PermissionHolderEnum[]>;
+}
+export interface HasAvailableFor {
+  availableFor?: MaybeNull<PermissionHolderEnum[]>;
+}
 export interface HasStatus<Status extends string | number = string> {
   status?: MaybeNull<Status>;
 }

@@ -1,33 +1,25 @@
-import { Connection, ExtServiceBase } from '../../types/integrations.types';
+import { Connections, ExtServiceBase } from '../../types/integrations.types';
 import { AppModuleName, StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
 import {
-  createInputIntegrationThunk,
+  createInputConnectionThunk,
   createOutputIntegrationThunk,
   getAllExternalServicesThunk,
   getAllIntegrationsByTypeThunk,
-  getInputIntegrationByIdThunk,
-  getOutputIntegrationByIdThunk,
+  getInputConnectionByIdThunk,
+  getOutputConnectionThunk,
+  regenerateKeysOutputConnectionThunk,
   updateOutputIntegrationThunk,
 } from './integrations.thunk';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
-import { ArrayOfUUID, UUID } from '../../types/utils.types';
-import { createOAuthConfigsThunk, getAllOAuthConfigsThunk } from '../auth/o-auth.thunks';
+import { StateMaps } from '../createStateMapsManager.helper';
 
-export interface IntegrationsState {
+export interface ConnectionsState {
   extList: ExtServiceBase[];
-  output: {
-    dataMap: Record<UUID, Connection.Output.Entity>;
-    keysMap: Record<UUID, ArrayOfUUID>;
-    list: Connection.Output.Entity[];
-  };
+  output: StateMaps<Connections.Output.Entity>;
 
-  input: {
-    dataMap: Record<UUID, Connection.Input.Entity>;
-    keysMap: Record<UUID, ArrayOfUUID>;
-    list: Connection.Input.Entity[];
-  };
+  input: StateMaps<Connections.Input.Entity>;
 
   error: StateErrorType | null;
   isLoading: boolean;
@@ -41,7 +33,7 @@ const createBaseMaps = () => {
   };
 };
 
-const initState: IntegrationsState = {
+const initState: ConnectionsState = {
   error: null,
   isLoading: false,
   input: createBaseMaps(),
@@ -63,7 +55,7 @@ export const integrationsSlice = createSlice({
           const currentType = a.payload.params?.type;
 
           if (currentType) {
-            type Tp = Connection.ByType[typeof currentType];
+            type Tp = Connections.ByType[typeof currentType];
 
             let list = s[currentType].list as Tp[];
 
@@ -84,43 +76,29 @@ export const integrationsSlice = createSlice({
             return item._id === a.payload.data._id ? a.payload.data : item;
           });
         })
-        .addCase(getOutputIntegrationByIdThunk.fulfilled, (s, a) => {
+        .addCase(regenerateKeysOutputConnectionThunk.fulfilled, (s, a) => {
+          s.output.dataMap[a.payload.data._id] = a.payload.data;
+
+          s.output.list = s.output.list.map(item => {
+            return item._id === a.payload.data._id ? a.payload.data : item;
+          });
+        })
+        .addCase(getOutputConnectionThunk.fulfilled, (s, a) => {
           s.output.dataMap[a.payload.data._id] = a.payload.data;
           // s.output.list.push(a.payload.data);
         })
-        .addCase(createOAuthConfigsThunk.fulfilled, (st, a) => {
-          st.output.list = st.output.list.map(item => {
-            if (item._id === a.payload.data.outputConnection?._id) {
-              if (!item.oAuth) {
-                item.oAuth = [];
-              }
 
-              item.oAuth.push(a.payload.data);
-            }
-
-            return item;
-          });
-        })
-        .addCase(getAllOAuthConfigsThunk.fulfilled, (st, a) => {
-          st.output.list = st.output.list.map(item => {
-            if (item._id === a.payload.params?.consumerId) {
-              item.oAuth = a.payload.data;
-            }
-
-            return item;
-          });
-        })
         // * ====================== INPUT
-        .addCase(createInputIntegrationThunk.fulfilled, (s, a) => {
+        .addCase(createInputConnectionThunk.fulfilled, (s, a) => {
           s.input.dataMap[a.payload.data._id] = a.payload.data;
           s.input.list.push(a.payload.data);
         })
-        .addCase(getInputIntegrationByIdThunk.fulfilled, (s, a) => {
+        .addCase(getInputConnectionByIdThunk.fulfilled, (s, a) => {
           s.input.dataMap[a.payload.data._id] = a.payload.data;
           // s.input.list.push(a.payload.data);
         })
 
-        .addMatcher(onUserLogout, sliceCleaner(initState))
+        .addMatcher(onUserLogoutMatch, sliceCleaner(initState))
     );
   },
 });

@@ -9,7 +9,7 @@ import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import FormOfferDefaultsDrawer from '../../../Overlays/FormOfferDefaultsDrawer';
 
-import { PriceEntity } from '../../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../../types/price-management';
 import { MaybeNull } from '../../../../types/utils.types';
 import { toPrice } from '../../../../utils/numbers';
 import { useOverlayService } from '../../../../Providers/Overlay/OverlayStackProvider';

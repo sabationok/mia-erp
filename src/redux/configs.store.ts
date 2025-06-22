@@ -1,36 +1,47 @@
 import { PersistConfig, Storage, WebStorage } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import storageSession from 'redux-persist/lib/storage/session';
-import { AppModuleName } from './reduxTypes.types';
+import { AppRootState } from './reduxTypes.types';
 
-type Key = keyof typeof AppModuleName | 'pageSettings' | string;
-export const persistorConfigs: Record<
-  Key,
-  {
-    key: Key;
-    storage: Storage | WebStorage;
-  } & PersistConfig<any>
-> = {
-  cart: {
-    key: 'cart',
-    storage,
-  },
+export type AppRootStateKey = keyof AppRootState;
+
+type PersistorConfig<K extends string, S = any> = {
+  key: K;
+  storage: Storage | WebStorage;
+  blacklist?: Array<keyof S>;
+  whitelist?: Array<keyof S>;
+} & PersistConfig<S>;
+
+type AppPersistConfigs = {
+  [key in AppRootStateKey]?: PersistorConfig<key, AppRootState[key] extends any ? AppRootState[key] : never>;
+};
+
+export const persistorConfigs: AppPersistConfigs = {
   auth: {
     key: 'auth',
     storage,
-    whitelist: ['access_token', 'user', 'isLogged'],
+    whitelist: ['access_token', 'refresh_token', 'user', 'isLoggedIn'],
+  },
+  cart: {
+    key: 'cart',
+    storage: storageSession,
+  },
+  carts: {
+    key: 'carts',
+    storage: storageSession,
+    whitelist: ['dataMap', 'ids', 'recommends', 'ids'],
   },
   permissions: {
-    key: 'permission',
+    key: 'permissions',
     storage: storageSession,
-    whitelist: ['permission', 'permission_token'],
+    whitelist: ['permissions', 'permission', 'permission_token'],
   },
   appSettings: {
     key: 'appSettings',
     storage,
-    whitelist: ['isDarkMode', 'appTheme', 'isLoaded'],
+    whitelist: ['isDarkMode', 'appTheme', 'isLoaded', 'accentColor'],
   },
-  pageSettings: {
+  appPage: {
     key: 'appPage',
     storage: storageSession,
     whitelist: ['pageGrid'],
@@ -64,7 +75,6 @@ export const persistorConfigs: Record<
     key: 'offers',
     storage: storageSession,
     whitelist: [
-      'keysMap',
       'dataMap',
       'skuKeysMap',
       'list',
@@ -85,32 +95,32 @@ export const persistorConfigs: Record<
   orders: {
     key: 'orders',
     storage: storageSession,
-    whitelist: ['orders', 'currentOrder', 'currentGroup', 'ordersGroupFormData'],
+    whitelist: ['orders', 'currentOrder', 'ordersGroupFormData'],
   },
   invoices: {
     key: 'invoices',
     storage: storageSession,
-    whitelist: ['invoices', 'currentInvoice', 'methods'],
+    whitelist: ['invoices', 'methods'],
   },
   payments: {
     key: 'payments',
     storage: storageSession,
-    whitelist: ['payments', 'currentPayment', 'methods'],
+    whitelist: ['payments', 'methods'],
   },
   shipments: {
     key: 'shipments',
     storage: storageSession,
-    whitelist: ['shipments', 'methods', 'currentShipment'],
+    whitelist: ['shipments', 'methods'],
   },
   deliveries: {
     key: 'deliveries',
     storage: storageSession,
     whitelist: ['deliveries', 'methods'],
   },
-  refunds: {
-    key: 'refunds',
+  returns: {
+    key: 'returns',
     storage: storageSession,
-    whitelist: ['refunds', 'currentRefund'],
+    whitelist: ['returns', 'currentRefund'],
   },
   connections: {
     key: 'connections',
@@ -120,26 +130,21 @@ export const persistorConfigs: Record<
   warehouses: {
     key: 'warehouses',
     storage: storageSession,
-    whitelist: ['warehouses'],
+    whitelist: ['list', 'dataMap', 'keysMap'],
   },
   customers: {
     key: 'customers',
     storage: storageSession,
     whitelist: ['customers'],
   },
-  priceLists: {
-    key: 'priceLists',
+  priceManagement: {
+    key: 'priceManagement',
     storage: storageSession,
-    whitelist: ['priceLists'],
+    whitelist: ['lists', 'dataMap', 'keysMap'],
   },
   customRoles: {
     key: 'customRoles',
     storage: storageSession,
     whitelist: ['customRoles'],
-  },
-  roles: {
-    key: 'roles',
-    storage: storageSession,
-    whitelist: ['roles'],
   },
 };

@@ -133,7 +133,7 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FormInputs>
-        <InputLabel label={t('businessSubjectType')} error={errors.label} required>
+        <InputLabel label={t('businessSubjectType')} $error={errors.label} required>
           <ButtonsGroup
             options={businessSubjectTypeFilterOptions}
             borderRadius={'4px'}
@@ -145,7 +145,7 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
 
         {renderFormConfig.renderNamesInputs && (
           <>
-            <InputLabel label={t('name')} error={errors.name} required>
+            <InputLabel label={t('name')} $error={errors.name} required>
               <InputText
                 placeholder={t('insertLabel')}
                 {...register('name')}
@@ -154,14 +154,14 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
               />
             </InputLabel>
 
-            <InputLabel label={t('secondName')} error={errors.secondName} required>
+            <InputLabel label={t('secondName')} $error={errors.secondName} required>
               <InputText placeholder={t('insertSecondName')} {...register('secondName')} required />
             </InputLabel>
           </>
         )}
 
         {renderFormConfig.renderLabelInput && (
-          <InputLabel label={t('label')} error={errors.label} required={!renderFormConfig.renderNamesInputs}>
+          <InputLabel label={t('label')} $error={errors.label} required={!renderFormConfig.renderNamesInputs}>
             <InputText
               placeholder={t('insertLabel')}
               {...register('label')}
@@ -172,22 +172,22 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
         )}
 
         {renderFormConfig.renderTaxCode && (
-          <InputLabel label={t('taxCode')} error={errors.taxCode}>
+          <InputLabel label={t('taxCode')} $error={errors.taxCode}>
             <InputText placeholder={t('taxCode')} {...register('taxCode')} />
           </InputLabel>
         )}
 
         {renderFormConfig.renderPersonalTaxCode && (
-          <InputLabel label={t('personalTaxCode')} error={errors.taxCode}>
+          <InputLabel label={t('personalTaxCode')} $error={errors.taxCode}>
             <InputText placeholder={t('personalTaxCode')} {...register('personalTaxCode')} />
           </InputLabel>
         )}
 
-        <InputLabel label={t('email')} error={errors.email}>
+        <InputLabel label={t('email')} $error={errors.email}>
           <InputText placeholder={t('email')} {...register('email')} />
         </InputLabel>
 
-        <InputLabel label={t('phone')} error={errors.phone}>
+        <InputLabel label={t('phone')} $error={errors.phone}>
           <InputText placeholder={t('phone')} {...register('phone')} />
         </InputLabel>
 
@@ -201,7 +201,7 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
           />
         )}
 
-        <InputLabel label={t('comment')} error={errors.description}>
+        <InputLabel label={t('comment')} $error={errors.description}>
           <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
         </InputLabel>
       </FormInputs>

@@ -1,35 +1,36 @@
 import ModalBase from '../../../atoms/Modal';
-import { Connection } from '../../../../types/integrations.types';
+import { Connections } from '../../../../types/integrations.types';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
 import { t } from '../../../../i18e';
 import { ApiKeyItem } from '../components/ApiKeyItem';
 import ButtonIcon from '../../../atoms/ButtonIcon';
-import { ModalOAuthConfigsForm } from './ModalOAuthConfigsForm';
+import { ModalOAuthConnectionForm } from './ModalOAuthConnectionForm';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../../../redux/store.store';
-import { getAllOAuthConfigsThunk } from '../../../../redux/auth/o-auth.thunks';
+import { getAllOAuthConnectionsThunk } from '../../../../redux/auth/o-auth.thunks';
 import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
 import { useTheme } from 'styled-components';
+import { useOAuthSelector } from '../../../../redux/selectors.store';
 
-export const ModalOAuthConfigs = ({ conn }: { conn: Connection.Output.Entity }) => {
+export const ModalOAuthConnectionsList = ({ conn }: { conn: Connections.Output.Entity }) => {
   return (
     <ModalBase title={conn.label} fillHeight>
-      <OAuthConnection conn={conn} />
+      <OAuthConnectionsList conn={conn} />
     </ModalBase>
   );
 };
 
-export const OAuthConnection = ({ conn }: { conn: Connection.Output.Entity }) => {
+export const OAuthConnectionsList = ({ conn }: { conn: Connections.Output.Entity }) => {
   const modalS = useModalService();
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const loaders = useLoaders<'list'>();
-
+  const state = useOAuthSelector();
   useEffect(() => {
     dispatch(
-      getAllOAuthConfigsThunk({
+      getAllOAuthConnectionsThunk({
         params: { consumerId: conn._id },
         onLoading: loaders.onLoading('list'),
       })
@@ -40,8 +41,7 @@ export const OAuthConnection = ({ conn }: { conn: Connection.Output.Entity }) =>
   return (
     <FlexBox flex={1} gap={8} padding={'8px'} overflow={'hidden'}>
       <FlexBox flex={1} gap={8} overflow={'auto'}>
-        {conn.oAuth?.map(config => {
-          console.log(config);
+        {state.list?.map(config => {
           return (
             <FlexBox
               key={config._id}
@@ -56,7 +56,8 @@ export const OAuthConnection = ({ conn }: { conn: Connection.Output.Entity }) =>
                     [
                       { label: t('Label'), value: config.label },
                       { label: t('Domain'), value: config.domain },
-                      { label: t('Permissions'), value: config.scopes?.join(', ') },
+                      { label: t('Origin'), value: config.origin },
+                      { label: t('Scopes'), value: config.scopes?.join(', ') },
                     ] as { label: string; value: string }[]
                   ).map(item => {
                     return (
@@ -116,7 +117,7 @@ export const OAuthConnection = ({ conn }: { conn: Connection.Output.Entity }) =>
           sizeType={'middle'}
           isLoading={loaders.isLoading.list}
           onClick={() => {
-            modalS.create(ModalOAuthConfigsForm, {
+            modalS.create(ModalOAuthConnectionForm, {
               conn,
             });
           }}

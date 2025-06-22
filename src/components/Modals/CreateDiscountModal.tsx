@@ -63,7 +63,7 @@ export const CreateDiscountModal = ({ onSuccess, priceId, offerId, discount }: C
                 );
             })}
           >
-            <InputLabel label={'Custom key'} error={form.formState.errors?.cmsConfigs?.key}>
+            <InputLabel label={'Custom key'} $error={form.formState.errors?.cmsConfigs?.key}>
               <InputText {...form.register('cmsConfigs.key')} />
             </InputLabel>
           </AccordionForm>

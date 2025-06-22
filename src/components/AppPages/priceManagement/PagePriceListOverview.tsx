@@ -6,7 +6,7 @@ import { takeFullGridArea } from '../pagesStyles';
 import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useEffect, useMemo, useState } from 'react';
-import { PriceEntity } from '../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../types/price-management';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import { ApiQuerySortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';

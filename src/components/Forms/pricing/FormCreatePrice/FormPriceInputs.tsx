@@ -1,10 +1,10 @@
 import {
   BasePriceInfoPath,
   IPriceBase,
-  PriceAmountAndPercentageFieldsEnum,
-  PriceAmountAndPercentageFieldsKey,
+  PriceAmountFieldsKey,
+  PriceAmountFieldsKeyEnum,
   PriceFormDataPath,
-} from '../../../../types/price-management/price-management.types';
+} from '../../../../types/price-management';
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import InputText from '../../../atoms/Inputs/InputText';
@@ -31,7 +31,7 @@ type HandleUseFormBlur<Name = any> = (
 
 export const FormPriceDecimal = Decimal.clone({ precision: 2 });
 
-const PriceAmountAndPercentageInputsNames = enumToArray(PriceAmountAndPercentageFieldsEnum);
+const PriceAmountAndPercentageInputsNames = enumToArray(PriceAmountFieldsKeyEnum);
 const PriceBaseInputsNames: (keyof Pick<IPriceBase, 'in' | 'out'>)[] = ['in', 'out'];
 
 const priceInputsPropsMap = new Map<
@@ -107,7 +107,7 @@ const FormPriceAmountAnPercentageInputsByName = ({
   form: { register },
   name,
 }: {
-  name: PriceAmountAndPercentageFieldsKey;
+  name: PriceAmountFieldsKey;
   form: UseFormReturn<IPriceBase>;
   handleBlur: HandleUseFormBlur<BasePriceInfoPath>;
 }) => {

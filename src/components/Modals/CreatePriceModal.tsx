@@ -1,5 +1,5 @@
 import { ModalFormProps } from '../ModalForm';
-import { IPriceFormData, PriceEntity } from '../../types/price-management/price-management.types';
+import { IPriceFormData, PriceEntity } from '../../types/price-management';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OfferEntity } from '../../types/offers/offers.types';
 import { t } from '../../i18e';

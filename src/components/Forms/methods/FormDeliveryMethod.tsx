@@ -127,7 +127,7 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
       <AccordionForm label={t('Main info')} {...registerFormArea()}>
         <InputLabel
           label={t('label')}
-          error={errors.label}
+          $error={errors.label}
           // disabled={defaultState?.isDefault}
           required={!defaultState?.isDefault}
         >
@@ -152,11 +152,11 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
           />
         </InputLabel>
 
-        <InputLabel label={t('Disabled for all')} error={errors?.disabledFor?.all}>
+        <InputLabel label={t('Disabled for all')} $error={errors?.disabledFor?.all}>
           <ButtonSwitch {...registerSwitch('all')} />
         </InputLabel>
 
-        <InputLabel label={t('Disabled for customer')} error={errors?.disabledFor?.customer}>
+        <InputLabel label={t('Disabled for customer')} $error={errors?.disabledFor?.customer}>
           <ButtonSwitch {...registerSwitch('customer')} />
         </InputLabel>
       </AccordionForm>
@@ -165,7 +165,7 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
         <FlexBox fxDirection={'row'} gap={8}>
           <InputLabel
             label={t('Min cost for delivery')}
-            error={getFieldState('invoicingPolicy.configs.minCost.delivery').error}
+            $error={getFieldState('invoicingPolicy.configs.minCost.delivery').error}
           >
             <InputText
               placeholder={'Min cost'}
@@ -177,7 +177,7 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
 
           <InputLabel
             label={t('Min cost for return')}
-            error={getFieldState('invoicingPolicy.configs.minCost.return').error}
+            $error={getFieldState('invoicingPolicy.configs.minCost.return').error}
           >
             <InputText
               placeholder={'Min cost'}
@@ -219,7 +219,7 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
       </AccordionForm>
 
       <AccordionForm label={t('Cms params')} {...registerFormArea('cmsConfigs')}>
-        <InputLabel label={t('Custom key')} error={errors?.cmsConfigs?.key}>
+        <InputLabel label={t('Custom key')} $error={errors?.cmsConfigs?.key}>
           <InputText placeholder={'Key'} {...register('cmsConfigs.key')} />
         </InputLabel>
 
@@ -227,7 +227,7 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
         {/*  <InputText placeholder={'Reference'} {...register('cmsConfigs.extRef')} />*/}
         {/*</InputLabel>*/}
 
-        <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
+        <InputLabel label={t('Language key')} $error={errors?.cmsConfigs?.key}>
           <LangButtonsGroup
             disabled
             onChange={key => {
@@ -238,7 +238,7 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
         </InputLabel>
 
         {langKey && (
-          <InputLabel disabled label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.[langKey]}>
+          <InputLabel disabled label={t('Label by lang key')} $error={errors?.cmsConfigs?.labels?.[langKey]}>
             <InputText disabled placeholder={'Label'} {...register(`cmsConfigs.labels.${langKey}`)} />
           </InputLabel>
         )}

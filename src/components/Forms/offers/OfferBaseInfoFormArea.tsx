@@ -87,16 +87,16 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
           onSelect={o => setValue('type', o.value)}
         />
 
-        <InputLabel label={t('label')} error={errors.label} required>
+        <InputLabel label={t('label')} $error={errors.label} required>
           <InputText placeholder={t('label')} {...register('label')} required autoFocus />
         </InputLabel>
 
         <FlexBox fxDirection={'row'} gap={12} fillWidth>
-          <InputLabel label={t('sku')} error={errors.sku}>
+          <InputLabel label={t('sku')} $error={errors.sku}>
             <InputText placeholder={t('sku')} {...register('sku')} />
           </InputLabel>
 
-          <InputLabel label={t('Bar-code')} error={errors.barCode}>
+          <InputLabel label={t('Bar-code')} $error={errors.barCode}>
             <InputText placeholder={t('Bar-code')} {...register('barCode')} />
           </InputLabel>
         </FlexBox>
@@ -135,11 +135,11 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
           })}
         />
 
-        <InputLabel label={t('description')} error={errors.description}>
+        <InputLabel label={t('description')} $error={errors.description}>
           <TextareaPrimary placeholder={t('description')} {...register('description')} />
         </InputLabel>
 
-        <InputLabel label={t('Visibility')} error={errors.description}>
+        <InputLabel label={t('Visibility')} $error={errors.description}>
           <ButtonSwitch
             value={formValues.visible}
             onChange={val => {

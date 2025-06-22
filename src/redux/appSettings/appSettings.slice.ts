@@ -9,6 +9,7 @@ export interface AppSettingsState {
   accentColor?: AccentColorName;
   appTheme: IAppTheme;
   appActions: Record<string, RoleActionType[]>;
+  isLoaded?: boolean;
 }
 
 const initialState: AppSettingsState = {

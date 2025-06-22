@@ -1,7 +1,7 @@
 import { VariationEntity } from 'types/offers/variations.types';
 import { WarehouseInventoryEntity } from 'types/warehousing/warehouse-inventory.types';
 import { OfferEntity } from 'types/offers/offers.types';
-import { PriceEntity } from '../types/price-management/price-management.types';
+import { PriceEntity } from '../types/price-management';
 import { IOrderTempSlot } from '../types/orders/order-slot.types';
 import { WarehouseEntity } from '../types/warehousing';
 import Decimal from 'decimal.js';

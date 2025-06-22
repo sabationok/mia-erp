@@ -19,7 +19,7 @@ import { clearCurrentPermission, setMockPermissionData } from './permissions.act
 import { checks, sliceCleaner } from '../../utils';
 import { StateErrorType } from '../reduxTypes.types';
 import { getAllAccessKeys } from '../../components/AppPages';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 
 export interface PermissionsState {
   permission: Partial<PermissionEntity>;
@@ -112,7 +112,7 @@ export const permissionsSlice = createSlice({
         s.isLoading = false;
         s.error = a.payload;
       })
-      .addMatcher(onUserLogout, sliceCleaner(initState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initState)),
 });
 function isPermissionsCase(type: string) {
   return checks.isStr(type) && type.startsWith('permissions');

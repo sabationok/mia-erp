@@ -119,7 +119,7 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
       </InputLabel>
 
       <FlexBox fxDirection={'row'} gap={16} alignItems={'flex-end'}>
-        <InputLabel label={t('Value')} error={form.formState?.errors?.value} required>
+        <InputLabel label={t('Value')} $error={form.formState?.errors?.value} required>
           <InputText
             type={'number'}
             align={'center'}
@@ -130,7 +130,7 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
           />
         </InputLabel>
 
-        <InputLabel label={t('Discount threshold')} error={form.formState?.errors?.threshold}>
+        <InputLabel label={t('Discount threshold')} $error={form.formState?.errors?.threshold}>
           <InputText
             align={'center'}
             type={'number'}
@@ -140,7 +140,7 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
           />
         </InputLabel>
 
-        <InputLabel label={t('Discount limit')} error={form.formState?.errors?.limit}>
+        <InputLabel label={t('Discount limit')} $error={form.formState?.errors?.limit}>
           <InputText
             align={'center'}
             type={'number'}
@@ -153,7 +153,7 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
 
       {!!formValues.threshold && (
         <>
-          <InputLabel label={t('Discount threshold type')} error={form.formState?.errors?.thresholdType}>
+          <InputLabel label={t('Discount threshold type')} $error={form.formState?.errors?.thresholdType}>
             <ButtonsGroup
               value={formValues.thresholdType}
               onSelect={registerOnSelect('thresholdType')}
@@ -165,7 +165,7 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
 
       {!!formValues.limit && (
         <>
-          <InputLabel label={t('Discount limit type')} error={form.formState?.errors?.limitType}>
+          <InputLabel label={t('Discount limit type')} $error={form.formState?.errors?.limitType}>
             <ButtonsGroup
               value={formValues.limitType}
               onSelect={registerOnSelect('limitType')}
@@ -200,11 +200,11 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
         </>
       )}
 
-      <InputLabel label={t('Label')} error={form.formState?.errors?.label}>
+      <InputLabel label={t('Label')} $error={form.formState?.errors?.label}>
         <InputText {...register('label')} />
       </InputLabel>
 
-      <InputLabel label={t('Promo code')} error={form.formState?.errors?.promoCode} disabled>
+      <InputLabel label={t('Promo code')} $error={form.formState?.errors?.promoCode} disabled>
         <InputText {...register('promoCode')} disabled />
       </InputLabel>
     </AccordionForm>

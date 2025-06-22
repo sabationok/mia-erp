@@ -37,13 +37,13 @@ export const ClientApi = new ApiClientManager(
     baseURL: Client.createOptions.baseURL,
     withCredentials: true,
     refreshParams: {
+      url: APP_CONFIGS.endpoints.auth.refreshTokens(),
       skipPaths: [
         APP_CONFIGS.endpoints.auth.logOut(),
         APP_CONFIGS.endpoints.auth.logIn(),
         '/auth/logOut',
         '/auth/logIn',
       ],
-      url: APP_CONFIGS.endpoints.auth.refreshTokens(),
     },
     headers: Client.createOptions.headers,
   }),

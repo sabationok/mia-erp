@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   ICreatePriceReqData,
-  IPriceListReqData,
   IUpdatePriceReqData,
   PriceEntity,
+  PriceListApiReqConfig,
   PriceListEntity,
-} from '../../types/price-management/price-management.types';
+} from '../../types/price-management';
 import { ThunkArgs } from '../store.store';
 import { apiCall, ApiQueryParams, GetOnePriceQuery, PriceManagementApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
@@ -83,7 +83,7 @@ export const getAllPriceListsThunk = createAsyncThunk<
 });
 export const createPriceListThunk = createAsyncThunk<
   PriceListEntity | undefined,
-  ThunkArgs<IPriceListReqData, PriceListEntity>
+  ThunkArgs<PriceListApiReqConfig, PriceListEntity>
 >(PriceManagementThunkType.createPriceList, async (arg, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = arg;
 
@@ -128,7 +128,7 @@ export const refreshPriceListByIdThunk = createAsyncThunk<
 });
 export const updatePriceListByIdThunk = createAsyncThunk<
   PriceListEntity | undefined,
-  ThunkArgs<IPriceListReqData, PriceListEntity>
+  ThunkArgs<PriceListApiReqConfig, PriceListEntity>
 >(PriceManagementThunkType.updatePriceListById, async (arg, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = arg;
 

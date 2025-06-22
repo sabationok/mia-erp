@@ -146,7 +146,7 @@ export function createApiClient2({
   type StatusEventType = `on_${HttpStatusCode}`;
   type HttpStatusIs = PartialRecord<StatusEventType, boolean>;
   function emitStatusEvents(statusIs: HttpStatusIs, error: AxiosError) {
-    if (statusIs.on_409 && onForbidden) onForbidden(error);
+    if (statusIs.on_403 && onForbidden) onForbidden(error);
   }
 
   client.interceptors.request.use(data => {

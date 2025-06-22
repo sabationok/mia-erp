@@ -3,7 +3,7 @@ import * as thunks from './discounts.thunks';
 import { PriceDiscountEntity } from '../../../types/price-management/discounts';
 import { PartialRecord, UUID } from '../../../types/utils.types';
 import { idsFromRefs, sliceCleaner } from '../../../utils';
-import { onUserLogout } from '../../auth/auth.actions';
+import { onUserLogoutMatch } from '../../auth/auth.actions';
 
 export type DiscountsState = {
   list: PriceDiscountEntity[];
@@ -41,7 +41,7 @@ export const discountsSlice = createSlice({
       .addCase(thunks.removeDiscountThunk.fulfilled, (s, a) => {
         ManageDiscountsStateMap(s, { removeId: a.payload.data?.discountId });
       })
-      .addMatcher(onUserLogout, sliceCleaner(initState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initState)),
 });
 
 function ManageDiscountsStateMap(

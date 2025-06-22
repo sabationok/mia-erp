@@ -33,7 +33,7 @@ export interface CustomSelectBaseProps<Option extends CustomSelectOptionBase = C
 
   onSelect?: CustomSelectHandler<Option>;
 
-  error?: { message?: string } & Record<string, any>;
+  $error?: { message?: string } & Record<string, any>;
   isTouched?: boolean;
   isDirty?: boolean;
 
@@ -65,7 +65,7 @@ export type CustomSelectHandler<Option = CustomSelectOption, Value = any> = (
 
 export type CustomSelectProps<Option extends CustomSelectOption = CustomSelectOption> = CustomSelectBaseProps<Option> &
   Omit<React.InputHTMLAttributes<HTMLSelectElement>, 'onSelect'> &
-  Pick<InputLabelProps, 'label' | 'required' | 'error' | 'success'> &
+  Pick<InputLabelProps, 'label' | 'required' | '$error' | '$success'> &
   Pick<CustomSelectItemProps, 'getLabel' | 'treeMode'>;
 
 const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<Value> = CustomSelectOption<Value>>(
@@ -93,8 +93,8 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
     onChange,
     disabled,
     label,
-    error,
-    success,
+    $error,
+    $success,
     ...props
   }: CustomSelectProps<Option>,
   _ref: React.ForwardedRef<Ref>
@@ -126,7 +126,7 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
   );
 
   const onSelectOption = useCallback(
-    (option: Option, value?: Value, index?: number) => {
+    (option: Option, _value?: Value, index?: number) => {
       if (onSelect) {
         onSelect(option, option?.value, index);
       } else {
@@ -207,11 +207,11 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
       required={required}
       ref={labelRef}
       disabled={disabled}
-      {...{ label, error, success }}
+      {...{ label, $error, $success }}
       {...labelProps}
     >
       <FlexBox className={'SelectOptionsListContainer'} fillWidth style={{ position: 'relative' }}>
-        <LabelInner fieldMode={fieldMode} error={!!error} success={!!success} isActive={isOpen}>
+        <LabelInner fieldMode={fieldMode} error={!!$error} success={!!$success} isActive={isOpen}>
           <StyledInput
             disabled={fieldMode}
             fieldMode={fieldMode}

@@ -1,11 +1,6 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../i18e';
-import {
-  OfferPriceTypeEnum,
-  PriceAmountAndPercentageFieldsKey,
-  PriceEntity,
-  PriceListEntity,
-} from '../types/price-management/price-management.types';
+import { OfferPriceTypeEnum, PriceAmountFieldsKey, PriceEntity, PriceListEntity } from '../types/price-management';
 import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 import { toPrice } from '../utils/numbers';
 import { createDateColumn, enumToFilterOptions } from '../utils';
@@ -103,7 +98,7 @@ export const priceListColumns: CellTittleProps<PriceListEntity>[] = [
 ];
 
 export function createColumnForPriceEntity<Type extends PriceEntity = any>(
-  name: PriceAmountAndPercentageFieldsKey,
+  name: PriceAmountFieldsKey,
   width?: string
 ): CellTittleProps<Type> {
   const topLabel = priceAmountAndPercentageFieldsLabels[name]?.amount;
@@ -124,7 +119,7 @@ export function createColumnForPriceEntity<Type extends PriceEntity = any>(
     action: 'valueByPath',
   };
 }
-const keys: PriceAmountAndPercentageFieldsKey[] = [
+const keys: PriceAmountFieldsKey[] = [
   'commission',
   'markup',
   // 'bonus',

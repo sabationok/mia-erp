@@ -5,13 +5,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
 import { useOrdersSelector } from '../../../redux/selectors.store';
-import { GetAllSaleOrdersQuery } from '../../../api';
+import { GetAllOrdersQuery } from '../../../api';
 import {
   ordersSearchParams,
+  OrdersSortParam,
   ordersSortParams,
   ordersTableColumns,
   SaleOrdersSearchParam,
-  SaleOrdersSortParam,
 } from '../../../data';
 import { OrderEntity, OrderStatusEnum } from '../../../types/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.hook';
@@ -112,12 +112,12 @@ export const useOrderTableConfigs = () => {
 
   const router = useAppRouter<{
     searchPath?: SaleOrdersSearchParam['dataPath'];
-    sortPath?: SaleOrdersSortParam['dataPath'];
+    sortPath?: OrdersSortParam['dataPath'];
   }>();
 
   // const filterSelectors = useProductsFilterSelectorsHook();
   const [sortParams, setSortParams] = useState<TableSortFormState<SaleOrdersSearchParam>>();
-  const [searchParams, setSearchParams] = useState<TableSearchFormState<SaleOrdersSortParam>>();
+  const [searchParams, setSearchParams] = useState<TableSearchFormState<OrdersSortParam>>();
 
   const tableConfig = useMemo(
     (): ITableListProps<OrderEntity> => ({
@@ -133,7 +133,7 @@ export const useOrderTableConfigs = () => {
 
       onSubmitSearch: data => {
         if (data.search) {
-          const params: GetAllSaleOrdersQuery = {
+          const params: GetAllOrdersQuery = {
             search: data.search,
             searchPath: data.param.dataPath,
           };

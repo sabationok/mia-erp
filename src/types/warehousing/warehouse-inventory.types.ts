@@ -1,7 +1,7 @@
 import { HasOwnerAsCompany, IBase, MaybeNull, UUID, WithPeriod } from '../utils.types';
 import { OfferEntity } from '../offers/offers.types';
 import { VariationEntity } from '../offers/variations.types';
-import { PriceEntity } from '../price-management/price-management.types';
+import { PriceEntity } from '../price-management';
 import { WarehouseEntity } from './index';
 import { ApiQueryParams } from '../../api';
 import { TagEntity } from '../tags.types';

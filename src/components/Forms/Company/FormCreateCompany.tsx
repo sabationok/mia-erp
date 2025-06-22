@@ -92,7 +92,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, id,
 
         <AppFormProvider value={formMethods}>
           <FormInputs flex={1} fillWidth padding={'8px 4px'} overflow={'auto'}>
-            <InputLabel label={t('businessSubjectType')} error={errors.businessSubjectType} required>
+            <InputLabel label={t('businessSubjectType')} $error={errors.businessSubjectType} required>
               <ButtonsGroup
                 options={businessSubjectTypeFilterOptions}
                 currentOption={{ value: businessSubjectType }}
@@ -109,11 +109,11 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, id,
 
             {formRenderConfig.renderLabelInput && <LabelInputs />}
 
-            <InputLabel label={'Емейл (основний)'} error={errors.email} required>
+            <InputLabel label={'Емейл (основний)'} $error={errors.email} required>
               <InputText placeholder={'Введіть основний емейл'} {...register('email')} type={'email'} required />
             </InputLabel>
 
-            <InputLabel label={'Телефон (основний)'} error={errors.phone} required>
+            <InputLabel label={'Телефон (основний)'} $error={errors.phone} required>
               <InputText placeholder={'Введіть осний контактний номер'} {...register('phone')} />
             </InputLabel>
 
@@ -128,13 +128,13 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, id,
             )}
 
             {formRenderConfig.renderTaxCode && (
-              <InputLabel label={t('taxCode')} error={errors.taxCode}>
+              <InputLabel label={t('taxCode')} $error={errors.taxCode}>
                 <InputText placeholder={t('taxCode')} {...register('taxCode')} />
               </InputLabel>
             )}
 
             {formRenderConfig.renderPersonalTaxCode && (
-              <InputLabel label={t('personalTaxCode')} error={errors.taxCode}>
+              <InputLabel label={t('personalTaxCode')} $error={errors.taxCode}>
                 <InputText placeholder={t('personalTaxCode')} {...register('personalTaxCode')} />
               </InputLabel>
             )}
@@ -155,11 +155,11 @@ const LabelInputs = (props: { autoFocus?: boolean }) => {
 
   return (
     <>
-      <InputLabel label={t('Label')} error={errors.label?.base} required={true}>
+      <InputLabel label={t('Label')} $error={errors.label?.base} required={true}>
         <InputText placeholder={t('insertLabel')} {...register('label.base')} required={true} autoFocus={true} />
       </InputLabel>
 
-      <InputLabel label={t('Print label')} error={errors.label?.print}>
+      <InputLabel label={t('Print label')} $error={errors.label?.print}>
         <InputText placeholder={t('Enter print label')} {...register('label.print')} />
       </InputLabel>
     </>
@@ -174,7 +174,7 @@ const NameInputs = (props: { autoFocus?: boolean }) => {
 
   return (
     <>
-      <InputLabel label={t('name')} error={errors.name?.first} required>
+      <InputLabel label={t('name')} $error={errors.name?.first} required>
         <InputText
           placeholder={t('Insert first name')}
           {...register('name.first')}
@@ -183,11 +183,11 @@ const NameInputs = (props: { autoFocus?: boolean }) => {
         />
       </InputLabel>
 
-      <InputLabel label={t('secondName')} error={errors?.name?.second}>
+      <InputLabel label={t('secondName')} $error={errors?.name?.second}>
         <InputText placeholder={t('insertSecondName')} {...register('name.second')} />
       </InputLabel>
 
-      <InputLabel label={t('Middle name')} error={errors?.name?.middle}>
+      <InputLabel label={t('Middle name')} $error={errors?.name?.middle}>
         <InputText placeholder={t('Insert middle name')} {...register('name.middle')} />
       </InputLabel>
     </>

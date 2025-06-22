@@ -1,17 +1,32 @@
 import { IBase, OnlyUUID, PartialRecord, UUID } from 'types/utils.types';
 import { AppAuth } from './auth.namespace';
 import { UserEntity } from './auth.types';
-import { Connection } from '../integrations.types';
+import { Connections } from '../integrations.types';
 
 export namespace OAuth {
-  export enum ProviderEnum {
-    facebook = 'facebook',
-    refme = 'refme',
-    google = 'google',
-    mia = 'mia',
+  export namespace Provider {
+    export enum TypeEnum {
+      facebook = 'facebook',
+      refme = 'refme',
+      google = 'google',
+      mia = 'mia',
+    }
+    export const ScopesByType: PartialRecord<TypeEnum, string[]> = {
+      [TypeEnum.google]: ['email', 'profile', 'openID'],
+      [TypeEnum.facebook]: ['email', 'profile', 'openID'],
+      [TypeEnum.refme]: ['email', 'reference', 'openID', 'wallets', 'profile'],
+      [TypeEnum.mia]: ['email', 'reference', 'openID', 'profile'],
+    };
+
+    export type ProviderScopesMap = {
+      [key in TypeEnum]: string[];
+    } & {
+      [TypeEnum.google]: ('email' | 'profile' | 'openid')[];
+      [TypeEnum.refme]: ('email' | 'reference' | 'wallets' | 'profile')[];
+    };
   }
 
-  export namespace Consumer {
+  export namespace Connection {
     export enum EndpointName {
       token = 'token',
       auth = 'auth',
@@ -24,22 +39,23 @@ export namespace OAuth {
 
     interface Base {
       label?: string;
-      provider?: OAuth.ProviderEnum;
+      provider?: OAuth.Provider.TypeEnum;
       endpoints?: EndpointsMap;
       scopes?: string[];
       domain?: string;
+      origin?: string;
       supportInfo?: {
         email?: string;
       };
     }
 
     interface BaseMia extends Base {
-      provider?: OAuth.ProviderEnum.mia;
+      provider?: OAuth.Provider.TypeEnum.mia;
       // publicKey: string;
       // privateKey: string;
     }
     interface BaseOther extends Base {
-      provider?: Exclude<OAuth.ProviderEnum, 'mia'>;
+      provider?: Exclude<OAuth.Provider.TypeEnum, 'mia'>;
 
       publicKey: string;
       privateKey: string;
@@ -51,7 +67,7 @@ export namespace OAuth {
       isActive?: boolean;
       status?: string;
 
-      outputConnection?: Connection.Output.Entity;
+      consumer?: Connections.Output.Entity;
     }
     interface _CreateDto {
       connectionId: string;
@@ -69,21 +85,21 @@ export namespace OAuth {
     }
 
     export type ExtraDataByType = {
-      [key in ProviderEnum]: Record<string, any>;
+      [key in Provider.TypeEnum]: Record<string, any>;
     } & {
-      [ProviderEnum.google]: {};
-      [ProviderEnum.refme]: {};
+      [Provider.TypeEnum.google]: {};
+      [Provider.TypeEnum.refme]: {};
     };
     export type LogInDtoByType = {
-      [key in ProviderEnum]: Record<string, any>;
+      [key in Provider.TypeEnum]: Record<string, any>;
     } & {
-      [ProviderEnum.google]: {
+      [Provider.TypeEnum.google]: {
         redirect_uri: string;
         state?: string;
         response_type: 'code';
         client_id: string;
       };
-      [ProviderEnum.refme]: {
+      [Provider.TypeEnum.refme]: {
         redirect?: true;
         clientId: string;
         redirectUri: string;
@@ -91,47 +107,29 @@ export namespace OAuth {
       };
     };
   }
-  export const ScopesByProvider: PartialRecord<ProviderEnum, string[]> = {
-    [ProviderEnum.google]: ['email', 'profile', 'openID'],
-    [ProviderEnum.facebook]: ['email', 'profile', 'openID'],
-    [ProviderEnum.refme]: ['email', 'reference', 'openID', 'wallets', 'profile'],
-    [ProviderEnum.mia]: ['email', 'reference', 'openID', 'profile'],
-  };
-
-  export type ProviderScopesMap = {
-    [key in ProviderEnum]: string[];
-  } & {
-    [ProviderEnum.google]: ('email' | 'profile' | 'openid')[];
-    [ProviderEnum.refme]: ('email' | 'reference' | 'wallets' | 'profile')[];
-  };
-
-  export type SavedTokensResData = {
-    code: string;
-    state?: string;
-  };
 
   export namespace Profile {
-    export interface BaseEntity<P extends ProviderEnum = any> {
+    export interface BaseEntity<P extends Provider.TypeEnum = any> {
       provider: P;
       extId?: string;
       email: string;
-      extra?: Consumer.ExtraDataByType[P];
+      extra?: Connection.ExtraDataByType[P];
     }
-    export interface Entity<P extends ProviderEnum = any> extends IBase, BaseEntity<P> {
+    export interface Entity<P extends Provider.TypeEnum = any> extends IBase, BaseEntity<P> {
       user?: UserEntity;
       session?: AppAuth.SessionEntity;
     }
   }
   export namespace Server {
-    export interface SaveTokensDto<P extends ProviderEnum> extends AppAuth.SessionDto {
+    export interface SaveTokensDto<P extends Provider.TypeEnum> extends AppAuth.SessionDto {
       userId: string;
       provider: P;
-      extra?: Consumer.ExtraDataByType[P];
+      extra?: Connection.ExtraDataByType[P];
     }
-    export type GetAuthUrlQuery<P extends ProviderEnum = ProviderEnum> = {
+    export type GetAuthUrlQuery<P extends Provider.TypeEnum = Provider.TypeEnum> = {
       provider: P;
       userId?: string;
-      scopes?: ProviderScopesMap[P];
+      scopes?: Provider.ProviderScopesMap[P];
       state?: string;
       redirectUri?: string;
       redirect?: boolean;
@@ -142,7 +140,7 @@ export namespace OAuth {
   }
   export namespace Client {
     export interface GetAuthUrlQuery {
-      provider: OAuth.ProviderEnum;
+      provider: OAuth.Provider.TypeEnum;
       redirect?: boolean;
     }
     export type GetAuthUrlResponseData = {

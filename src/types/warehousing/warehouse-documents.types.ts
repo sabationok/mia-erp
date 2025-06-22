@@ -2,7 +2,7 @@ import { HasCompany, HasReference, HasType, OnlyUUID, UUID, WithPeriod } from '.
 import { IFormDataValueWithID } from '../../redux/app-redux.types';
 import { WarehouseEntity } from './warehouses.types';
 import { OfferEntity } from '../offers/offers.types';
-import { PriceEntity } from '../price-management/price-management.types';
+import { PriceEntity } from '../price-management';
 import { ApiQueryParams } from '../../api';
 
 export enum WarehouseDocumentType {

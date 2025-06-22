@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useEffect, useState } from 'react';
-import { PriceEntity } from '../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../types/price-management';
 import { getIdRef } from '../../../utils/data-transform';
 
 export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {

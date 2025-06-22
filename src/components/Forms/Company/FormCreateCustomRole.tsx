@@ -139,7 +139,7 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
           style={{ boxShadow: '0 5px 6px rgba(0, 0, 0, 0.1)', position: 'relative', zIndex: 20 }}
         >
           <FlexBox fillWidth fxDirection={'row'} gap={8}>
-            <InputLabel label={translate('label')} required error={errors.label}>
+            <InputLabel label={translate('label')} required $error={errors.label}>
               <InputText placeholder={translate('insertLabel')} {...register('label')} required />
             </InputLabel>
 

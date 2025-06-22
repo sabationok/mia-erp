@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { IPayment } from '../../types/payments.types';
 import { getAllPaymentMethodsThunk, getAllPaymentsThunk, updatePaymentMethodThunk } from './payments.thunks';
 import { IPaymentMethod } from '../../types/integrations.types';
-import { onUserLogout } from '../auth/auth.actions';
+import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
 
 export interface PaymentsState {
@@ -38,5 +38,5 @@ export const paymentsSlice = createSlice({
           s.payments = a.payload.data;
         }
       })
-      .addMatcher(onUserLogout, sliceCleaner(initState)),
+      .addMatcher(onUserLogoutMatch, sliceCleaner(initState)),
 });

@@ -11,7 +11,7 @@ const initState: CounterpartiesState = {
   dataMap: {},
 };
 
-export const counterpartiesState = createSlice({
+export const counterpartiesSlice = createSlice({
   name: 'counterparties',
   initialState: initState,
   reducers: {},

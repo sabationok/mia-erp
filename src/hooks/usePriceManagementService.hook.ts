@@ -5,19 +5,19 @@ import { defaultThunkPayload } from 'utils/fabrics';
 import { ApiQueryParams } from 'api';
 import {
   ICreatePriceReqData,
-  IPriceListReqData,
   IUpdatePriceReqData,
   PriceEntity,
+  PriceListApiReqConfig,
   PriceListEntity,
-} from '../types/price-management/price-management.types';
+} from '../types/price-management';
 import * as thunks from '../redux/priceManagement/priceManagement.thunks';
 import { IPricesThunksData } from '../redux/priceManagement/priceManagement.thunks';
 
 export interface PriceManagementService {
   // createList?: ServiceDispatcherAsync<IPriceListReqData, IPriceList>;
-  createList: ServiceDispatcherAsync<IPriceListReqData, PriceListEntity>;
+  createList: ServiceDispatcherAsync<PriceListApiReqConfig, PriceListEntity>;
   deleteById?: ServiceApiCaller<string, PriceListEntity>; // !!!!! ===>>> ServiceDispatcher
-  updateById?: ServiceApiCaller<IPriceListReqData, PriceListEntity>; // !!!!! ===>>> ServiceDispatcher
+  updateById?: ServiceApiCaller<PriceListApiReqConfig, PriceListEntity>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceDispatcherAsync<
     { list: OnlyUUID; query?: ApiQueryParams; refreshCurrent?: boolean },
     PriceListEntity

@@ -6,7 +6,7 @@ import { Text } from '../../../atoms/Text';
 import { t } from 'i18e';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
-import { Connection } from 'types/integrations.types';
+import { Connections } from 'types/integrations.types';
 import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
@@ -30,7 +30,7 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
     getAll: { content: t('Refreshing') + '...' },
     delete: { content: t('Deleting') + '...' },
   });
-  const [integrationsList, setIntegrationsList] = useState<Connection.Input.Entity[]>([]);
+  const [integrationsList, setIntegrationsList] = useState<Connections.Input.Entity[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
   const methodsList = useTranslatedMethodsList(usePaymentsSelector().methods);

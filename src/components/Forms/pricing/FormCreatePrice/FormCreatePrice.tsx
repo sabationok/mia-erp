@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import FlexBox from '../../../atoms/FlexBox';
-import { IPriceFormData, PriceFormDataPath } from '../../../../types/price-management/price-management.types';
+import { IPriceFormData, PriceFormDataPath } from '../../../../types/price-management';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../../hooks';
 import { useCallback, useState } from 'react';

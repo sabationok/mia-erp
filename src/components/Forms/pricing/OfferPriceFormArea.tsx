@@ -1,12 +1,7 @@
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useCallback } from 'react';
 import { useAppForm, useCurrentOffer, useCurrentPrice } from '../../../hooks';
-import {
-  IPriceFormData,
-  OfferPriceTypeEnum,
-  PriceEntity,
-  PriceFormDataPath,
-} from '../../../types/price-management/price-management.types';
+import { IPriceFormData, OfferPriceTypeEnum, PriceEntity, PriceFormDataPath } from '../../../types/price-management';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FormPriceInputs, { FormPriceDecimal } from './FormCreatePrice/FormPriceInputs';
 import { toReqData } from '../../../utils';

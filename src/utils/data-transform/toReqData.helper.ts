@@ -1,5 +1,5 @@
 import _, { omit } from 'lodash';
-import { OnlyUUID } from '../../redux/app-redux.types';
+import { OnlyUUID } from '../../types/utils.types';
 
 export interface ToRequestDataOptions<OmitPath extends string = string> {
   omitPathArr?: OmitPath[];
@@ -8,8 +8,9 @@ export interface ToRequestDataOptions<OmitPath extends string = string> {
   checkArrayPath?: string;
   ignorePaths?: string[];
   isRoot?: boolean;
-  uuidFieldKeysMap?: Record<string, string>;
-  uuidArraysFieldKeysMap?: Record<string, string>;
+  transformKeys?: Record<string, string>;
+  toUUIDKeys?: Record<string, string>;
+  // uuidArraysFieldKeysMap?: Record<string, string>;
 }
 
 export function toReqData<
@@ -30,6 +31,8 @@ export function toReqData<
   // console.log('before', { inputCopy }, { outData });
   try {
     Object.entries(inputCopy).forEach(([key, value]) => {
+      const transformedKey = options?.transformKeys ? options?.transformKeys?.[key] : key;
+
       if (_.isUndefined(value) || _.isNull(value)) {
         // console.log('isUndefined', { key }, { value });
         return;
@@ -43,18 +46,18 @@ export function toReqData<
 
       if (options?.ignorePaths?.includes(key)) {
         // console.log('ignorePaths', { key }, { value });
-        outData[key] = value;
+        outData[transformedKey] = value;
         return;
       }
 
       if (options?.dateToNumberPath && key === options?.dateToNumberPath) {
         // console.log('dateToNumberPath', { key }, { value });
-        outData[key] = new Date(value as never).valueOf() as any;
+        outData[transformedKey] = new Date(value as never).valueOf() as any;
         return;
       }
       if (options?.amountToNumberPath && key === options?.amountToNumberPath) {
         // console.log('amountToNumberPath', { key }, { value });
-        outData[key] = (Number(value) || 0) as any;
+        outData[transformedKey] = (Number(value) || 0) as any;
         return;
       }
       if (value && typeof value === 'object') {
@@ -64,33 +67,30 @@ export function toReqData<
         }
 
         if ('_id' in value) {
-          if (options?.uuidFieldKeysMap) {
-            const idKey = options?.uuidFieldKeysMap?.[key];
+          // if (options?.uuidArraysFieldKeysMap) {
+          //   const idsKey = options?.uuidArraysFieldKeysMap?.[key];
+          //
+          //   if (idsKey) {
+          //     return (outData[idsKey] = value);
+          //   }
+          // }
 
-            if (idKey) {
-              return (outData[idKey] = value);
-            }
+          if (options.uuidKeys) {
+            const uuidKey = options.uuidKeys ? options.uuidKeys[transformedKey] : transformedKey;
+
+            return (outData[uuidKey] = value._id);
           }
-
-          if (options?.uuidArraysFieldKeysMap) {
-            const idsKey = options?.uuidArraysFieldKeysMap?.[key];
-
-            if (idsKey) {
-              return (outData[idsKey] = value);
-            }
-          }
-
           // console.log("'_id' in value", { key }, { value });
-          return (outData[key] = { _id: value?._id } as OnlyUUID);
+          return (outData[transformedKey] = { _id: value?._id } as OnlyUUID);
         }
         if ('value' in value) {
           // console.log("'value' in value", { key }, { value });
-          return (outData[key] = value?.value);
+          return (outData[transformedKey] = value?.value);
         }
 
         if (Array.isArray(value)) {
           // console.log('type === Array', { key }, { value });
-          return (outData[key] = value as IncomeDataType[typeof key]);
+          return (outData[transformedKey] = value as IncomeDataType[typeof key]);
         }
 
         if (
@@ -112,13 +112,13 @@ export function toReqData<
 
         if (Object.keys(recursiveRes).length > 0) {
           // console.log('recursive call | keys.length > 0', { key }, { value });
-          return (outData[key] = recursiveRes);
+          return (outData[transformedKey] = recursiveRes);
         }
         return;
       }
       if (!(_.isUndefined(value) || _.isNull(value))) {
         // console.log('value exist', { key }, { value });
-        return (outData[key] = value as any);
+        return (outData[transformedKey] = value as any);
       }
       return;
     });
