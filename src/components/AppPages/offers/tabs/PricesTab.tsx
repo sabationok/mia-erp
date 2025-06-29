@@ -10,7 +10,7 @@ import CreatePriceModal from '../../../Modals/CreatePriceModal';
 import { pricesColumnsForProductReview } from '../../../../data/priceManagement.data';
 import { IBase } from '../../../../types/utils.types';
 import { useAppDispatch } from '../../../../redux/store.store';
-import { getPriceThunk } from '../../../../redux/priceManagement/priceManagement.thunks';
+import { getPriceThunk } from '../../../../redux/priceManagement/prices.thunks';
 
 export interface PricesTabProps {
   onSelect?: (price: OnlyUUID) => void;

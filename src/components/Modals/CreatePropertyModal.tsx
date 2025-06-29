@@ -31,9 +31,9 @@ const CreatePropertyModal: React.FC<OfferPropertyModalProps> = ({
   updateId,
   defaultState,
   parent,
-  title,
+  // title,
   onClose,
-  ...props
+  // ...props
 }) => {
   const dataMap = useOffersSelector().propertiesDataMap;
   const parentLevelIs: PropertyLevelIsType = { [parent?.levelType ?? 'group']: true };

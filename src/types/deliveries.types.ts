@@ -1,5 +1,3 @@
-import { AddressDto, OnlyUUID } from '../redux/app-redux.types';
-import { IDeliveryMethod } from './integrations.types';
 import {
   HasCompany,
   HasDescription,
@@ -8,63 +6,97 @@ import {
   HasDimensions,
   HasMethod,
   HasStatus,
-  MaybeNull,
+  HasType,
+  OnlyUUID,
+  UUID,
 } from './utils.types';
-
-import { IInvoice } from './invoices.types';
-import { OrderEntity } from './orders/orders.types';
+import { IDeliveryMethod } from './integrations.types';
+import { InvoiceEntity } from './invoices.types';
+import { OrderEntity } from './orders';
 import { ICustomerBase } from './customers.types';
+import { HasRefundRequests } from './refunds';
+import { PermissionEntity } from './permissions.types';
+import { WarehouseEntity } from './warehousing';
+import { AddressEntity } from './addresses/addresses.types';
+import { IPayment } from './payments.types';
+import { AmountAndPercentageFields } from './price-management';
 
 export enum DeliveryStatusTypeEnum {
   pending = 'pending',
+  queued = 'queued',
+  success = 'success',
+  delivered = 'delivered',
+  shipped = 'shipped',
+  reversed = 'reversed',
 }
 
-export interface IDelivery
+export enum DeliveryTypeEnum {
+  reverse = 'reverse',
+  in = 'in',
+  out = 'out',
+}
+
+export interface DeliverySummaryFields {
+  itemsAmount?: string;
+  itemsCount?: string;
+  cost?: string;
+  declared?: string;
+  insurance?: string;
+}
+export interface HasDeliverySummary {
+  summary?: DeliverySummaryFields;
+}
+
+export interface DeliveryImposedPayment extends IPayment {}
+export interface DeliveryEntity
   extends HasCompany,
     HasDescription,
     HasDimensions,
     HasDestination,
+    HasType<DeliveryTypeEnum>,
     HasStatus<DeliveryStatusTypeEnum>,
     HasDestinationRefs,
-    HasMethod<IDeliveryMethod> {
-  ttn?: MaybeNull<string>;
-  declaredAmount?: MaybeNull<number>;
-
-  contentTotals?: MaybeNull<IDeliveryContentTotals>;
-
+    HasMethod<IDeliveryMethod>,
+    HasRefundRequests,
+    HasDeliverySummary {
   customer?: ICustomerBase;
   receiver?: ICustomerBase;
 
+  sender?: PermissionEntity;
+  _receiver?: PermissionEntity; // TODO
+
   order?: OrderEntity;
-  invoice?: IInvoice;
+  invoice?: InvoiceEntity;
+
+  imposedPayment?: DeliveryImposedPayment;
+
+  warehouse?: WarehouseEntity;
+
+  from?: AddressEntity;
+  to?: AddressEntity;
 }
-export interface IDeliveryContentTotals {
-  amount?: MaybeNull<number>;
-  quantity?: MaybeNull<number>;
+
+export interface CreateDeliveryDto extends HasDescription, HasDeliverySummary, HasDestination {
+  orderId: UUID;
+  invoiceId?: UUID;
+  methodId?: UUID;
+  slotsIds?: UUID[];
+  warehouseId?: UUID;
+  fromId?: UUID;
+  toId?: UUID;
+
+  reference?: string;
+
+  imposedPayment?: AmountAndPercentageFields & {
+    methodId?: UUID;
+  };
 }
 
-export interface IDeliveryBaseDto {
-  order?: OnlyUUID;
-  slots?: string[];
-  invoice?: OnlyUUID;
-
-  ttn?: string;
-
-  declaredValue?: number;
-  contentTotalValue?: number;
-  cost?: number;
-
-  provider?: OnlyUUID;
-  method?: OnlyUUID;
-
-  destination?: AddressDto;
-
-  description?: string;
-}
+export interface UpdateDeliveryDto extends OnlyUUID, CreateDeliveryDto {}
 
 export interface HasDelivery {
-  delivery?: MaybeNull<IDelivery>;
+  delivery?: DeliveryEntity;
 }
 export interface HasDeliveriesList {
-  deliveries?: MaybeNull<IDelivery[]>;
+  deliveries?: DeliveryEntity[];
 }

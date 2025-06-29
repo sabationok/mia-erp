@@ -3,10 +3,12 @@ import { FinCategoryEntity, FinCategoryFormData, FinTransactionTypeEnum, TagType
 import { FinAccountsTypeEnum } from './finances/fin-accounts.types';
 import { TabOption } from '../components/atoms/TabSelector';
 import {
+  HasBarCode,
   HasDescription,
   HasEmail,
   HasIconUrl,
   HasLabel,
+  HasOwnerAsCompany,
   HasPhone,
   HasType,
   IBase,
@@ -14,7 +16,6 @@ import {
   MaybeNull,
   OnlyUUID,
 } from './utils.types';
-import { CompanyEntity } from './companies/companies.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { IModalProviderContext, ModalService } from '../Providers/ModalProvider/ModalProvider';
 import { DirectoriesService } from '../hooks/useDirService.hook';
@@ -40,9 +41,11 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any>
     HasLabel,
     HasDescription,
     HasEmail,
-    HasPhone {
+    HasPhone,
+    HasDescription,
+    HasOwnerAsCompany,
+    HasBarCode {
   dirType?: DirType;
-  owner?: Pick<CompanyEntity, '_id' | 'name' | 'email'>;
 
   parent?: IBaseDirItem<Type, DirType>;
   childrenList?: IBaseDirItem<Type, DirType>[];

@@ -1,8 +1,8 @@
 import { AddressDto, IBase, IFormDataValueWithID, OnlyUUID } from '../app-redux.types';
-import { OrderEntity, IOrderSlot } from '../../types/orders/orders.types';
+import { IOrderSlot, OrderEntity } from '../../types/orders/orders.types';
 import { IPayment } from '../../types/payments.types';
-import { IInvoice } from '../../types/invoices.types';
-import { IDelivery } from '../../types/deliveries.types';
+import { InvoiceEntity } from '../../types/invoices.types';
+import { DeliveryEntity } from '../../types/deliveries.types';
 import { HasDimensions } from '../../types/utils.types';
 
 export enum ShipmentProviderEnum {
@@ -16,12 +16,12 @@ export interface IShipment extends IBase {
   slots?: IOrderSlot[];
 
   payment?: IPayment;
-  invoice?: IInvoice;
+  invoice?: InvoiceEntity;
 
   status?: ShipmentStatusTypeEnum;
   description?: string;
 
-  deliveries?: IDelivery[];
+  deliveries?: DeliveryEntity[];
 }
 
 export interface IShipmentBaseDto {

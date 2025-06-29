@@ -1,6 +1,6 @@
 import {
-  IPropertyDto,
   PropertyBaseEntity,
+  PropertyDto,
   PropertyLevelIsType,
   PropertyTypeEnum,
 } from '../../../../types/offers/properties.types';
@@ -25,7 +25,7 @@ const recommendTypesOptions = ObjectValues(PropertyTypeEnum);
 export const PropertyCmsParamsFormArea = (_: {
   levelIs?: PropertyLevelIsType;
   defaultState?: MaybeNull<Partial<PropertyBaseEntity>>;
-  onSubmit?: AppSubmitHandler<Pick<IPropertyDto, 'cmsConfigs'>, { levelIs?: PropertyLevelIsType }>;
+  onSubmit?: AppSubmitHandler<Pick<PropertyDto, 'cmsConfigs'>, { levelIs?: PropertyLevelIsType }>;
 }) => {
   const loaders = useLoadersProvider<FormCreatePropertyLoaderKey>();
   const offersSrv = useAppServiceProvider().get(AppModuleName.offers);

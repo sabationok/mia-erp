@@ -1,21 +1,8 @@
-import { Action } from '../../store.store';
-import { PriceEntity } from '../../../types/price-management';
 import * as thunks from './discounts.thunks';
-import { AnyAction } from '@reduxjs/toolkit';
+import { isAnyOf } from '@reduxjs/toolkit';
 
-export function onCreateDiscountMather(a: Action<{ data: PriceEntity }>) {
-  return a.type === thunks.createDiscountThunk.fulfilled;
-}
-export function onUpdateDiscountMatcher(a: Action<{ data: PriceEntity }>) {
-  return a.type === thunks.updateDiscountThunk.fulfilled;
-}
-export function onGetDiscountsMatcher(a: AnyAction) {
-  return a.type === thunks.getAllDiscountsThunk.fulfilled;
-}
-export function onGetOneDiscountCase(a: AnyAction) {
-  return a.type === thunks.getDiscountThunk.fulfilled;
-}
-
-export function onRemoveDiscountCase(a: AnyAction) {
-  return a.type === thunks.removeDiscountThunk.fulfilled;
-}
+export const onCreateDiscountMather = isAnyOf(thunks.createDiscountThunk.fulfilled);
+export const onUpdateDiscountMatcher = isAnyOf(thunks.updateDiscountThunk.fulfilled);
+export const onGetDiscountsMatcher = isAnyOf(thunks.getAllDiscountsThunk.fulfilled);
+export const onGetOneDiscountCase = isAnyOf(thunks.getDiscountThunk.fulfilled);
+export const onRemoveDiscountCase = isAnyOf(thunks.removeDiscountThunk.fulfilled);

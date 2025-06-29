@@ -1,4 +1,4 @@
-import { ICreateOrderInfoDto, OrderEntity, SaleOrdersGroupDto } from '../../types/orders/orders.types';
+import { CreateOrderDto, ICreateOrderInfoDto, OrderEntity } from '../../types/orders/orders.types';
 import { ApiAxiosResponse, OnlyUUID } from '../../redux/app-redux.types';
 import { ApiQueryParams, ApiQuerySearchParams, ApiQuerySortParams } from '../index';
 import { ClientApi } from '../client.api';
@@ -36,7 +36,7 @@ export class OrderSlotsApi {
 export class SaleOrderGroupsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.ordersEndpoints.sales.groups;
-  public static createByWarehouse = (data?: SaleOrdersGroupDto, params?: undefined): Promise<any> => {
+  public static createByWarehouse = (data?: CreateOrderDto, params?: undefined): Promise<any> => {
     return this.api.post(this.endpoints.createByWarehouse(), { slots: data?.slots, ...data?.info }, { params: params });
   };
 }

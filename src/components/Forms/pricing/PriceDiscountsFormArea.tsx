@@ -13,7 +13,7 @@ import CheckBox, {
   CustomCheckboxEventHandler,
 } from '../../TableList/TebleCells/CellComponents/CheckBox';
 import { sortIds } from '../../../utils';
-import { updatePriceThunk } from '../../../redux/priceManagement/priceManagement.thunks';
+import { updatePriceThunk } from '../../../redux/priceManagement/prices.thunks';
 import FlexBox, { FlexUl, SimpleGridBox } from '../../atoms/FlexBox';
 import ButtonIcon from '../../atoms/ButtonIcon';
 import { getAllDiscountsThunk } from '../../../redux/priceManagement/discounts/discounts.thunks';

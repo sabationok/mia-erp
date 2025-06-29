@@ -1,34 +1,35 @@
-import { AmountAndPercentage, PriceDiscountType } from '../price-management';
 import { ICustomerBase } from '../customers.types';
-import { ApiQueryParams } from '../../api';
+import { ApiQueryParams, ApiRequestConfig } from '../../api';
 import { ICommunicationMethod } from '../integrations.types';
 import {
-  HasCurrencyCode,
+  HasBarCode,
+  HasDescription,
   HasEmbeddedReference,
-  HasEmbeddedReferences,
-  HasExecuteDate,
-  HasExpireDate,
   HasManager,
   HasOwnerAsCompany,
   HasStatus,
   HasSummary,
   IBase,
   MaybeNull,
+  OnlyUUID,
 } from '../utils.types';
-import { IInvoice } from '../invoices.types';
-import { IDelivery } from '../deliveries.types';
+import { InvoiceEntity } from '../invoices.types';
+import { HasDeliveriesList } from '../deliveries.types';
 import { IPayment } from '../payments.types';
 import { ICreateOrderInfoDto } from './createOrderInfo.dto';
 import { ICreateOrderInfoFormState } from './createOrderInfoFormState.type';
 import { IOrderTempSlot, OrderSlotDto, OrderSlotEntity } from './order-slot.types';
+import { HasRefundRequests } from '../refunds';
+import { OrderSummary } from './order-summary.types';
+import { HasOrderSchedule } from './order-schedule-fields.types';
 
 export * from './createOrderInfo.dto';
 export * from './createOrderInfoFormState.type';
 
 export enum OrderTypeEnum {
-  Order = 'Order',
-  Group = 'Group',
-  Cart = 'Cart',
+  order = 'order',
+  group = 'group',
+  cCart = 'cart',
 }
 
 export enum OrderStatusEnum {
@@ -42,39 +43,39 @@ export enum OrderStatusEnum {
   archived = 'order_archived',
   expired = 'order_expired',
 }
-
-// export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
-
+export type HasOrderSummary = HasSummary<OrderSummary>;
 export interface OrderEntity
   extends IBase,
     HasOwnerAsCompany,
     HasManager,
-    HasExpireDate,
     HasEmbeddedReference,
-    HasExecuteDate,
     HasStatus<OrderStatusEnum>,
-    HasSummary<OrderSummaryType>,
-    HasEmbeddedReferences<string, string> {
-  group?: MaybeNull<OrderEntity>;
+    HasOrderSummary,
+    HasBarCode,
+    HasOrderSchedule,
+    HasDescription,
+    HasDeliveriesList,
+    HasRefundRequests {
+  chat?: OnlyUUID;
+  group?: OrderEntity;
+  orders?: OrderEntity[];
 
   strategy?: MaybeNull<string>;
   number?: MaybeNull<number>;
 
-  receiver?: MaybeNull<ICustomerBase>;
-  customer?: MaybeNull<ICustomerBase>;
+  receiver?: ICustomerBase;
+  customer?: ICustomerBase;
 
-  barCode?: MaybeNull<string>;
   code?: MaybeNull<string>;
 
   communication?: {
-    customer?: MaybeNull<ICommunicationMethod>;
-    receiver?: MaybeNull<ICommunicationMethod>;
+    customer?: ICommunicationMethod;
+    receiver?: ICommunicationMethod;
   };
 
   slots?: OrderSlotEntity[];
-  invoices?: IInvoice[];
+  invoices?: InvoiceEntity[];
   payments?: IPayment[];
-  deliveries?: IDelivery[];
 }
 
 export interface ICreateOrdersGroupFormState {
@@ -87,38 +88,14 @@ export interface IOrderReqData {
   data: ICreateOrderInfoDto;
   params?: ApiQueryParams;
 }
-
-export interface SaleOrdersGroupDto {
+export interface CreateOrderDto {
+  slots?: OrderSlotDto[];
+  info?: ICreateOrderInfoDto;
+}
+export interface UpdateOrderDto extends OnlyUUID, ICreateOrderInfoDto {
   slots?: OrderSlotDto[];
   info?: ICreateOrderInfoDto;
 }
 
-export type OrderSummaryType = HasCurrencyCode & {
-  brutto: number;
-  netto: number;
-  hold: number;
-  received: number;
-  slotsCount: number;
-  [PriceDiscountType.bonus]?: string | number;
-  [PriceDiscountType.discount]?: string | number;
-  [PriceDiscountType.cashback]?: string | number;
-};
-export interface OrderSummary extends HasCurrencyCode {
-  discount?: AmountAndPercentage;
-
-  cashback?: AmountAndPercentage;
-
-  bonus?: AmountAndPercentage;
-
-  brutto?: string;
-  netto?: string;
-
-  ordersCount?: number;
-  offersCount?: number;
-  slotsCount?: number;
-
-  deliveriesCount?: number;
-  deliveryPrice?: number | string;
-}
-
-export interface FormOrderSummaryData extends OrderSummary {}
+export type CreateOrderApiReqConfig = ApiRequestConfig<ICreateOrderInfoDto, ApiQueryParams>;
+export type UpdateOrderApiReqConfig = ApiRequestConfig<UpdateOrderDto, ApiQueryParams>;

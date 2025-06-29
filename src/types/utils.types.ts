@@ -132,7 +132,7 @@ export interface HasEditor {
 }
 
 export interface HasManager {
-  manager?: MaybeNull<PermissionShortType>;
+  manager?: PermissionShortType;
 }
 
 export interface HasCompany extends IBase, HasOwnerAsCompany, HasAuthor, HasEditor {}
@@ -155,6 +155,12 @@ export interface HasStatus<Status extends string | number = string> {
   status?: MaybeNull<Status>;
 }
 
+export interface HasDescription2 {
+  description?: {
+    internal?: string;
+    public?: string;
+  };
+}
 export interface HasEmbeddedStatus<Status extends object = object> {
   status?: MaybeNull<Status>;
 }

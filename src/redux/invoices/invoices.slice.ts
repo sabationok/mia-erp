@@ -1,13 +1,13 @@
 import { StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
-import { IInvoice } from '../../types/invoices.types';
+import { InvoiceEntity } from '../../types/invoices.types';
 import { getAllInvoiceMethodsThunk, getAllInvoicesThunk, updateInvoicingMethodThunk } from './invoicing.thunks';
 import { IInvoicingMethod } from '../../types/integrations.types';
 import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
 
 export interface InvoicesState {
-  invoices: IInvoice[];
+  invoices: InvoiceEntity[];
   error: StateErrorType | null;
   methods: IInvoicingMethod[];
   isLoading: boolean;

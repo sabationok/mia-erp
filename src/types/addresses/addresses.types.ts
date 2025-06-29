@@ -23,12 +23,13 @@ export enum AddressSlotTypeEnum {
   customs = 'customs',
 }
 
-export interface AddressDto extends PartialRecord<AddressSlotTypeEnum, string> {
+export interface AddressDto
+  extends PartialRecord<AddressSlotTypeEnum, string>,
+    Partial<Record<`${keyof typeof AddressSlotTypeEnum}ExtRef`, string>> {
   location?: GeolocationPoint;
 
   locale?: string;
 }
-
 export interface AddressSlotDto extends HasBaseCmsConfigs {
   locale?: string;
   type: AddressSlotTypeEnum;

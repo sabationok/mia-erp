@@ -8,6 +8,7 @@ import {
   HasMethod,
   MaybeNull,
 } from './utils.types';
+import { BankAccountEntity } from './finances/bank-accounts.types';
 
 export enum PaymentInternalStatusEnum {
   created = 'created',
@@ -43,7 +44,7 @@ export interface IPayment
   amountEnd?: MaybeNull<number>;
 
   commission?: MaybeNull<PaymentCommissionInfo>;
-  card?: MaybeNull<any>;
+  card?: BankAccountEntity;
 
   invoice?: OnlyUUID;
 
@@ -56,10 +57,10 @@ export interface IPayment
 }
 
 export interface HasPayment {
-  payment?: MaybeNull<IPayment>;
+  payment?: IPayment;
 }
 export interface HasPaymentsList {
-  payments?: MaybeNull<IPayment[]>;
+  payments?: IPayment[];
 }
 
 // TODO refactoring

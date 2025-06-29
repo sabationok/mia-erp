@@ -1,13 +1,13 @@
 import { OfferEntity, VariationEntity } from '../offers';
-import { ApiQueryParams } from '../../api';
+import { ApiQueryParams, ApiRequestConfig } from '../../api';
 import { ICompanyBase } from '../companies/companies.types';
 import { IUserBase } from '../auth/auth.types';
 import {
   EntityPath,
   HasLabel,
+  HasOwnerAsCompany,
   HasType,
   IBase,
-  MaybeNull,
   OnlyUUID,
   PartialRecord,
   UUID,
@@ -24,7 +24,7 @@ export enum OfferPriceTypeEnum {
   onContract = 'onContract',
 }
 
-export interface AmountAndPercentage {
+export interface AmountAndPercentageFields {
   amount?: number | string;
   percentage?: number | string;
 }
@@ -41,7 +41,8 @@ export enum PriceAmountFieldsKeyEnum {
 
 export type PriceAmountFieldsKey = keyof typeof PriceAmountFieldsKeyEnum;
 
-export interface PriceAmountAndPercentageFields extends PartialRecord<PriceAmountFieldsKey, AmountAndPercentage> {}
+export interface PriceAmountAndPercentageFields
+  extends PartialRecord<PriceAmountFieldsKey, AmountAndPercentageFields> {}
 
 export interface IPriceBase extends PriceAmountAndPercentageFields, HasLabel, HasType<OfferPriceTypeEnum> {
   in?: number | string;
@@ -51,22 +52,15 @@ export interface IPriceBase extends PriceAmountAndPercentageFields, HasLabel, Ha
 export type BasePriceInfoPath = EntityPath<IPriceBase>;
 
 export interface CreatePriceDto extends IPriceBase, WithPeriod {
-  list?: OnlyUUID;
-  product?: OnlyUUID;
-  variation?: OnlyUUID;
-
   listId?: UUID;
-  productId?: UUID;
-  variationId?: UUID;
+  offerId?: UUID;
 
   discounts?: (OnlyUUID | PriceDiscountRecord)[];
 }
 
-export type UpdatePriceDto = Partial<Omit<CreatePriceDto, 'list' | 'product' | 'variation'>> & {
-  // discountsIds?: UUID[];
-};
+export type UpdatePriceDto = OnlyUUID & Partial<Omit<CreatePriceDto, 'list' | 'product' | 'variation'>> & {};
 
-export interface PriceEntity extends IBase, IPriceBase {
+export interface PriceEntity extends IBase, IPriceBase, HasOwnerAsCompany {
   owner?: ICompanyBase;
   author?: IUserBase;
   editor?: IUserBase;
@@ -84,27 +78,19 @@ export interface IPriceFormData extends Omit<CreatePriceDto, 'product' | 'variat
   variation?: IFormDataValueWithID;
   list?: IFormDataValueWithID;
   setAsDefault?: boolean;
-
-  // discounts?: (PriceDiscountRecord | OnlyUUID)[];
 }
+
 export type PriceFormDataPath = Path<IPriceFormData>;
 
-export interface IPriceListItemReqData {
-  _id?: string;
-  data: CreatePriceDto;
-  params?: ApiQueryParams;
-}
-
-export interface ICreatePriceReqData {
-  data: CreatePriceDto;
-  params?: ApiQueryParams;
-}
+export interface ICreatePriceReqData extends ApiRequestConfig<CreatePriceDto, ApiQueryParams> {}
 
 export interface IUpdatePriceReqData {
-  _id?: string;
-  data: UpdatePriceDto;
+  data?: UpdatePriceDto;
   params?: ApiQueryParams;
 }
 export interface HasPrice {
-  price?: MaybeNull<PriceEntity>;
+  price?: PriceEntity;
+}
+export interface HasPrices {
+  prices?: PriceEntity[];
 }

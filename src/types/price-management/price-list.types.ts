@@ -1,7 +1,7 @@
 import { TabOption } from '../../components/atoms/TabSelector';
-import { HasDescription, HasLabel, HasStatus, HasType, IBase, UUID, WithPeriod } from '../utils.types';
+import { HasDescription, HasLabel, HasStatus, HasType, IBase, OnlyUUID, UUID, WithPeriod } from '../utils.types';
 import { PriceDiscountEntity } from './discounts';
-import { ApiQueryParams } from '../../api';
+import { ApiQueryParams, ApiRequestConfig } from '../../api';
 import { PriceEntity } from './price.types';
 
 export enum PriceListTypeEnum {
@@ -31,8 +31,7 @@ export interface PriceListDto extends PriceListBase {
   supplierTags?: UUID[];
 }
 
-export interface PriceListApiReqConfig {
-  _id?: string;
-  data: PriceListDto;
-  params?: Pick<ApiQueryParams, 'ids' | 'limit' | 'offset' | 'tagsIds'>;
-}
+export type PriceListApiReqConfig = ApiRequestConfig<
+  PriceListDto & OnlyUUID,
+  Pick<ApiQueryParams, 'ids' | 'limit' | 'offset' | 'tagsIds'>
+>;

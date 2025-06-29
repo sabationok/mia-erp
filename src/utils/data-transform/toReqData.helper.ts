@@ -75,8 +75,8 @@ export function toReqData<
           //   }
           // }
 
-          if (options.uuidKeys) {
-            const uuidKey = options.uuidKeys ? options.uuidKeys[transformedKey] : transformedKey;
+          if (options?.toUUIDKeys) {
+            const uuidKey = options?.toUUIDKeys ? options?.toUUIDKeys[transformedKey] : transformedKey;
 
             return (outData[uuidKey] = value._id);
           }

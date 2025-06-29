@@ -22,7 +22,7 @@ const useLoadInitialAppDataHook = ({
   onSuccess?: () => void;
   onError?: (e: any) => void;
 } = {}) => {
-  const { _id, permission_token, company } = usePermissionsSelector().permission;
+  const { _id, access_token, company } = usePermissionsSelector().permission;
   const prService = usePermissionsServiceHook();
   const {
     directories: { getAll },
@@ -32,7 +32,7 @@ const useLoadInitialAppDataHook = ({
     deliveries,
     warehouses,
     payments,
-    integrations,
+    connections,
     offers,
     // shipments,
     // invoicing,
@@ -42,13 +42,13 @@ const useLoadInitialAppDataHook = ({
   const load = async () => {
     onLoading && onLoading(true);
 
-    if (permission_token || _id) {
+    if (access_token || _id) {
       // setIsLoading(true);
 
       try {
         if (company?._id) {
           await prService.getAllByCompanyId({
-            data: { refresh: true, _id: company._id, params: { recipient: PermissionHolderEnum.user } },
+            data: { refresh: true, params: { recipient: PermissionHolderEnum.user, _id: company._id } },
           });
         }
 
@@ -58,7 +58,7 @@ const useLoadInitialAppDataHook = ({
         // priceManagement.getAll({ data: { refresh: true } });
         //  transactions.getAll({ data: { refresh: true } });
 
-        integrations.getAllExtServices({
+        connections.getAllExtServices({
           onSuccess: () => {
             // invoicing.getAllMethods();
             payments.getAllMethods();
@@ -94,7 +94,7 @@ const useLoadInitialAppDataHook = ({
   useEffect(() => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [permission_token]);
+  }, [access_token]);
 
   return load;
 };

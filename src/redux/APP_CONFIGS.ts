@@ -18,9 +18,9 @@ export enum API_BASE_ROUTES {
   CUSTOM_ROLES = '/roles',
   CUSTOM_ROLES_ACTIONS = '/roles/actions',
   FILES = '/files',
-  PRODUCTS = '/products',
-  PROPERTIES = '/products/properties',
-  VARIATIONS = '/products/variations',
+  OFFERS = '/products',
+  OFFERS_PROPERTIES = '/products/properties',
+  OFFERS_VARIATIONS = '/products/variations',
   ORDERS = '/orders',
   ORDERS_SLOTS = '/orders/slots',
   ORDERS_SALES = '/orders/sales',
@@ -28,7 +28,14 @@ export enum API_BASE_ROUTES {
   ORDERS_PURCHASE = '/orders/purchases',
   ORDERS_PURCHASE_SLOTS = '/orders/purchases/slots',
   REFUNDS = '/refunds',
+  REFUNDS_SLOTS = '/refunds/slots',
+  REFUNDS_REQUESTS = '/refunds/requests',
+  REFUNDS_RETURNS = '/refunds/returns',
+  REFUNDS_EXCHANGES = '/refunds/exchanges',
   PRICE_MANAGEMENT = '/priceManagement',
+  PRICE_MANAGEMENT_PRICES = '/priceManagement/prices',
+  PRICE_MANAGEMENT_PRICES_LISTS = '/priceManagement/prices-lists',
+  PRICE_MANAGEMENT_DISCOUNTS = '/priceManagement/discounts',
   WAREHOUSES = '/warehouses',
   WAREHOUSES_INVENTORIES = '/warehouses/inventories',
   WAREHOUSES_DOCUMENTS = '/warehouses/documents',
@@ -228,42 +235,18 @@ const finances = {
     getAll: 'getAll',
     create: 'create',
   }),
-  bankAccounts: {
-    update: (id?: string) => `${API_BASE_ROUTES.FINANCES_BANK_ACCOUNTS}/update/${id}`,
-    ...createEndpoints('FINANCES_BANK_ACCOUNTS', {
-      getAll: 'getAll',
-      create: 'create',
-    }),
-  },
-};
-const variationsApiEndpoints = {
-  getAll: (): string => `${API_BASE_ROUTES.VARIATIONS}/getAll`,
-  getAllByProductId: (id?: string): string => `${API_BASE_ROUTES.VARIATIONS}/${Endpoints.getAllByProductId}/${id}`,
-  create: (): string => `${API_BASE_ROUTES.VARIATIONS}/create`,
-  deleteById: (id?: string): string => `${API_BASE_ROUTES.VARIATIONS}/${Endpoints.deleteById}/${id}`,
-  updateById: (id?: string): string => `${API_BASE_ROUTES.VARIATIONS}/${Endpoints.updateById}/${id}`,
-  getById: (id?: string): string => `${API_BASE_ROUTES.VARIATIONS}/getById/${id}`,
-};
-const propertiesApiEndpoints = {
-  getAll: (): string => `${API_BASE_ROUTES.PROPERTIES}/getAll`,
-  create: (): string => `${API_BASE_ROUTES.PROPERTIES}/create`,
-  deleteById: (id?: string): string => `${API_BASE_ROUTES.PROPERTIES}/${Endpoints.deleteById}/${id}`,
-  updateById: (id?: string): string => `${API_BASE_ROUTES.PROPERTIES}/${Endpoints.updateById}/${id}`,
-  getById: (id?: string): string => `${API_BASE_ROUTES.PROPERTIES}/getById/${id}`,
+  bankAccounts: createEndpoints('FINANCES_BANK_ACCOUNTS', EndpointsCRUD),
 };
 
 const offers = {
-  getAll: (): string => `${API_BASE_ROUTES.PRODUCTS}/getAll`,
-  create: (): string => `${API_BASE_ROUTES.PRODUCTS}/create`,
-  deleteById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.deleteById}/${id}`,
-  updateById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.updateById}/${id}`,
-  getById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/getById/${id}`,
-  getOne: (): string => `${API_BASE_ROUTES.PRODUCTS}/one`,
-  getFullInfoById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getFullInfoById}/${id}`,
-  updateDefaultsById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/update/defaults/${id}`,
-
-  properties: propertiesApiEndpoints,
-  variations: variationsApiEndpoints,
+  deleteById: (id?: string): string => `${API_BASE_ROUTES.OFFERS}/${Endpoints.deleteById}/${id}`,
+  updateById: (id?: string): string => `${API_BASE_ROUTES.OFFERS}/${Endpoints.updateById}/${id}`,
+  getById: (id?: string): string => `${API_BASE_ROUTES.OFFERS}/getById/${id}`,
+  getFullInfoById: (id?: string): string => `${API_BASE_ROUTES.OFFERS}/${Endpoints.getFullInfoById}/${id}`,
+  updateDefaultsById: (id?: string): string => `${API_BASE_ROUTES.OFFERS}/update/defaults/${id}`,
+  ...createEndpoints('OFFERS', EndpointsCRUD),
+  properties: createEndpoints('OFFERS_PROPERTIES', EndpointsCRUD),
+  variations: createEndpoints('OFFERS_VARIATIONS', EndpointsCRUD),
 };
 
 const companies = createEndpoints('COMPANIES', EndpointsCRUD);
@@ -291,17 +274,15 @@ const customRoles = {
 const appSettings = {
   getAllActions: () => `${API_BASE_ROUTES.APP}/getAllActions`,
 };
-const priceManagementEndpoints = {
+const priceManagement = {
   getAll: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/getAll`,
   getById: (listId: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/getById/${listId}`,
   getOne: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/one`,
   createList: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.createList}`,
   updateList: (listId: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.updateList}/${listId}`,
-
-  getAllPrices: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/prices/getAll`,
-  createPrice: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.prices}/create`,
-  updatePrice: (id?: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.prices}/update/${id}`,
-  deletePrice: (id?: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.prices}/delete/${id}`,
+  prices: createEndpoints('PRICE_MANAGEMENT_PRICES', EndpointsCRUD),
+  discounts: createEndpoints('PRICE_MANAGEMENT_DISCOUNTS', EndpointsCRUD),
+  lists: createEndpoints('PRICE_MANAGEMENT_PRICES_LISTS', EndpointsCRUD),
 };
 
 const ordersEndpoints = {
@@ -348,18 +329,13 @@ const ordersEndpoints = {
   },
 };
 
-const refunds = createEndpoints2('REFUNDS', {
-  getAll: () => `/`,
-  getById: () => `/`,
-  create: () => `/`,
-  deleteById: () => `/`,
-  getAllRefundSlots: () => `/`,
-  addSlotToRefund: () => `/`,
-  softDeleteSlotFromRefund: () => `/`,
-  addItemToRefundSlot: () => `/`,
-  softDeleteRefundSlotItem: () => `/`,
-  getDataForNewRefundSlot: () => `/`,
-});
+const refunds = {
+  ...createEndpoints('REFUNDS', EndpointsCRUD),
+  slots: createEndpoints('REFUNDS_SLOTS', EndpointsCRUD),
+  returns: createEndpoints('REFUNDS_RETURNS', EndpointsCRUD),
+  requests: createEndpoints('REFUNDS_REQUESTS', EndpointsCRUD),
+  exchanges: createEndpoints('REFUNDS_EXCHANGES', EndpointsCRUD),
+};
 
 const warehousing = {
   getById: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/getById/${id}`,
@@ -483,10 +459,8 @@ const APP_CONFIGS = {
     customRoles,
     finTransactions: finances,
     offers,
-    propertiesApiEndpoints,
-    variationsApiEndpoints,
     warehousing,
-    priceManagementEndpoints,
+    priceManagement,
     ordersEndpoints,
     payments,
     invoices,

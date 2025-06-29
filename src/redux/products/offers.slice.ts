@@ -8,19 +8,16 @@ import {
   PropertySelectableTypeEnum,
 } from '../../types/offers/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk, updatePropertyThunk } from './properties/properties.thunks';
-import { clearCurrentOfferAction, setCurrentProductInventoriesAction, setOfferPricesAction } from './offers.actions';
 import { PartialRecord, SKU, UUID } from '../../types/utils.types';
 import { VariationEntity } from '../../types/offers/variations.types';
-import { onCreatePriceMather, onUpdatePriceMatcher } from '../priceManagement/prices.actions';
+import { onCreatePriceMather, onGetPricesCase, onUpdatePriceMatcher } from '../priceManagement/prices.actions';
 import { Action, ActionPayload } from '../store.store';
-import { PriceEntity } from '../../types/price-management';
 import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
 
 type OfferDefaultsKey = keyof IOfferRelatedDefaultFields;
 export interface OffersState {
   list: OfferEntity[];
-  currentOffer?: OfferEntity;
   filteredProducts?: OfferEntity[];
   properties: PropertyBaseEntity[];
   isLoading: boolean;
@@ -41,7 +38,6 @@ const initialState: OffersState = {
   isLoading: false,
   error: null,
   list: [],
-  currentOffer: undefined,
   filteredProducts: [],
   properties: [],
 
@@ -103,9 +99,6 @@ export const offersSlice = createSlice({
       .addCase(thunks.getOfferThunk.fulfilled, (s, a) => {
         return ManageOffersStateMap(s, a.payload, a.payload);
       })
-      .addCase(clearCurrentOfferAction, s => {
-        s.currentOffer = { _id: '' };
-      })
       // * ============>>>>>>>>>>> PROPERTIES
       .addCase(getAllPropertiesThunk.fulfilled, (s, a) => {
         if (a.payload.params?.dataView === 'tree') {
@@ -141,55 +134,44 @@ export const offersSlice = createSlice({
         }
       })
       //  * sep ============>>>>>>>>>>> PRICES
-      .addCase(thunks.getAllOfferPricesThunk.fulfilled, (s, a) => {
-        if (a.payload.params?.offerId) {
-          return ManageOffersStateMap(s, { data: { _id: a.payload.params?.offerId, prices: a.payload.data } });
-        }
-      })
-      .addCase(setOfferPricesAction, (s, a) => {
-        s.currentOffer = {
-          ...(s.currentOffer as OfferEntity),
-          prices: a.payload.refresh
-            ? a.payload?.data
-            : s.currentOffer?.prices
-              ? [...a.payload.data, ...s.currentOffer?.prices]
-              : a.payload.data,
+      // .addCase(thunks.getAllOfferPricesThunk.fulfilled, (s, a) => {
+      //   if (a.payload.params?.offerId) {
+      //     return ManageOffersStateMap(s, { data: { _id: a.payload.params?.offerId, prices: a.payload.data } });
+      //   }
+      // })
+      .addMatcher(onGetPricesCase, (s, a) => {
+        const { params: { offerId } = {}, data, refresh } = a.payload;
+
+        if (!offerId) return s;
+
+        s.dataMap[offerId] = {
+          ...(s.dataMap[offerId] as OfferEntity),
+          prices: refresh ? data : s.dataMap[offerId]?.prices ? [...data, ...(s.dataMap[offerId]?.prices ?? [])] : data,
         };
 
         // ManageOffersStateMap(s, { data: { _id: a.payload.params?.offerId, prices: a.payload.data } });
       })
-      //  * sep ============>>>>>>>>>>> INVENTORIES
-      .addCase(thunks.getAllInventoriesByProductIdThunk.fulfilled, (s, a) => {
-        if (a.payload?.refresh) {
-          s.currentOffer = { ...(s.currentOffer as OfferEntity), inventories: a.payload.data };
-        }
-      })
-      .addCase(setCurrentProductInventoriesAction, (s, a) => {
-        s.currentOffer = {
-          ...(s.currentOffer as OfferEntity),
-          inventories: a.payload.refresh
-            ? a.payload?.data
-            : s.currentOffer?.inventories
-              ? [...a.payload.data, ...s.currentOffer?.inventories]
-              : a.payload.data,
-        };
-      })
-      .addMatcher(onCreatePriceMather, (s, a: Action<{ data: PriceEntity }>) => {
-        const offerId = a.payload.data.offer?._id;
+      .addMatcher(onCreatePriceMather, (s, a) => {
+        const { data } = a.payload;
+        if (!data) return;
+        const offerId = data?.offer?._id;
         if (offerId) {
           const current = s.dataMap?.[offerId];
-          if (!current) return;
+          if (!current) return s;
 
           if (current?.prices?.length) {
-            current?.prices?.unshift(a.payload.data);
+            current?.prices?.unshift(data);
           }
-          current.prices = [a.payload?.data];
+          current.prices = [data];
 
           s.dataMap[offerId] = current;
         }
       })
-      .addMatcher(onUpdatePriceMatcher, (s, a: Action<{ data: PriceEntity }>) => {
-        const offerId = a.payload?.data?.offer?._id;
+      .addMatcher(onUpdatePriceMatcher, (s, a) => {
+        const { data } = a.payload;
+        if (!data) return;
+
+        const offerId = data?.offer?._id;
 
         if (offerId) {
           const current = s.dataMap?.[offerId];
@@ -197,25 +179,16 @@ export const offersSlice = createSlice({
 
           if (current?.prices?.length) {
             current.prices.map(price => {
-              return price?._id === a.payload.data._id ? a.payload.data : price;
+              return price?._id === data._id ? data : price;
             });
           }
-          current.prices = [a.payload?.data];
+          current.prices = [data];
 
           s.dataMap[offerId] = current;
         }
       })
       .addMatcher(onUserLogoutMatch, sliceCleaner(initialState)),
-  // .addMatcher(onGetPricesCase, (s, a: Action<{ data: PriceEntity[] }>) => {
-  //   console.log('onGetPricesCase', a);
-  // }),
 });
-
-export const { setOfferDefaultsAction } = offersSlice.actions;
-
-// function isProductsCase(type: string) {
-//   return checks.isStr(type) && type.startsWith('products');
-// }
 
 function ManageOffersStateMap(
   st: OffersState,

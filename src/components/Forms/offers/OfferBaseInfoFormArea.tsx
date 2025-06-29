@@ -1,12 +1,6 @@
 import { AccordionForm } from '../../atoms/FormArea/AccordionForm';
 import { OfferFormAreaProps } from './types';
-import {
-  OfferEntity,
-  OfferFormData,
-  OfferFullFormData,
-  OfferStatusEnum,
-  OfferTypeEnum,
-} from '../../../types/offers/offers.types';
+import { OfferEntity, OfferFormData, OfferFullFormData, OfferStatusEnum, OfferTypeEnum } from '../../../types/offers';
 import { useAppForm } from '../../../hooks';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../i18e';

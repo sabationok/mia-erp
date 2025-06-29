@@ -4,14 +4,13 @@ import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
 import { useAppFormProvider } from '../../../../hooks/useAppForm.hook';
 import { toReqData } from '../../../../utils';
-import { omit } from 'lodash';
+import { pick } from 'lodash';
 import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import { t } from '../../../../i18e';
 import InputText from '../../../atoms/Inputs/InputText';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
-import React from 'react';
 import { FormCreatePropertyLoaderKey, IPropertyFormData } from '../../../Modals/CreatePropertyModal';
 
 export const PropertyInfoFormArea = ({
@@ -40,7 +39,7 @@ export const PropertyInfoFormArea = ({
   const onValid = (data: IPropertyFormData) => {
     if (updateId) {
       offersSrv.updatePropertyById({
-        data: { data: { _id: updateId, data: toReqData(omit(data, ['cmsConfigs', '_id'])) } },
+        data: { data: { _id: updateId, data: toReqData(pick(data, ['label'])) } },
         onLoading: loaders.onLoading('update'),
         onSuccess: ({ data }) => {
           loaders.setData('currentId', data._id);
@@ -50,7 +49,7 @@ export const PropertyInfoFormArea = ({
       offersSrv.createProperty({
         onLoading: loaders.onLoading('create'),
         data: {
-          data: { data: toReqData(omit(data, ['cmsConfigs'])) },
+          data: { data: toReqData(pick(data, ['label', 'parentId', 'type', 'cmsParams'])) },
         },
         onSuccess: ({ data }) => {
           loaders.setData('currentId', data._id);

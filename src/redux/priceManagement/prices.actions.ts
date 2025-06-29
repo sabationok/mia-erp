@@ -1,17 +1,7 @@
-import { AnyAction } from '@reduxjs/toolkit';
-import * as thunks from './priceManagement.thunks';
-import { Action } from '../store.store';
-import { PriceEntity } from '../../types/price-management';
+import { isAnyOf } from '@reduxjs/toolkit';
+import * as thunks from './prices.thunks';
 
-export function onCreatePriceMather(a: Action<{ data: PriceEntity }>) {
-  return a.type === thunks.createPriceThunk.fulfilled;
-}
-export function onUpdatePriceMatcher(a: Action<{ data: PriceEntity }>) {
-  return a.type === thunks.updatePriceThunk.fulfilled;
-}
-export function onGetPricesCase(a: AnyAction) {
-  return a.type === thunks.updatePriceThunk.fulfilled;
-}
-export function onGetOnePriceCase(a: AnyAction) {
-  return a.type === thunks.getPriceThunk.fulfilled;
-}
+export const onCreatePriceMather = isAnyOf(thunks.createPriceThunk.fulfilled);
+export const onUpdatePriceMatcher = isAnyOf(thunks.updatePriceThunk.fulfilled);
+export const onGetPricesCase = isAnyOf(thunks.getAllPricesThunk.fulfilled);
+export const onGetOnePriceCase = isAnyOf(thunks.getPriceThunk.fulfilled);

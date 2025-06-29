@@ -1,7 +1,7 @@
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { invoicesTableColumns } from '../../../../data/invoicing.data';
 import { useEffect, useMemo } from 'react';
-import { IInvoice } from '../../../../types/invoices.types';
+import { InvoiceEntity } from '../../../../types/invoices.types';
 import { OrderTabProps } from './orderTabs.types';
 import { useCurrentOrder } from '../../../../Providers/CurrentOrderProvider';
 import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
@@ -17,7 +17,7 @@ const OrderInvoicesTab: React.FC<OrderInvoicesTabProps> = _p => {
   // const modalService = useModalService();
   const loaders = useLoaders<'refresh'>();
 
-  const tableConfigs = useMemo((): ITableListProps<IInvoice> => {
+  const tableConfigs = useMemo((): ITableListProps<InvoiceEntity> => {
     return {
       actionsCreator: ctx => {
         return [

@@ -2,7 +2,7 @@ import { ApiQueryParams } from './index';
 import { ApiAxiosResponse } from '../redux/app-redux.types';
 import { IDeliveryMethod, IDeliveryMethodReqData } from '../types/integrations.types';
 import { ClientApi } from './client.api';
-import { IDelivery } from '../types/deliveries.types';
+import { DeliveryEntity } from '../types/deliveries.types';
 
 export class DeliveryMethodsApi {
   private static api = ClientApi.clientRef;
@@ -21,13 +21,13 @@ export class DeliveriesApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.deliveries;
   static readonly methods = DeliveryMethodsApi;
-  public static createOne = (args?: any): Promise<ApiAxiosResponse<IDelivery>> => {
+  public static createOne = (args?: any): Promise<ApiAxiosResponse<DeliveryEntity>> => {
     return this.api.post(this.endpoints.create(), args?.data);
   };
   public static getAll = (
     _?: undefined,
     params?: Partial<Pick<ApiQueryParams, 'orderId' | 'groupId' | 'customerId' | 'withDeleted'>>
-  ): Promise<ApiAxiosResponse<IDelivery[]>> => {
+  ): Promise<ApiAxiosResponse<DeliveryEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
   };
   public static getById = (id?: string, params?: ApiQueryParams) => {

@@ -8,7 +8,7 @@ export const useAppRouter = <Query = any, Hash extends string = any>() => {
   const params = useAppParams();
   const { query, params: sp } = useAppQuery<Query & ApiQueryParams>();
 
-  const goBack = () => window.history.back();
+  const goBack = () => navTo(-1);
 
   const currentHash: Hash | undefined = (location.hash.replace('#', '') as Hash) || undefined;
 

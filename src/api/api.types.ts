@@ -2,7 +2,7 @@ import { AppDate, ArrayOfUUID, Keys, OnlyUUID, PartialRecord, UUID, Values } fro
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { TableSortOrderEnum } from '../components/TableList/tableTypes.types';
 import { CompanyQueryTypeEnum } from '../types/companies/companies.types';
-import { AxiosResponse } from 'axios';
+import { AxiosProgressEvent, AxiosResponse } from 'axios';
 import { AppResponseType } from '../redux/app-redux.types';
 
 export enum ApiHeaders {
@@ -17,18 +17,6 @@ export enum ApiHeaders {
   cookies_permission = 'cokies-permission',
 }
 
-export enum AppQueryKey {
-  dirType = 'dirType',
-  isArchived = 'isArchived',
-  createTreeData = 'createTreeData',
-  owner = 'owner',
-  sortParams = 'sortParams',
-  search = 'search',
-  searchBy = 'searchBy',
-  timeFrom = 'timeFrom',
-  timeTo = 'timeTo',
-  filterParams = 'filterParams',
-}
 export enum RefQueryKeyEnum {
   owner = 'owner',
   parent = 'parent',
@@ -195,3 +183,10 @@ export interface ApiQueryParams<Type = any>
 }
 
 export interface ApiAxiosResponse<D = any, M = any> extends AxiosResponse<AppResponseType<D, M>> {}
+
+export interface ApiRequestConfig<D = any, P = any> {
+  data?: D;
+  params?: P;
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void;
+  onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void;
+}

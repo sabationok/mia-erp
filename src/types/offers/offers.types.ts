@@ -138,6 +138,7 @@ export interface OfferDefaultsFormData extends PartialRecord<keyof IOfferRelated
 
 export interface OfferFullFormData extends OfferDto {
   defaults?: OfferDefaultsFormData;
+  brand?: OnlyUUID;
 
   images?: OfferImageSlotEntity[];
   files?: FilesApi.UploadFileByLinkDto;
@@ -170,9 +171,7 @@ export interface IOfferDefaultsDto
   extends PartialRecord<OfferDefaultRefKey, OnlyUUID>,
     PartialRecord<OfferDefaultsIdKey, UUID> {}
 
-export interface OfferDto extends OfferBaseDto, OfferRelatedFieldsDto, IOfferDefaultsDto {
-  id?: UUID;
-}
+export interface OfferDto extends Partial<OnlyUUID>, OfferBaseDto, OfferRelatedFieldsDto, IOfferDefaultsDto {}
 
 export interface OfferReqData {
   _id?: string;

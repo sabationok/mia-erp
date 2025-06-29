@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IInvoice } from '../types/invoices.types';
+import { InvoiceEntity } from '../types/invoices.types';
 import { t } from '../i18e';
 import { enumToFilterOptions, numberWithSpaces } from '../utils';
 import { PaymentInternalTypeEnum } from '../types/integrations.types';
@@ -15,7 +15,7 @@ const dateColumn: CellTittleProps = {
   width: '170px',
   action: 'dateDbl',
 };
-export const invoicesTableColumns: CellTittleProps<IInvoice>[] = [
+export const invoicesTableColumns: CellTittleProps<InvoiceEntity>[] = [
   {
     top: { name: t('Status') + '/' + t('Internal'), getData: rd => rd.status?.internal },
     bottom: { name: t('Status') + '/' + t('External'), getData: rd => rd.status?.external },

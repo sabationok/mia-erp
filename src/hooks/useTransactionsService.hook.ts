@@ -1,17 +1,15 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { ITransaction, ITransactionReqData } from '../types/finances/transactions.types';
-import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/app-redux.types';
+import { __ServiceDispatcherAsync, ServiceApiCaller, ServiceDispatcherAsync } from 'redux/app-redux.types';
 import { createTransactionThunk, getAllTransactionsThunk } from '../redux/finances/transactions.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { ApiQueryParams, createApiCall, TransactionsApi } from 'api';
-import { BankAccountEntity, BankAccountReqData } from '../types/finances/bank-accounts.types';
 import { createBankAccountThunk, getBankAccountsListThunk } from '../redux/finances/bank-accounts/bank-accounts.thunks';
 
 export interface UseBankAccountsService {
-  create: ServiceDispatcherAsync<BankAccountReqData, BankAccountEntity>;
-  // update: ServiceApiCaller<BankAccountReqData, IBankAccount>; // !!!!! ===>>> ServiceDispatcher
-  getList: ServiceDispatcherAsync<{ update?: boolean; query?: ApiQueryParams }, BankAccountEntity[]>;
+  create: __ServiceDispatcherAsync<typeof createBankAccountThunk>;
+  getList: __ServiceDispatcherAsync<typeof getBankAccountsListThunk>;
 }
 export interface UseFinancesService {
   create: ServiceDispatcherAsync<ITransactionReqData, ITransaction>;
@@ -36,8 +34,8 @@ const useFinancesService = (): UseFinancesService => {
       getAll: payload => dispatch(getAllTransactionsThunk(defaultThunkPayload(payload))),
 
       bankAccounts: {
-        create: args => dispatch(createBankAccountThunk(defaultThunkPayload(args))),
-        getList: args => dispatch(getBankAccountsListThunk(defaultThunkPayload(args))),
+        create: args => dispatch(createBankAccountThunk(args)),
+        getList: args => dispatch(getBankAccountsListThunk(args)),
       },
     };
   }, [dispatch]);

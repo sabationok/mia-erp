@@ -1,8 +1,8 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
-import { ApiQueryParams } from '../../api';
+import { IBase, OnlyUUID } from '../../redux/app-redux.types';
+import { ApiQueryParams, ApiRequestConfig } from '../../api';
 import { OfferTypeEnum } from './offers.types';
-import { ICmsBaseConfigs } from '../cms.types';
 import { MaybeNull, PartialRecord, UUID, Values } from '../utils.types';
+import { CmsParamsDto, HasCmsParams, HasCmsParamsDto } from '../cms/cms-params.types';
 
 export enum PropertyLevelTypeEnum {
   group = 'group',
@@ -18,7 +18,7 @@ interface PropertyTempData {
   levelIs?: PropertyLevelIsType;
   selectableType?: PropertySelectableTypeEnum;
 }
-export interface PropertyBaseEntity extends IBase, PropertyTempData {
+export interface PropertyBaseEntity extends IBase, PropertyTempData, HasCmsParams {
   label?: MaybeNull<string>;
   type?: OfferTypeEnum;
   isSelectable?: MaybeNull<boolean>;
@@ -29,8 +29,6 @@ export interface PropertyBaseEntity extends IBase, PropertyTempData {
 
   parent?: PropertyBaseEntity;
   childrenList?: PropertyBaseEntity[];
-
-  cmsConfigs?: MaybeNull<ICmsPropertyConfigs>;
 }
 
 export interface PropertiesGroupEntity extends Omit<PropertyBaseEntity, 'parent'> {
@@ -58,43 +56,20 @@ export enum PropertyTypeEnum {
   style = 'style',
   specialFutures = 'specialFutures',
   trends = 'trends',
-
-  // countryOfOrigin = 'countryOfOrigin',
-  // brand = 'brand',
-}
-export interface ICmsPropertyConfigs extends ICmsBaseConfigs {
-  colors?: string[];
-  type?: PropertyTypeEnum;
-  description?: string;
 }
 
-export interface CmsPropertyConfigsDto extends ICmsBaseConfigs {
+export interface CmsPropertyExtraDto extends CmsParamsDto {
   colors?: string[];
-  type?: PropertyTypeEnum;
-  description?: string;
 }
-export interface PropertyFormData {
-  _id?: UUID;
-  parent?: IFormDataValueWithID;
+export interface PropertyFormData extends PropertyDto {}
+export interface PropertyDto extends Partial<OnlyUUID>, HasCmsParamsDto<string, PropertyTypeEnum, CmsPropertyExtraDto> {
   parentId?: UUID;
   label?: string;
   type?: OfferTypeEnum;
   isSelectable?: boolean;
-
-  cmsConfigs?: MaybeNull<CmsPropertyConfigsDto>;
-}
-export interface IPropertyDto {
-  parent?: MaybeNull<OnlyUUID>;
-
-  label?: string;
-  type?: OfferTypeEnum;
-  isSelectable?: boolean;
-
-  cmsConfigs?: MaybeNull<CmsPropertyConfigsDto>;
 }
 
-export interface IPropertyReqData {
-  _id?: string;
-  data?: IPropertyDto;
-  params?: Pick<ApiQueryParams, 'dataView' | 'getAll' | 'depth' | 'parentId' | 'withDeleted'>;
-}
+export type PropertyApiReqConfig = ApiRequestConfig<
+  PropertyDto,
+  Pick<ApiQueryParams, 'dataView' | 'getAll' | 'depth' | 'parentId' | 'withDeleted'>
+>;

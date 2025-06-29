@@ -1,95 +1,14 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkArgs } from '../store.store';
-import { ApiQueryParams, createApiCall, RefundsApi } from '../../api';
-import { axiosErrorCheck } from '../../utils';
-import { isAxiosError } from 'axios';
-import { OnlyUUID } from '../app-redux.types';
-import { IRefund, IRefundReqData } from './returns.types';
+import { RefundsManagementApi } from '../../api';
+import { createAppAsyncThunk2 } from '../createAppAsynkThunk2';
 
-export const getAllRefundsThunk = createAsyncThunk<
-  { refresh?: boolean; data?: IRefund[] },
-  ThunkArgs<
-    {
-      refresh?: boolean;
-      query?: ApiQueryParams;
-    },
-    IRefund[]
-  >
->('refunds/getAllRefundsThunk', async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
+enum ThunkType {
+  create = 'refunds/create/thunk',
+  getOne = 'refunds/getOne/thunk',
+  getAll = 'refunds/getAll/thunk',
+  update = 'refunds/update/thunk',
+}
 
-  try {
-    const response = await RefundsApi.getAll(data?.query);
-
-    onSuccess && onSuccess(response.data.data);
-
-    onLoading && onLoading(false);
-    return { data: response.data.data, refresh: data?.refresh };
-  } catch (error) {
-    onError && onError(error);
-
-    onLoading && onLoading(false);
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-  }
-});
-
-export const createRefundThunk = createAsyncThunk<IRefund | undefined, ThunkArgs<IRefundReqData, IRefund>>(
-  'refunds/createRefundThunk',
-  async (args, thunkApi) => {
-    try {
-      const res = await createApiCall(
-        {
-          ...args,
-          logRes: true,
-          throwError: true,
-        },
-        RefundsApi.createOne,
-        RefundsApi
-      );
-
-      return res?.data.data;
-    } catch (error) {
-      return thunkApi.rejectWithValue(isAxiosError(error));
-    }
-  }
-);
-export const getRefundByIdThunk = createAsyncThunk<IRefund | undefined, ThunkArgs<OnlyUUID, IRefund>>(
-  'refunds/getRefundByIdThunk',
-  async (args, thunkApi) => {
-    try {
-      const res = await createApiCall(
-        {
-          ...args,
-          logRes: true,
-          throwError: true,
-        },
-        RefundsApi.getById,
-        RefundsApi
-      );
-
-      return res?.data.data;
-    } catch (error) {
-      return thunkApi.rejectWithValue(isAxiosError(error));
-    }
-  }
-);
-export const getRefundSlotsById = createAsyncThunk<IRefund | undefined, ThunkArgs<OnlyUUID, IRefund>>(
-  'refunds/getRefundSlotsById',
-  async (args, thunkApi) => {
-    try {
-      const res = await createApiCall(
-        {
-          ...args,
-          logRes: true,
-          throwError: true,
-        },
-        RefundsApi.getById,
-        RefundsApi
-      );
-
-      return res?.data.data;
-    } catch (error) {
-      return thunkApi.rejectWithValue(isAxiosError(error));
-    }
-  }
-);
+export const getAllRefundsThunk = createAppAsyncThunk2(ThunkType.getAll, RefundsManagementApi.refunds.getAll);
+export const createRefundThunk = createAppAsyncThunk2(ThunkType.create, RefundsManagementApi.refunds.create);
+export const getRefundThunk = createAppAsyncThunk2(ThunkType.getOne, RefundsManagementApi.refunds.getOne);
+export const updateRefundThunk = createAppAsyncThunk2(ThunkType.update, RefundsManagementApi.refunds.update);

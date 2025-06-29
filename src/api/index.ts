@@ -4,10 +4,8 @@ export { default as TransactionsApi } from './transactions.api';
 export { default as CompaniesApi } from './companies.api';
 export { default as PermissionsApi } from './permissions.api';
 export { default as DirectoriesApi } from './directories.api';
-export { default as PriceManagementApi } from './priceManagement.api';
 export { default as OffersApi } from './offers.api';
 export { default as OrdersApi } from './orders/OrdersApi';
-export { default as RefundsApi } from './refunds.api';
 export { default as WarehousesApi } from './warehouses.api';
 export { default as PaymentsApi } from './payments.api';
 export { default as InvoicesApi } from './invoices.api';
@@ -26,7 +24,7 @@ export * from './permissions.api';
 export * from './directories.api';
 export * from './offers.api';
 export * from './orders/OrdersApi';
-export * from './refunds.api';
+export * from './refunds';
 export * from './warehouses.api';
 export * from './payments.api';
 export * from './invoices.api';
@@ -43,8 +41,8 @@ export * from './ext-services.api';
 export * from './Connections.api';
 
 // sep PRICES
-export * from './Discounts.api';
-export * from './priceManagement.api';
+export * from './prices/Discounts.api';
+export * from './prices';
 
 // * FILES
 

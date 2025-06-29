@@ -1,7 +1,7 @@
 import { useModalProvider } from '../Providers/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { TableActionsCreator } from '../components/TableList/tableTypes.types';
-import { IPriceListItemReqData, PriceEntity, PriceListEntity, PriceListTypeEnum } from '../types/price-management';
+import { ICreatePriceReqData, PriceEntity, PriceListEntity, PriceListTypeEnum } from '../types/price-management';
 import FormCreatePriceList from '../components/Forms/pricing/FormCreatePriceList';
 import { omit } from 'lodash';
 import { getIdRef } from '../utils/data-transform';
@@ -14,7 +14,7 @@ export type PriceManagementActionsCreator = TableActionsCreator<PriceListEntity>
 
 export const PriceManagementItemTypeFilterOptions = enumToFilterOptions(PriceListTypeEnum);
 
-export const createPriceDataForReq = (input: Required<PriceEntity>): IPriceListItemReqData => {
+export const createPriceDataForReq = (input: Required<PriceEntity>): ICreatePriceReqData => {
   return {
     ...getIdRef(input),
     data: {

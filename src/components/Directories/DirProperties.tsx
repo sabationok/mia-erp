@@ -8,17 +8,17 @@ import FlexBox, { FlexLi, FlexUl } from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useOffersSelector } from '../../redux/selectors.store';
 import {
-  IPropertyDto,
+  OfferTypeEnum,
   PropertyBaseEntity,
+  PropertyDto,
   PropertyEntity,
   PropertyLevelIsType,
-} from '../../types/offers/properties.types';
+} from '../../types/offers';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { MaybeNull, OnlyUUID, Values } from '../../types/utils.types';
 import ModalBase from '../atoms/Modal';
 import { Text } from '../atoms/Text';
 import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
-import { OfferTypeEnum } from '../../types/offers/offers.types';
 import { CustomSelectHandler } from '../atoms/Inputs/CustomSelect';
 import CreatePropertyModal from '../Modals/CreatePropertyModal';
 import { RenderStackHistory } from '../atoms/RenderStackHistory';
@@ -33,8 +33,8 @@ import { getAllPropertiesThunk } from '../../redux/products/properties/propertie
 export interface DirPropertiesProps
   extends IDirInTreeProps<
     ApiDirType.PROPERTIES_PRODUCTS,
-    IPropertyDto,
-    IPropertyDto,
+    PropertyDto,
+    PropertyDto,
     PropertyEntity,
     OffersService,
     PropertyLevelIsType & { onSuccess?: (data: PropertyEntity) => void }
@@ -170,10 +170,9 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     }
   };
   useEffect(() => {
-    if (roots.length) return;
     dispatch(
       getAllPropertiesThunk({
-        params: { dataView: 'list' },
+        params: { dataView: 'list', getAll: false },
         onLoading: loaders.onLoading('getAll'),
       })
     );

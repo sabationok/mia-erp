@@ -1,53 +1,36 @@
-import { HasCurrencyCode, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
+import { HasCompany, HasCurrencyCode, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
 import { OrderEntity } from './orders/orders.types';
 import { IInvoicingMethod } from './integrations.types';
 import {
-  AppDate,
-  HasAmount,
   HasEmbeddedError,
   HasEmbeddedReferences,
   HasEmbeddedStatus,
   HasExpireDate,
   HasIsValidFlag,
-  HasMagicLink,
   HasMethod,
   MaybeNull,
 } from './utils.types';
-import { IDelivery } from './deliveries.types';
-import { IPayment } from './payments.types';
+import { HasDeliveriesList, HasDelivery } from './deliveries.types';
+import { HasPaymentsList } from './payments.types';
 import { ApiQueryParams } from '../api';
 import { OrderSlotEntity } from './orders/order-slot.types';
+import { HasRefundRequests } from './refunds';
+import { OrderSummary } from './orders';
+import { AmountAndPercentageFields } from './price-management';
 
 export interface InvoiceAmount {
-  amountStart?: MaybeNull<number>;
-  amountEnd?: MaybeNull<number>;
+  amountStart?: string;
+  amountEnd?: string;
 }
 
+export interface IInvoiceSummary extends HasCurrencyCode, InvoiceAmount, OrderSummary {
+  tax?: AmountAndPercentageFields;
+}
 export interface HasInvoiceSummary {
-  totals?: MaybeNull<
-    {
-      bonusUsed?: MaybeNull<number>;
-      bonusAccrued?: MaybeNull<number>;
-      taxes?: MaybeNull<string[]>;
-      vatAmount?: MaybeNull<number>;
-      vatPercentage?: MaybeNull<number>;
-      currency?: MaybeNull<string>;
-    } & InvoiceAmount
-  >;
+  summary?: IInvoiceSummary;
 }
 
-export interface HasInvoiceDateInfo {
-  date?: MaybeNull<{
-    due?: MaybeNull<AppDate>;
-    expected?: MaybeNull<AppDate>;
-  }>;
-}
-export interface HasInvoiceStatusInfo {
-  status?: MaybeNull<{
-    internal?: MaybeNull<string>;
-    external?: MaybeNull<string>;
-  }>;
-}
+export interface HasInvoiceSchedule extends Pick<OrderEntity, 'schedule'> {}
 
 export interface InvoiceStatusInfo {
   internal?: MaybeNull<string>;
@@ -59,49 +42,32 @@ export interface InvoiceErrorInfo {
   external?: MaybeNull<string>;
 }
 
-export interface IInvoiceTotals extends HasCurrencyCode {
-  amountStart: MaybeNull<number>;
-  amountEnd: MaybeNull<number>;
-  bonusUsed: MaybeNull<number>;
-  bonusAccrued: MaybeNull<number>;
-
-  taxes?: MaybeNull<any[]>;
-  vatAmount?: MaybeNull<number>;
-  vatPercentage?: MaybeNull<number>;
-}
-
-export interface InvoiceReqData {}
-export interface IInvoice
-  extends IBase,
-    HasMagicLink,
-    HasAmount,
-    HasMethod<IInvoicingMethod>,
-    HasExpireDate,
-    HasEmbeddedReferences,
+export interface InvoiceBaseEntity
+  extends HasEmbeddedReferences,
     HasInvoiceSummary,
-    HasInvoiceDateInfo,
+    HasInvoiceSchedule,
     HasIsValidFlag,
     HasEmbeddedStatus<InvoiceStatusInfo>,
-    HasEmbeddedError<InvoiceErrorInfo> {
+    HasEmbeddedError<InvoiceErrorInfo> {}
+
+export interface InvoiceEntity
+  extends IBase,
+    InvoiceBaseEntity,
+    HasMethod<IInvoicingMethod>,
+    HasPaymentsList,
+    HasRefundRequests,
+    HasCompany,
+    HasDeliveriesList,
+    HasDelivery {
   order?: OrderEntity;
-  delivery?: IDelivery;
+
   slots?: OrderSlotEntity[];
-  payments?: IPayment[];
-  validity?: number;
-
-  totals?: MaybeNull<IInvoiceTotals>;
-
-  date: {
-    validity: MaybeNull<number>;
-    due: MaybeNull<AppDate>;
-    expected: MaybeNull<AppDate>;
-  };
 }
 export interface HasInvoice {
-  invoice?: MaybeNull<IInvoice>;
+  invoice?: MaybeNull<InvoiceEntity>;
 }
 export interface HasInvoicesList {
-  invoices?: MaybeNull<IInvoice[]>;
+  invoices?: MaybeNull<InvoiceEntity[]>;
 }
 export interface IInvoiceBaseFormData extends HasExpireDate {
   method?: IFormDataValueWithID;

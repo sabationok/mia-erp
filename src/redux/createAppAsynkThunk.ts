@@ -8,6 +8,8 @@ type ThunkGetAppResponseFn<Data = any, Params = any, Return = any, Meta = any> =
   params?: Params
 ) => Promise<ApiAxiosResponse<Return, Meta>>;
 
+
+
 export const createAppAsyncThunk = <
   Data = any,
   Params = any,

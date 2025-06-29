@@ -20,7 +20,7 @@ export const usePricesModal = () => {
         modalChildrenProps: {
           title: 'Create new price',
           defaultState: { list },
-          onSubmit: async (sData, o) => {
+          onSubmit: async (sData, _o) => {
             if (!Array.isArray(sData)) {
               await service.addPriceToList({
                 data: { data: { data: sData }, updateCurrent: true },

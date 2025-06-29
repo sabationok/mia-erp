@@ -1,13 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AppModuleName, SliceMap, StateErrorType } from 'redux/reduxTypes.types';
 import { PriceDiscountEntity, PriceEntity, PriceListEntity } from '../../types/price-management';
-import * as thunks from './priceManagement.thunks';
+import * as thunks from './prices.thunks';
 import { PartialRecord, UUID } from '../../types/utils.types';
 import { omit } from 'lodash';
 import { onCreateDiscountMather, onGetDiscountsMatcher, onRemoveDiscountCase } from './discounts/discounts.matchers';
 import { Action } from '../store.store';
 import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
+import {
+  createPriceListThunk,
+  getAllPriceListsThunk,
+  getPriceListThunk,
+  updatePriceListThunk,
+} from './prices-lists.thunks';
 
 export interface PriceListsState extends SliceMap<UUID, UUID, PriceListEntity> {}
 export interface PriceManagementState {
@@ -37,7 +43,7 @@ export const priceManagementSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(thunks.getAllPriceListsThunk.fulfilled, (s, a) => {
+      .addCase(getAllPriceListsThunk.fulfilled, (s, a) => {
         s.isLoading = false;
         const inputArr = a?.payload?.data && Array.isArray(a?.payload?.data) ? a?.payload?.data : [];
 
@@ -47,23 +53,18 @@ export const priceManagementSlice = createSlice({
         }
         s.lists.list = [...inputArr, ...(s.lists.list ?? [])];
       })
-      .addCase(thunks.createPriceListThunk.fulfilled, (s, a) => {
+      .addCase(createPriceListThunk.fulfilled, (s, a) => {
         s.isLoading = false;
         if (a.payload) {
-          s.lists.list = [a.payload, ...(s.lists.list ?? [])];
+          s.lists.list = [a.payload.data, ...(s.lists.list ?? [])];
         }
       })
-      .addCase(thunks.refreshPriceListByIdThunk.fulfilled, (s, a) => {
-        const id = a.payload?._id;
-        if (!id || !a.payload) return;
-        s.lists.dataMap[id] = a.payload;
+      .addCase(getPriceListThunk.fulfilled, (s, a) => {
+        const id = a.payload.data?._id;
+        if (!id || !a.payload.data) return;
+        s.lists.dataMap[id] = a.payload.data;
       })
-      .addCase(thunks.updatePriceListByIdThunk.fulfilled, (s, a) => {
-        const id = a.payload?._id;
-        if (!id || !a.payload) return;
-        s.lists.dataMap[id] = a.payload;
-      })
-      .addCase(thunks.getPriceListByIdThunk.fulfilled, (s, a) => {
+      .addCase(updatePriceListThunk.fulfilled, (s, a) => {
         const id = a.payload.data?._id;
         if (!id || !a.payload.data) return;
         s.lists.dataMap[id] = a.payload.data;
@@ -72,23 +73,15 @@ export const priceManagementSlice = createSlice({
         ManagePricesStateMap(st, { data: a.payload.data });
       })
       .addCase(thunks.createPriceThunk.fulfilled, (s, a) => {
-        const id = a.payload.data?._id;
-        if (!id || !a.payload.data) return;
-        s.dataMap[id] = a.payload.data;
+        ManagePricesStateMap(s, { data: a.payload.data });
       })
       .addCase(thunks.getAllPricesThunk.fulfilled, (s, a) => {
-        let discounts: PriceDiscountEntity[] = [];
-
         a.payload?.data.forEach(price => {
           ManagePricesStateMap(s, { data: price });
-
-          if (price.discounts?.length) {
-            discounts = discounts.concat(price.discounts);
-          }
         });
       })
       .addCase(thunks.deletePriceFromListThunk.fulfilled, (s, a) => {
-        ManagePricesStateMap(s, { removeId: a.payload?.data?.priceId });
+        ManagePricesStateMap(s, { removeId: a.payload?.params?._id });
       })
       .addCase(thunks.updatePriceThunk.fulfilled, (s, a) => {
         ManagePricesStateMap(s, { data: a.payload.data });

@@ -65,8 +65,8 @@ export const useBaseApiWithPermissionToken = () => {
   const { permission_token, permission } = usePermissionsSelector();
 
   const tempToken = useMemo(() => {
-    return permission_token || permission?.permission_token || permission?._id;
-  }, [permission?._id, permission?.permission_token, permission_token]);
+    return permission_token || permission?.access_token || permission?._id;
+  }, [permission?._id, permission?.access_token, permission_token]);
 
   useEffect(() => {
     if (tempToken) {

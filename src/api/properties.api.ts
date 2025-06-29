@@ -1,81 +1,56 @@
-import { ApiAxiosResponse } from '../redux/app-redux.types';
-import { IPropertyReqData, PropertyEntity } from 'types/offers/properties.types';
+import { PropertyApiReqConfig, PropertyEntity } from 'types/offers/properties.types';
 import { ClientApi } from './client.api';
+import { ApiAxiosResponse } from './api.types';
 
 export default class PropertiesApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = ClientApi._endpoints.propertiesApiEndpoints;
+  private static endpoints = ClientApi._endpoints.offers.properties;
 
-  public static getAll = (
-    _?: undefined,
-    params?: IPropertyReqData['params']
-  ): Promise<ApiAxiosResponse<PropertyEntity[]>> => {
+  public static getAll = (config: Omit<PropertyApiReqConfig, 'data'>): Promise<ApiAxiosResponse<PropertyEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), {
+      ...config,
       params: {
+        ...config.params,
         dataView: 'list',
-        ...params,
       },
     });
   };
-  public static getAllInTree = (
-    _?: undefined,
-    params?: IPropertyReqData['params']
-  ): Promise<ApiAxiosResponse<PropertyEntity[]>> => {
+  public static getTree = (config: Omit<PropertyApiReqConfig, 'data'>): Promise<ApiAxiosResponse<PropertyEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), {
+      ...config,
       params: {
-        dataView: 'tree',
+        ...config.params,
         depth: 3,
-        ...params,
+        dataView: 'tree',
       },
     });
   };
 
-  public static create = (
-    data?: IPropertyReqData,
-    params?: IPropertyReqData['params']
+  public static create = ({ data, ...config }: PropertyApiReqConfig): Promise<ApiAxiosResponse<PropertyEntity>> => {
+    return this.api.post(this.endpoints.create(), data, config);
+  };
+
+  public static updateById = ({ data, ...config }: PropertyApiReqConfig): Promise<ApiAxiosResponse<PropertyEntity>> => {
+    return this.api.patch(this.endpoints.update(), data, config);
+  };
+
+  public static getOne = (config?: Omit<PropertyApiReqConfig, 'data'>): Promise<ApiAxiosResponse<PropertyEntity>> => {
+    return this.api.get(this.endpoints.getOne(), {
+      ...config,
+      params: {
+        ...config?.params,
+      },
+    });
+  };
+
+  public static deleteById = (
+    config?: Omit<PropertyApiReqConfig, 'data'>
   ): Promise<ApiAxiosResponse<PropertyEntity>> => {
-    return this.api.post(this.endpoints.create(), data?.data, {
+    return this.api.delete(this.endpoints.delete(), {
+      ...config,
       params: {
         dataView: 'list',
-        getAll: false,
-        ...data?.params,
-        ...params,
-      },
-    });
-  };
-
-  public static updateById = (
-    data?: IPropertyReqData,
-    params?: IPropertyReqData['params']
-  ): Promise<ApiAxiosResponse<PropertyEntity>> => {
-    return this.api.patch(this.endpoints.updateById(data?._id), data?.data, {
-      params: {
-        dataView: 'list',
-        getAll: false,
-        ...data?.params,
-        ...params,
-      },
-    });
-  };
-
-  public static getById = (
-    data?: IPropertyReqData,
-    params?: IPropertyReqData['params']
-  ): Promise<ApiAxiosResponse<PropertyEntity>> => {
-    return this.api.get(this.endpoints.getById(data?._id), {
-      params: {
-        ...data?.params,
-        ...params,
-      },
-    });
-  };
-
-  public static deleteById = (data?: IPropertyReqData): Promise<ApiAxiosResponse<PropertyEntity>> => {
-    return this.api.delete(this.endpoints.deleteById(data?._id), {
-      params: {
-        getAll: false,
-        dataView: 'list',
-        ...data?.params,
+        ...config?.params,
       },
     });
   };

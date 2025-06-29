@@ -6,6 +6,7 @@ import {
   IEmbeddedLabel,
   IEmbeddedName,
   MaybeNull,
+  OnlyUUID,
 } from 'types/global.types';
 import { PartialRecord } from '../utils.types';
 import { LangPack } from 'i18e';
@@ -22,6 +23,7 @@ export interface CmsParamsBase<
 > extends HasDisableFor,
     HasType<Type> {
   key: Key;
+  keyWords?: string[];
   label?: LabelCmsParams;
   labels?: LabelCmsParams;
   name?: NameCmsParams;
@@ -33,7 +35,6 @@ export interface CmsParamsEntity<
   Extra extends CmsParamsExtra = CmsParamsExtra,
 > extends IBase,
     CmsParamsBase<Key, Type, Extra>,
-    Omit<CmsParamsDto, 'key' | 'type'>,
     HasDisableFor,
     HasAvailableFor {}
 
@@ -45,16 +46,17 @@ export interface HasCmsParams<
   cmsParams?: MaybeNull<CmsParamsEntity<Key, Type, Extra>>;
 }
 
-export interface CmsParamsDto {
-  key: string;
-  type?: string;
-  extKey?: string;
+export interface CmsParamsDto<
+  Key extends string = string,
+  Type extends string = string,
+  Extra extends CmsParamsExtra = CmsParamsExtra,
+> extends Omit<CmsParamsEntity<Key, Type, Extra>, keyof IBase>,
+    Partial<OnlyUUID> {}
 
-  labels?: LabelCmsParams;
-  label?: LabelCmsParams;
-  name?: NameCmsParams;
-
-  description?: LangPack;
-
-  extRef?: string;
+export interface HasCmsParamsDto<
+  Key extends string = string,
+  Type extends string = string,
+  Extra extends CmsParamsExtra = CmsParamsExtra,
+> {
+  cmsParams?: CmsParamsDto<Key, Type, Extra>;
 }

@@ -3,12 +3,12 @@ import { StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { getAllDeliveriesThunk, getAllDeliveryMethodsThunk, updateDeliveryMethodThunk } from './deliveries.thunks';
 import { IDeliveryMethod } from '../../types/integrations.types';
-import { IDelivery } from '../../types/deliveries.types';
+import { DeliveryEntity } from '../../types/deliveries.types';
 import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
 
 export interface DeliveriesState {
-  deliveries: IDelivery[];
+  deliveries: DeliveryEntity[];
   methods: IDeliveryMethod[];
   error: StateErrorType | null;
   isLoading: boolean;

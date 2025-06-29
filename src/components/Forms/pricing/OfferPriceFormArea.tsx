@@ -1,7 +1,13 @@
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useCallback } from 'react';
 import { useAppForm, useCurrentOffer, useCurrentPrice } from '../../../hooks';
-import { IPriceFormData, OfferPriceTypeEnum, PriceEntity, PriceFormDataPath } from '../../../types/price-management';
+import {
+  IPriceFormData,
+  OfferPriceTypeEnum,
+  PriceEntity,
+  PriceFormDataPath,
+  UpdatePriceDto,
+} from '../../../types/price-management';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FormPriceInputs, { FormPriceDecimal } from './FormCreatePrice/FormPriceInputs';
 import { toReqData } from '../../../utils';
@@ -15,13 +21,10 @@ import { usePriceModalFormLoaders } from '../../Modals/CreatePriceModal';
 import * as yup from 'yup';
 import { isNumberStringSchema, UUIDRefSchema, UUIDSchema } from '../validation';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { OfferEntity } from '../../../types/offers/offers.types';
-import { VariationEntity } from '../../../types/offers/variations.types';
+import { OfferEntity, VariationEntity } from '../../../types/offers';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 import { PriceTypeOptions } from '../../../data/priceManagement.data';
-import { useAppDispatch } from '../../../redux/store.store';
-import { setOfferDefaultsAction } from '../../../redux/products/offers.slice';
 
 const validation = yup.object().shape({
   in: isNumberStringSchema.optional(),
@@ -59,7 +62,6 @@ export const OfferPriceFormArea = ({
   const loaders = usePriceModalFormLoaders();
   const Offer = useCurrentOffer(offer);
   const Price = useCurrentPrice(price ?? { _id: updateId }) || Offer?.price;
-  const dispatch = useAppDispatch();
   const service = useAppServiceProvider().get(ServiceName.priceManagement);
   const offersSrv = useAppServiceProvider().get(ServiceName.offers);
 
@@ -124,24 +126,20 @@ export const OfferPriceFormArea = ({
     offersSrv.updateById({
       data: { data: { _id: offerId, data: { price: { _id: priceId } } } },
       onLoading: loaders.onLoading('set_default_price'),
-      onSuccess: d => {},
+      onSuccess: _d => {},
     });
   };
   const onValid = ({ setAsDefault, ...fData }: IPriceFormData) => {
-    const dataForReq = toReqData(fData);
+    const dataForReq = toReqData<IPriceFormData, string, UpdatePriceDto>(fData);
     if (!fData?.offer?._id) {
       ToastService.warning('Not passed offer id');
       return;
     }
     if (fData?._id) {
-      service.updatePriceById({
-        data: { data: { _id: fData?._id, data: dataForReq }, updateCurrent: true },
+      service.prices.update({
+        data: { data: { data: dataForReq as never } },
         onLoading: loaders.onLoading('update'),
-        onSuccess: loaders.onSuccess('update', (data, meta) => {
-          if (Offer?._id && Offer?.price?._id === data?._id) {
-            dispatch(setOfferDefaultsAction({ offerId: Offer?._id, data: { price: data } }));
-          }
-
+        onSuccess: loaders.onSuccess('update', ({ data }) => {
           if (setAsDefault && fData.offer?._id) {
             onSetAsDefault(fData.offer?._id, data._id);
           }
