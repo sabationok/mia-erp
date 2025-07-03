@@ -8,9 +8,9 @@ import FlexBox, { FlexLi, FlexUl } from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useOffersSelector } from '../../redux/selectors.store';
 import {
+  CreatePropertyDto,
   OfferTypeEnum,
   PropertyBaseEntity,
-  PropertyDto,
   PropertyEntity,
   PropertyLevelIsType,
 } from '../../types/offers';
@@ -21,7 +21,7 @@ import { Text } from '../atoms/Text';
 import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { CustomSelectHandler } from '../atoms/Inputs/CustomSelect';
 import CreatePropertyModal from '../Modals/CreatePropertyModal';
-import { RenderStackHistory } from '../atoms/RenderStackHistory';
+import { Breadcrumps } from '../atoms/Breadcrumps';
 import styled, { useTheme } from 'styled-components';
 import { t } from '../../i18e';
 import ButtonSwitch from '../atoms/ButtonSwitch';
@@ -29,12 +29,13 @@ import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import InputLabel from 'components/atoms/Inputs/InputLabel';
 import { useAppDispatch } from '../../redux/store.store';
 import { getAllPropertiesThunk } from '../../redux/products/properties/properties.thunks';
+import { TreeRouterProvider, useTreeRouter } from '../../Providers/TreeRouter/TreeProvider';
 
 export interface DirPropertiesProps
   extends IDirInTreeProps<
     ApiDirType.PROPERTIES_PRODUCTS,
-    PropertyDto,
-    PropertyDto,
+    CreatePropertyDto,
+    CreatePropertyDto,
     PropertyEntity,
     OffersService,
     PropertyLevelIsType & { onSuccess?: (data: PropertyEntity) => void }
@@ -70,7 +71,22 @@ type FilterData = {
 //   }
 // }
 
-const DirProperties: React.FC<DirPropertiesProps> = ({
+const DirProperties: React.FC<DirPropertiesProps> = props => {
+  const state = useOffersSelector();
+
+  const map = useMemo(
+    () =>
+      new Map(Object.entries(state.propertiesDataMap).filter(e => Boolean(e[1]))) as Map<string, PropertyBaseEntity>,
+    [state.propertiesDataMap]
+  );
+  return (
+    <TreeRouterProvider treeMap={map} rootId={''}>
+      <DirPropertiesInner {...props} />
+    </TreeRouterProvider>
+  );
+};
+
+const DirPropertiesInner: React.FC<DirPropertiesProps> = ({
   // availableLevels = 3,
   title,
   onClose,
@@ -79,37 +95,27 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   const theme = useTheme();
   const dispatch = useAppDispatch();
 
+  const { navTo, goBack, currentId, currentNode, currentNodeChildren, breadcrumbs, treeMap } =
+    useTreeRouter<PropertyBaseEntity>();
+
   const loaders = useLoaders<'getAll' | string>({ getAll: { content: 'Refreshing properties' } });
   const modalSrv = useModalProvider();
-  const [stack, setStack] = useState<PropertyBaseEntity[]>([]);
   const [filerData, setFilerData] = useState<FilterData>({
     type: OfferTypeEnum.GOODS,
     isSelectable: false,
   });
 
-  const currentId: string | undefined = stack[stack.length - 1]?._id;
-  const onStackItemSelect = (position: number) => {
-    setStack(p => [...p].slice(0, position + 1));
-  };
   const roots = useMemo(() => {
-    if (state.properties.length) return state.properties;
+    if (currentNodeChildren?.length) return currentNodeChildren;
 
-    const _rootItems: PropertyBaseEntity[] = [];
-
-    state.propertiesByTypeKeysMap[filerData.type].forEach(itemId => {
-      const item = state.propertiesDataMap?.[itemId];
-
-      if (item && !item?.parent) {
-        _rootItems.push(item);
-      }
-    });
-
-    return _rootItems;
-  }, [filerData.type, state.properties, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
+    return state.propertiesKeysMap.root?.length
+      ? (state.propertiesKeysMap.root.map(treeMap.get.bind(treeMap)).filter(Boolean) as PropertyBaseEntity[])
+      : [];
+  }, [currentNodeChildren, state.propertiesKeysMap, treeMap]);
 
   const currentData = useMemo(() => {
-    const _current: PropertyBaseEntity | undefined = stack?.[stack?.length - 1];
-    const _parent: PropertyBaseEntity | undefined = stack?.[stack?.length - 2];
+    const _current: PropertyBaseEntity | undefined = currentNode;
+    const _parent: PropertyBaseEntity | undefined = currentNode?.parent;
     const _filtered: PropertyBaseEntity[] = [];
 
     const _ids = _current ? state.propertiesKeysMap?.[_current._id] || [] : [];
@@ -123,17 +129,15 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
       }
     }
 
-    const _levelIs: PropertyLevelIsType = {};
-    if (_current?.levelType) {
-      _levelIs[_current?.levelType] = true;
-    }
+    const _levelIs: PropertyLevelIsType = _current?.levelType ? { [_current?.levelType]: true } : {};
+
     return {
       levelIs: _levelIs,
       current: _current,
       parent: _parent,
       children: _filtered,
     };
-  }, [filerData.isSelectable, stack, state.propertiesDataMap, state.propertiesKeysMap]);
+  }, [currentNode, filerData.isSelectable, state.propertiesDataMap, state.propertiesKeysMap]);
 
   const registerTabSelector = <Name extends keyof FilterData>(
     name: Name
@@ -144,7 +148,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     return {
       onOptSelect: option => {
         if (name === 'type') {
-          setStack([]);
+          // setStack([]);
         }
         setFilerData(prev => (option ? { ...prev, [name]: option.value } : prev));
       },
@@ -153,26 +157,31 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   };
 
   const onSetCurrentHandler = (item: PropertyBaseEntity) => {
-    // dispatch(
-    //   getAllPropertiesThunk({
-    //     params: { dataView: 'list', parentId: item._id },
-    //     onLoading: loaders.onLoading('getAll'),
-    //   })
-    // );
-
-    setStack(prev => prev.concat([item]));
-  };
-  const onGoBackHandler = () => {
-    if (stack.length) {
-      setStack(prev => prev.splice(0, prev.length - 1));
-    } else {
-      onClose && onClose();
-    }
-  };
-  useEffect(() => {
+    navTo(item._id);
     dispatch(
       getAllPropertiesThunk({
-        params: { dataView: 'list', getAll: false },
+        data: { params: { dataView: 'list', parentId: item._id } },
+        onLoading: loaders.onLoading('getAll'),
+      })
+    );
+    // setStack(prev => prev.concat([item]));
+  };
+  const onGoBackHandler = () => {
+    if (breadcrumbs.length) return goBack();
+    // if (stack.length) {
+    //   setStack(prev => prev.splice(0, prev.length - 1));
+    // } else {
+    onClose && onClose();
+    // }
+  };
+  useEffect(() => {
+    // if (Object.keys(state.propertiesDataMap).length) return;
+
+    dispatch(
+      getAllPropertiesThunk({
+        data: {
+          params: { dataView: 'list' },
+        },
         onLoading: loaders.onLoading('getAll'),
       })
     );
@@ -185,7 +194,9 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     if (currentData.children.length) return;
     dispatch(
       getAllPropertiesThunk({
-        params: { dataView: 'list', parentId: currentData.current?._id },
+        data: {
+          params: { dataView: 'list', parentId: currentData.current?._id },
+        },
         onLoading: loaders.onLoading('getAll'),
       })
     );
@@ -205,8 +216,9 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
       },
     });
   };
-  const canGoNext = stack?.length <= 3;
-  const canAddNew = stack?.length <= 2;
+  const canGoNext = breadcrumbs?.length <= 3;
+  const canAddNew = breadcrumbs?.length <= 2;
+
   const onEditCurrentHandler = () => {
     currentData.current &&
       modalSrv.open({
@@ -227,9 +239,9 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
       />
 
       <FlexBox>
-        <RenderStackHistory stack={stack} onItemSelect={(_, index) => onStackItemSelect(index)} />
+        <Breadcrumps stack={breadcrumbs} onItemSelect={item => navTo(item._id)} />
 
-        {stack.length === 1 && (
+        {breadcrumbs.length === 1 && (
           <FlexBox margin={'8px 0'}>
             <InputLabel label={t('Select type')}>
               <ButtonSwitch
@@ -293,7 +305,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
           onClick={() => {
             dispatch(
               getAllPropertiesThunk({
-                // params: { dataView: 'tree', depth: 3 },
+                data: { params: { dataView: 'list' } },
                 onLoading: loaders.onLoading('getAll'),
               })
             );
@@ -328,7 +340,8 @@ const RenderItem = ({
       gap={8}
       alignItems={'center'}
     >
-      <Text $weight={500}>{item?.label}</Text>
+      <Text $weight={500}>{item?.label || item?._id}</Text>
+
       <ButtonIcon
         variant={'onlyIconNoEffects'}
         icon={'arrowRight'}

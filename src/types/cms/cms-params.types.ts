@@ -53,10 +53,24 @@ export interface CmsParamsDto<
 > extends Omit<CmsParamsEntity<Key, Type, Extra>, keyof IBase>,
     Partial<OnlyUUID> {}
 
-export interface HasCmsParamsDto<
+export type UpdateCmsParamsDto<
+  Key extends string = string,
+  Type extends string = string,
+  Extra extends CmsParamsExtra = CmsParamsExtra,
+> = OnlyUUID & CmsParamsDto<Key, Type, Extra>;
+
+export interface HasCreateCmsParamsDto<
   Key extends string = string,
   Type extends string = string,
   Extra extends CmsParamsExtra = CmsParamsExtra,
 > {
   cmsParams?: CmsParamsDto<Key, Type, Extra>;
+}
+
+export interface HasUpdateCmsParamsDto<
+  Key extends string = string,
+  Type extends string = string,
+  Extra extends CmsParamsExtra = CmsParamsExtra,
+> {
+  cmsParams?: UpdateCmsParamsDto<Key, Type, Extra>;
 }

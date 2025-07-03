@@ -1,8 +1,8 @@
 import {
+  CreatePropertyDto,
   PropertyBaseEntity,
-  PropertyDto,
+  PropertyCmsTypeEnum,
   PropertyLevelIsType,
-  PropertyTypeEnum,
 } from '../../../../types/offers/properties.types';
 import { MaybeNull } from '../../../../types/utils.types';
 import { AppSubmitHandler, useAppFormProvider } from '../../../../hooks/useAppForm.hook';
@@ -21,11 +21,11 @@ import { FormCreatePropertyLoaderKey, IPropertyFormData } from '../../../Modals/
 import FlexBox from '../../../atoms/FlexBox';
 import ButtonIcon from '../../../atoms/ButtonIcon';
 
-const recommendTypesOptions = ObjectValues(PropertyTypeEnum);
+const recommendTypesOptions = ObjectValues(PropertyCmsTypeEnum);
 export const PropertyCmsParamsFormArea = (_: {
   levelIs?: PropertyLevelIsType;
   defaultState?: MaybeNull<Partial<PropertyBaseEntity>>;
-  onSubmit?: AppSubmitHandler<Pick<PropertyDto, 'cmsConfigs'>, { levelIs?: PropertyLevelIsType }>;
+  onSubmit?: AppSubmitHandler<Pick<CreatePropertyDto, 'cmsConfigs'>, { levelIs?: PropertyLevelIsType }>;
 }) => {
   const loaders = useLoadersProvider<FormCreatePropertyLoaderKey>();
   const offersSrv = useAppServiceProvider().get(AppModuleName.offers);

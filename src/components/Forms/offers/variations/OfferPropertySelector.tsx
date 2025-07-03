@@ -1,4 +1,4 @@
-import { PropertyEntity, PropertyTypeEnum, PropertyValueEntity } from '../../../../types/offers/properties.types';
+import { PropertyCmsTypeEnum, PropertyEntity, PropertyValueEntity } from '../../../../types/offers/properties.types';
 import { MaybeNull } from '../../../../types/utils.types';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
@@ -15,17 +15,17 @@ interface PropertyItemStyleByCmsTypeProps {
   numColumns?: number;
 }
 
-const PropertyItemStylesByCmsKey: Record<PropertyTypeEnum | string, PropertyItemStyleByCmsTypeProps> = {
-  [PropertyTypeEnum.size]: {
+const PropertyItemStylesByCmsKey: Record<PropertyCmsTypeEnum | string, PropertyItemStyleByCmsTypeProps> = {
+  [PropertyCmsTypeEnum.size]: {
     numColumns: 4,
   },
-  [PropertyTypeEnum.color]: {
+  [PropertyCmsTypeEnum.color]: {
     numColumns: 2,
   },
-  [PropertyTypeEnum.style]: {
+  [PropertyCmsTypeEnum.style]: {
     numColumns: 2,
   },
-  [PropertyTypeEnum.care]: {
+  [PropertyCmsTypeEnum.care]: {
     numColumns: 1,
   },
 };

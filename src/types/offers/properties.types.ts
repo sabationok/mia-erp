@@ -1,13 +1,15 @@
-import { IBase, OnlyUUID } from '../../redux/app-redux.types';
-import { ApiQueryParams, ApiRequestConfig } from '../../api';
 import { OfferTypeEnum } from './offers.types';
-import { MaybeNull, PartialRecord, UUID, Values } from '../utils.types';
-import { CmsParamsDto, HasCmsParams, HasCmsParamsDto } from '../cms/cms-params.types';
+import { OnlyUUID, PartialRecord, UUID, Values } from '../utils.types';
+import { CmsParamsDto, HasCmsParams, HasCreateCmsParamsDto } from '../cms';
+import { TreeEntityType } from '../tree-entity.types';
 
 export enum PropertyLevelTypeEnum {
   group = 'group',
   prop = 'prop',
   value = 'value',
+  col = 'col',
+  row = 'row',
+  cell = 'cell',
 }
 export enum PropertySelectableTypeEnum {
   static = 'static',
@@ -18,31 +20,33 @@ interface PropertyTempData {
   levelIs?: PropertyLevelIsType;
   selectableType?: PropertySelectableTypeEnum;
 }
-export interface PropertyBaseEntity extends IBase, PropertyTempData, HasCmsParams {
-  label?: MaybeNull<string>;
-  type?: OfferTypeEnum;
-  isSelectable?: MaybeNull<boolean>;
-  level?: number;
-  path?: string;
+export type PropertyBaseEntity = TreeEntityType &
+  PropertyTempData &
+  HasCmsParams & {
+    label?: string;
+    type?: OfferTypeEnum;
+    isSelectable?: boolean;
+    level?: number;
+    path?: string;
 
-  levelType?: PropertyLevelTypeEnum;
+    levelType?: PropertyLevelTypeEnum;
 
-  parent?: PropertyBaseEntity;
-  childrenList?: PropertyBaseEntity[];
-}
+    parent?: PropertyBaseEntity;
+    childrenList?: PropertyBaseEntity[];
+  };
 
-export interface PropertiesGroupEntity extends Omit<PropertyBaseEntity, 'parent'> {
+export type PropertiesGroupEntity = Omit<PropertyBaseEntity, 'parent'> & {
   childrenList?: PropertyEntity[];
-}
-export interface PropertyEntity extends PropertyBaseEntity {
+};
+export type PropertyEntity = PropertyBaseEntity & {
   parent?: PropertiesGroupEntity;
   childrenList?: PropertyValueEntity[];
-}
+};
 export interface PropertyValueEntity extends Omit<PropertyBaseEntity, 'childrenList'> {
   parent?: PropertyEntity;
 }
 
-export enum PropertyTypeEnum {
+export enum PropertyCmsTypeEnum {
   size = 'size',
   color = 'color',
   care = 'care',
@@ -61,15 +65,14 @@ export enum PropertyTypeEnum {
 export interface CmsPropertyExtraDto extends CmsParamsDto {
   colors?: string[];
 }
-export interface PropertyFormData extends PropertyDto {}
-export interface PropertyDto extends Partial<OnlyUUID>, HasCmsParamsDto<string, PropertyTypeEnum, CmsPropertyExtraDto> {
+export interface CreatePropertyDto extends HasCreateCmsParamsDto<string, PropertyCmsTypeEnum, CmsPropertyExtraDto> {
   parentId?: UUID;
   label?: string;
   type?: OfferTypeEnum;
   isSelectable?: boolean;
+  levelType?: PropertyLevelTypeEnum;
 }
 
-export type PropertyApiReqConfig = ApiRequestConfig<
-  PropertyDto,
-  Pick<ApiQueryParams, 'dataView' | 'getAll' | 'depth' | 'parentId' | 'withDeleted'>
->;
+export type UpdatePropertyDto = OnlyUUID & CreatePropertyDto & {};
+
+export type PropertyFormData = CreatePropertyDto & UpdatePropertyDto;

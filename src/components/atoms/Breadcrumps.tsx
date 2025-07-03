@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { useScrollTo } from '../../hooks';
 import ButtonIcon from './ButtonIcon';
 
-export const RenderStackHistory = <Item extends IBase & { label?: MaybeNull<string> }>({
+export const Breadcrumps = <Item extends IBase & { label?: MaybeNull<string> }>({
   stack,
   onItemSelect,
 }: {

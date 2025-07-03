@@ -24,8 +24,6 @@ export interface OfferPropertyModalProps
   currentLevelIs?: PropertyLevelIsType;
 }
 
-export interface IPropertyFormData extends PropertyFormData {}
-
 export type FormCreatePropertyLoaderKey = 'create' | 'update' | 'current';
 const CreatePropertyModal: React.FC<OfferPropertyModalProps> = ({
   updateId,
@@ -52,19 +50,19 @@ const CreatePropertyModal: React.FC<OfferPropertyModalProps> = ({
   );
   const currentProp = loaders.state?.currentId ? dataMap?.[loaders.state?.currentId] : undefined;
 
-  const form = useAppForm<IPropertyFormData>({
+  const form = useAppForm<PropertyFormData>({
     defaultValues: !defaultState
       ? undefined
       : ({
           isSelectable: parent?.isSelectable ?? false,
           ...defaultState,
           parent: parent ? getIdRef(parent) : undefined,
-        } as IPropertyFormData),
+        } as PropertyFormData),
     values: currentProp
       ? ({
           ...currentProp,
           parent: parent ? getIdRef(parent) : undefined,
-        } as IPropertyFormData)
+        } as PropertyFormData)
       : undefined,
   });
 

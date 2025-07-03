@@ -1,5 +1,5 @@
 import { HasType, IBase, OnlyUUID, UUID } from 'types/utils.types';
-import { HasCmsParams, HasCmsParamsDto } from '../cms/cms-params.types';
+import { HasCmsParams, HasCreateCmsParamsDto } from '../cms/cms-params.types';
 
 export enum PriceDiscountType {
   discount = 'discount',
@@ -95,7 +95,7 @@ export interface PriceDiscountEntity extends IBase, IDiscountBase, HasCmsParams 
   tempId?: string;
 }
 
-export interface PriceDiscountDto extends PriceDiscountRecord, HasCmsParamsDto {
+export interface PriceDiscountDto extends PriceDiscountRecord, HasCreateCmsParamsDto {
   priceId?: UUID;
   offerId?: UUID;
   listId?: UUID;

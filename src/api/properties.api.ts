@@ -1,6 +1,15 @@
-import { PropertyApiReqConfig, PropertyEntity } from 'types/offers/properties.types';
+import { CreatePropertyDto, PropertyEntity, UpdatePropertyDto } from 'types/offers/properties.types';
 import { ClientApi } from './client.api';
-import { ApiAxiosResponse } from './api.types';
+import { ApiAxiosResponse, ApiQueryParams, ApiRequestConfig } from './api.types';
+
+export type PropertyApiReqConfig = ApiRequestConfig<
+  CreatePropertyDto,
+  Pick<ApiQueryParams, 'dataView' | 'getAll' | 'depth' | 'parentId' | 'withDeleted'>
+>;
+export type UpdatePropertyApiReqConfig = ApiRequestConfig<
+  UpdatePropertyDto,
+  Pick<ApiQueryParams, 'dataView' | 'getAll' | 'depth' | 'parentId' | 'withDeleted'>
+>;
 
 export default class PropertiesApi {
   private static api = ClientApi.clientRef;
@@ -30,7 +39,10 @@ export default class PropertiesApi {
     return this.api.post(this.endpoints.create(), data, config);
   };
 
-  public static updateById = ({ data, ...config }: PropertyApiReqConfig): Promise<ApiAxiosResponse<PropertyEntity>> => {
+  public static updateById = ({
+    data,
+    ...config
+  }: UpdatePropertyApiReqConfig): Promise<ApiAxiosResponse<PropertyEntity>> => {
     return this.api.patch(this.endpoints.update(), data, config);
   };
 

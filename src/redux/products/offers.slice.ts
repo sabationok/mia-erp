@@ -6,14 +6,16 @@ import {
   PropertyBaseEntity,
   PropertyLevelTypeEnum,
   PropertySelectableTypeEnum,
-} from '../../types/offers/properties.types';
+  VariationEntity,
+} from '../../types/offers';
 import { createPropertyThunk, getAllPropertiesThunk, updatePropertyThunk } from './properties/properties.thunks';
 import { PartialRecord, SKU, UUID } from '../../types/utils.types';
-import { VariationEntity } from '../../types/offers/variations.types';
 import { onCreatePriceMather, onGetPricesCase, onUpdatePriceMatcher } from '../priceManagement/prices.actions';
 import { Action, ActionPayload } from '../store.store';
 import { onUserLogoutMatch } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
+
+const ROOT_KEY = 'root';
 
 type OfferDefaultsKey = keyof IOfferRelatedDefaultFields;
 export interface OffersState {
@@ -29,9 +31,11 @@ export interface OffersState {
   variationsKeysMap: PartialRecord<UUID, UUID[]>;
   variationsMap: PartialRecord<UUID, VariationEntity>;
 
-  propertiesKeysMap: PartialRecord<UUID, UUID[]>;
+  propertiesKeysMap: Record<
+    OfferTypeEnum | PropertySelectableTypeEnum | PropertyLevelTypeEnum | typeof ROOT_KEY | UUID,
+    UUID[]
+  >;
   propertiesDataMap: PartialRecord<UUID, PropertyBaseEntity>;
-  propertiesByTypeKeysMap: Record<OfferTypeEnum | PropertySelectableTypeEnum | PropertyLevelTypeEnum, UUID[]>;
 }
 
 const initialState: OffersState = {
@@ -47,9 +51,7 @@ const initialState: OffersState = {
   variationsKeysMap: {},
   variationsMap: {},
 
-  propertiesKeysMap: {},
-  propertiesDataMap: {},
-  propertiesByTypeKeysMap: {
+  propertiesKeysMap: {
     group: [],
     value: [],
     prop: [],
@@ -58,7 +60,11 @@ const initialState: OffersState = {
     SET: [],
     static: [],
     dynamic: [],
+    row: [],
+    col: [],
+    cell: [],
   },
+  propertiesDataMap: {},
 };
 
 export const offersSlice = createSlice({
@@ -296,6 +302,7 @@ function UpdatePropertiesMap(
   data.forEach(item => {
     const itemId = item._id;
     const prev = st.propertiesDataMap?.[itemId];
+
     st.propertiesDataMap[itemId] = {
       ...prev,
       ...item,
@@ -306,27 +313,29 @@ function UpdatePropertiesMap(
           }
         : item?.parent,
     };
-    const parentId = st.propertiesDataMap?.[itemId]?.parent?._id;
+    const parentId = item?.parent?._id || st.propertiesDataMap?.[itemId]?.parent?._id;
 
-    if (!item?.parent) {
-      const current = st.propertiesByTypeKeysMap.group ?? [];
+    for (const getDataKey of [
+      () => item.levelType,
+      () => item.type,
+      () => parentId,
+      () => (!item.parent ? ROOT_KEY : undefined),
+    ]) {
+      const dataKey = getDataKey();
 
-      st.propertiesByTypeKeysMap.group = Array.from(new Set([...current, itemId]));
+      if (dataKey) {
+        const current = new Set(st.propertiesKeysMap[dataKey]);
+        if (!current.has(itemId)) {
+          current.add(itemId);
 
-      if (item.type) {
-        const current = st.propertiesByTypeKeysMap[item.type] ?? [];
-        st.propertiesByTypeKeysMap[item.type] = Array.from(new Set([...current, itemId]));
+          st.propertiesKeysMap[dataKey] = Array.from(current);
+        }
       }
     }
 
-    if (parentId) {
-      const current = st.propertiesKeysMap[parentId] ?? [];
-      st.propertiesKeysMap[parentId] = Array.from(new Set([...current, itemId]));
-    }
-
-    if (item?.childrenList) {
-      UpdatePropertiesMap(st, { data: item?.childrenList });
-    }
+    // if (item?.childrenList) {
+    //   UpdatePropertiesMap(st, { data: item?.childrenList });
+    // }
   });
 }
 
