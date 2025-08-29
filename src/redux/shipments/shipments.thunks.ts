@@ -1,49 +1,14 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { axiosErrorCheck } from '../../utils';
 import { ShipmentsApi } from '../../api';
-import { ThunkArgs } from '../store.store';
-import { IDeliveryMethod } from '../../types/integrations.types';
+import { createAppAsyncThunk } from '../createAppAsynkThunk';
 
-enum ShipmentsThunkTypeEnum {
-  getAll = 'shipments/getAllThunk',
+enum ThunkTypeEnum {
+  _base = 'shipments',
+  getAll = `${_base}/getAll/Thunk`,
 
-  getAllMethods = 'shipments/getAllMethodsThunk',
-  updateMethod = 'shipments/updateMethodThunk',
+  _methods = `${_base}/methods`,
+  getAllMethods = `${_methods}/getAllThunk`,
+  updateMethod = `${_methods}/updateThunk`,
 }
 
-export const getAllDeliveryMethodsThunk = createAsyncThunk<IDeliveryMethod[], ThunkArgs<unknown, IDeliveryMethod[]>>(
-  ShipmentsThunkTypeEnum.getAllMethods,
-  async (args, thunkAPI) => {
-    args?.onLoading && args?.onLoading(true);
-    try {
-      const res = await ShipmentsApi.getAllMethods();
-      res && args?.onSuccess && args?.onSuccess(res?.data?.data);
-
-      args?.onLoading && args?.onLoading(false);
-      return res?.data?.data;
-    } catch (e) {
-      args?.onLoading && args?.onLoading(false);
-      args?.onError && args?.onError(e);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(e));
-    }
-  }
-);
-export const updateShipmentMethodThunk = createAsyncThunk<IDeliveryMethod, ThunkArgs<any, IDeliveryMethod>>(
-  ShipmentsThunkTypeEnum.updateMethod,
-  async (args, thunkAPI) => {
-    args?.onLoading && args?.onLoading(true);
-    try {
-      const res = await ShipmentsApi.updateMethod(args?.data || {});
-      res && args?.onSuccess && args?.onSuccess(res?.data?.data);
-
-      args?.onLoading && args?.onLoading(false);
-      return res?.data?.data;
-    } catch (e) {
-      args?.onLoading && args?.onLoading(false);
-      args?.onError && args?.onError(e);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(e));
-    }
-  }
-);
+export const getAllDeliveryMethodsThunk = createAppAsyncThunk(ThunkTypeEnum.getAllMethods, ShipmentsApi.getAllMethods);
+export const updateShipmentMethodThunk = createAppAsyncThunk(ThunkTypeEnum.updateMethod, ShipmentsApi.updateMethod);

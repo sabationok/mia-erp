@@ -18,6 +18,14 @@ export interface OnlyUUID {
 }
 export type Ref = OnlyUUID;
 
+export interface IBase extends OnlyUUID {
+  createdAt?: MaybeNull<Date | string>;
+  updatedAt?: MaybeNull<Date | string>;
+  deletedAt?: MaybeNull<Date | string>;
+}
+
+export type IBaseKeys = keyof IBase;
+
 export type FieldValues = Record<string, any>;
 
 export type Values<T extends any> = T extends (infer U)[] ? U : T[keyof T];
@@ -44,13 +52,6 @@ export type ArrayOfRefs = Array<OnlyUUID>;
 
 export type IdKeyVersion = '_id' | 'id';
 
-export interface IBase extends OnlyUUID {
-  createdAt?: MaybeNull<Date | string>;
-  updatedAt?: MaybeNull<Date | string>;
-  deletedAt?: MaybeNull<Date | string>;
-}
-
-export type IBaseKeys = keyof IBase;
 export enum CurrencyCode {
   UAH = 'UAH',
   EUR = 'EUR',

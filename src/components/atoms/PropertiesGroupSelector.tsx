@@ -47,8 +47,8 @@ export const PropertiesGroupSelector = ({
   const service = useAppServiceProvider().get(ServiceName.offers);
 
   const rootList = useMemo(() => {
-    if (state.properties?.length) {
-      return state.properties.filter(item => !item.parent);
+    if (state.propertiesList?.length) {
+      return state.propertiesList.filter(item => !item.parent);
     }
 
     const _ids = state.propertiesByTypeKeysMap[filter.type];
@@ -60,7 +60,7 @@ export const PropertiesGroupSelector = ({
     }
 
     return _roots;
-  }, [filter.type, state.properties, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
+  }, [filter.type, state.propertiesList, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
 
   const handleSelect: CustomSelectHandler<PropertiesGroupEntity> = option => {
     if (onSelect && option) {

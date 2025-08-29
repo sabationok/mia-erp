@@ -1,4 +1,4 @@
-import OffersApi from '../../api/offers.api';
+import OffersApi from '../../api/offers/offers.api';
 import { createAppAsyncThunk } from '../createAppAsynkThunk';
 
 export * from './variations/variations.thunks';

@@ -1,6 +1,6 @@
 import { CreatePropertyDto, PropertyEntity, UpdatePropertyDto } from 'types/offers/properties.types';
-import { ClientApi } from './client.api';
-import { ApiAxiosResponse, ApiQueryParams, ApiRequestConfig } from './api.types';
+import { ClientApi } from '../client.api';
+import { ApiAxiosResponse, ApiQueryParams, ApiRequestConfig } from '../api.types';
 
 export type PropertyApiReqConfig = ApiRequestConfig<
   CreatePropertyDto,

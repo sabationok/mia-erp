@@ -1,10 +1,10 @@
-import AppRoutes from 'components/AppRoutes/AppRoutes';
 import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import { useAppSettingsSelector } from './redux/selectors.store';
 import GlobalStyles from './theme/globalStyles';
 import React, { Suspense } from 'react';
 import AppLoader from './components/atoms/AppLoader';
+import { AppRoutes2 } from 'components/AppRoutes/AppRoutes2';
 import { t } from './i18e';
 
 const App: React.FC = () => {
@@ -16,7 +16,8 @@ const App: React.FC = () => {
         <GlobalStyles />
 
         <Suspense fallback={<AppLoader isLoading comment={t('Please wait while minions do their work...')} />}>
-          <AppRoutes />
+          {/*<AppRoutes />*/}
+          <AppRoutes2 />
         </Suspense>
       </AppContainer>
 

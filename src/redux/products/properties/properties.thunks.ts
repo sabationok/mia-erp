@@ -1,4 +1,4 @@
-import PropertiesApi from '../../../api/properties.api';
+import PropertiesApi from '../../../api/offers/properties.api';
 import { createAppAsyncThunk2 } from '../../createAppAsynkThunk2';
 
 enum PropertiesThunkType {

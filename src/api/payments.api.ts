@@ -1,5 +1,4 @@
-import { ApiQueryParams } from './index';
-import { ApiAxiosResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse, ApiQueryParams } from './api.types';
 import { IPayment } from '../types/payments.types';
 import { ClientApi } from './client.api';
 import { IPaymentMethod, IPaymentMethodReqData } from '../types/integrations.types';

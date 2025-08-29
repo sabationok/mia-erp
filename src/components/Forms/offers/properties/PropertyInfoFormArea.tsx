@@ -1,17 +1,23 @@
-import { PropertyBaseEntity, PropertyLevelIsType } from '../../../../types/offers/properties.types';
+import {
+  CreatePropertyDto,
+  PropertyBaseEntity,
+  PropertyFormData,
+  PropertyLevelIsType,
+  UpdatePropertyDto,
+} from '../../../../types/offers';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
 import { useAppFormProvider } from '../../../../hooks/useAppForm.hook';
 import { toReqData } from '../../../../utils';
-import { pick } from 'lodash';
+import * as _ from 'lodash';
 import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import { t } from '../../../../i18e';
 import InputText from '../../../atoms/Inputs/InputText';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
-import { FormCreatePropertyLoaderKey, IPropertyFormData } from '../../../Modals/CreatePropertyModal';
+import { FormCreatePropertyLoaderKey } from '../../../Modals/CreatePropertyModal';
 
 export const PropertyInfoFormArea = ({
   parentLevelIs,
@@ -26,7 +32,7 @@ export const PropertyInfoFormArea = ({
 }) => {
   const loaders = useLoadersProvider<FormCreatePropertyLoaderKey, { currentId: string }>();
   const offersSrv = useAppServiceProvider().get(AppModuleName.offers);
-  const form = useAppFormProvider<IPropertyFormData>();
+  const form = useAppFormProvider<PropertyFormData>();
 
   const {
     formState: { errors },
@@ -36,23 +42,19 @@ export const PropertyInfoFormArea = ({
     setValue,
   } = form;
 
-  const onValid = (data: IPropertyFormData) => {
+  const onValid = (data: PropertyFormData) => {
     if (updateId) {
-      offersSrv.updatePropertyById({
-        data: { data: { _id: updateId, data: toReqData(pick(data, ['label'])) } },
+      offersSrv.properties.update({
         onLoading: loaders.onLoading('update'),
-        onSuccess: ({ data }) => {
-          loaders.setData('currentId', data._id);
-        },
+        onSuccess: loaders.onSuccess('update'),
+        data: { data: toReqData(_.pick(data, ['_id', 'label'])) as UpdatePropertyDto },
       });
     } else {
-      offersSrv.createProperty({
+      offersSrv.properties.create({
         onLoading: loaders.onLoading('create'),
+        onSuccess: loaders.onSuccess('create'),
         data: {
-          data: { data: toReqData(pick(data, ['label', 'parentId', 'type', 'cmsParams'])) },
-        },
-        onSuccess: ({ data }) => {
-          loaders.setData('currentId', data._id);
+          data: toReqData(_.omit(data, ['cmsParams'])) as CreatePropertyDto,
         },
       });
     }

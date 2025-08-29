@@ -19,10 +19,11 @@ export interface WsConnectionOptions {
 enum SocketNamespaces {
   chat = 'chat',
   app = 'app',
+  events = 'events',
 }
 
 export class WsClient {
-  public static readonly BASE_URL = ConfigService.getBaseApiUrl();
+  public static readonly BASE_URL = ConfigService.getWsUrl();
   public static readonly authData: WsConnectionOptions['auth'] = {
     // privateKey: 'API_KEY',
     // access_token: 'Bearer authorization',

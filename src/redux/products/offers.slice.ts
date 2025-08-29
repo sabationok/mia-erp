@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AppModuleName, StateErrorType } from 'redux/reduxTypes.types';
-import { IOfferRelatedDefaultFields, OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
-import * as thunks from './offers.thunks';
 import {
+  IOfferRelatedDefaultFields,
+  OfferEntity,
+  OfferTypeEnum,
   PropertyBaseEntity,
   PropertyLevelTypeEnum,
   PropertySelectableTypeEnum,
   VariationEntity,
 } from '../../types/offers';
+import * as thunks from './offers.thunks';
 import { createPropertyThunk, getAllPropertiesThunk, updatePropertyThunk } from './properties/properties.thunks';
 import { PartialRecord, SKU, UUID } from '../../types/utils.types';
 import { onCreatePriceMather, onGetPricesCase, onUpdatePriceMatcher } from '../priceManagement/prices.actions';
@@ -19,52 +21,65 @@ const ROOT_KEY = 'root';
 
 type OfferDefaultsKey = keyof IOfferRelatedDefaultFields;
 export interface OffersState {
-  list: OfferEntity[];
   filteredProducts?: OfferEntity[];
-  properties: PropertyBaseEntity[];
   isLoading: boolean;
   error: StateErrorType;
 
-  skuKeysMap: PartialRecord<SKU, UUID>;
+  list: OfferEntity[];
+  keysMap: PartialRecord<UUID | SKU, UUID[]>;
   dataMap: PartialRecord<UUID, OfferEntity>;
+  refsMap: PartialRecord<string, string>;
 
-  variationsKeysMap: PartialRecord<UUID, UUID[]>;
-  variationsMap: PartialRecord<UUID, VariationEntity>;
+  variations: {
+    list: VariationEntity[];
+    keysMap: PartialRecord<UUID | SKU, UUID[]>;
+    dataMap: PartialRecord<UUID, VariationEntity>;
+    refsMap: PartialRecord<string, string>;
+  };
 
-  propertiesKeysMap: Record<
-    OfferTypeEnum | PropertySelectableTypeEnum | PropertyLevelTypeEnum | typeof ROOT_KEY | UUID,
-    UUID[]
-  >;
-  propertiesDataMap: PartialRecord<UUID, PropertyBaseEntity>;
+  properties: {
+    list: PropertyBaseEntity[];
+    keysMap: Record<
+      OfferTypeEnum | PropertySelectableTypeEnum | PropertyLevelTypeEnum | typeof ROOT_KEY | UUID,
+      UUID[]
+    >;
+    dataMap: PartialRecord<UUID, PropertyBaseEntity>;
+  };
 }
 
 const initialState: OffersState = {
   isLoading: false,
   error: null,
+
   list: [],
-  filteredProducts: [],
-  properties: [],
-
   dataMap: {},
-  skuKeysMap: {},
+  keysMap: {},
+  refsMap: {},
 
-  variationsKeysMap: {},
-  variationsMap: {},
-
-  propertiesKeysMap: {
-    group: [],
-    value: [],
-    prop: [],
-    GOODS: [],
-    SERVICE: [],
-    SET: [],
-    static: [],
-    dynamic: [],
-    row: [],
-    col: [],
-    cell: [],
+  variations: {
+    list: [],
+    dataMap: {},
+    keysMap: {},
+    refsMap: {},
   },
-  propertiesDataMap: {},
+
+  properties: {
+    list: [],
+    dataMap: {},
+    keysMap: {
+      group: [],
+      value: [],
+      prop: [],
+      GOODS: [],
+      SERVICE: [],
+      SET: [],
+      static: [],
+      dynamic: [],
+      row: [],
+      col: [],
+      cell: [],
+    },
+  },
 };
 
 export const offersSlice = createSlice({
@@ -108,7 +123,7 @@ export const offersSlice = createSlice({
       // * ============>>>>>>>>>>> PROPERTIES
       .addCase(getAllPropertiesThunk.fulfilled, (s, a) => {
         if (a.payload.params?.dataView === 'tree') {
-          s.properties = a.payload.data;
+          s.properties.list = a.payload.data;
         }
 
         UpdatePropertiesMap(s, a.payload);
@@ -231,7 +246,7 @@ function ManageOffersStateMap(
   // console.log('offer from state', Offer);
 
   if (itemSku) {
-    st.skuKeysMap[itemSku] = itemId;
+    st.refsMap[itemSku] = itemId;
   }
 
   if (!options?.isForList && Offer) {
@@ -268,14 +283,14 @@ function ManageVariationsStateMap(
     const offerId = input.data?.offer?._id || input?.offerId;
     const itemSku = input.data?.sku;
 
-    st.variationsMap[itemId] = options?.refresh ? input.data : { ...st.dataMap?.[itemId], ...input.data };
+    st.variations.dataMap[itemId] = options?.refresh ? input.data : { ...st.dataMap?.[itemId], ...input.data };
 
     if (itemSku) {
-      st.skuKeysMap[itemSku] = itemId;
+      st.refsMap[itemSku] = itemId;
     }
 
     if (offerId) {
-      st.variationsKeysMap[itemId] = Array.from(new Set<string>(st.variationsKeysMap?.[itemId] ?? []).add(offerId));
+      st.variations.keysMap[itemId] = Array.from(new Set<string>(st.variations.keysMap?.[itemId] ?? []).add(offerId));
 
       if (st.dataMap[offerId]) {
         if (!st.dataMap[offerId]?.variations) {
@@ -301,9 +316,9 @@ function UpdatePropertiesMap(
 ) {
   data.forEach(item => {
     const itemId = item._id;
-    const prev = st.propertiesDataMap?.[itemId];
+    const prev = st.properties.dataMap?.[itemId];
 
-    st.propertiesDataMap[itemId] = {
+    st.properties.dataMap[itemId] = {
       ...prev,
       ...item,
       parent: prev?.parent
@@ -313,7 +328,7 @@ function UpdatePropertiesMap(
           }
         : item?.parent,
     };
-    const parentId = item?.parent?._id || st.propertiesDataMap?.[itemId]?.parent?._id;
+    const parentId = item?.parent?._id || st.properties.dataMap?.[itemId]?.parent?._id;
 
     for (const getDataKey of [
       () => item.levelType,
@@ -324,11 +339,11 @@ function UpdatePropertiesMap(
       const dataKey = getDataKey();
 
       if (dataKey) {
-        const current = new Set(st.propertiesKeysMap[dataKey]);
+        const current = new Set(st.properties.keysMap[dataKey]);
         if (!current.has(itemId)) {
           current.add(itemId);
 
-          st.propertiesKeysMap[dataKey] = Array.from(current);
+          st.properties.keysMap[dataKey] = Array.from(current);
         }
       }
     }
@@ -341,7 +356,7 @@ function UpdatePropertiesMap(
 
 export function DeletePropertyFromMap(st: OffersState, input: { id: string }) {
   const currentId = input.id;
-  const current = st.propertiesDataMap?.[currentId];
+  const current = st.properties.dataMap?.[currentId];
 
   function removeCurrentIdFromList(list?: string[]) {
     if (list) {
@@ -353,10 +368,10 @@ export function DeletePropertyFromMap(st: OffersState, input: { id: string }) {
   }
 
   if (current) {
-    delete st.propertiesDataMap?.[currentId];
-    removeCurrentIdFromList(st.propertiesKeysMap?.[currentId]);
+    delete st.properties.dataMap?.[currentId];
+    removeCurrentIdFromList(st.properties.keysMap?.[currentId]);
 
-    const childIds = st.propertiesKeysMap?.[currentId];
+    const childIds = st.properties.keysMap?.[currentId];
     if (childIds) {
       for (const childId of childIds) {
         DeletePropertyFromMap(st, { id: childId });

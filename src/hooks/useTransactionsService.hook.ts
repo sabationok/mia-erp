@@ -28,9 +28,9 @@ const useFinancesService = (): UseFinancesService => {
     const { deleteById, updateById, getById } = TransactionsApi;
     return {
       create: payload => dispatch(createTransactionThunk(defaultThunkPayload(payload))),
-      deleteById: payload => createApiCall(defaultApiCallPayload(payload), deleteById, TransactionsApi),
-      updateById: payload => createApiCall(defaultApiCallPayload(payload), updateById, TransactionsApi),
-      getById: payload => createApiCall(defaultApiCallPayload(payload), getById, TransactionsApi),
+      deleteById: payload => createApiCall(defaultApiCallPayload(payload), deleteById),
+      updateById: payload => createApiCall(defaultApiCallPayload(payload), updateById),
+      getById: payload => createApiCall(defaultApiCallPayload(payload), getById),
       getAll: payload => dispatch(getAllTransactionsThunk(defaultThunkPayload(payload))),
 
       bankAccounts: {

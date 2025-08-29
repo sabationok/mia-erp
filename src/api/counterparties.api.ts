@@ -1,6 +1,6 @@
-import { ApiQueryParams } from './index';
-import { ApiAxiosResponse, OnlyUUID } from '../redux/app-redux.types';
+import { OnlyUUID } from 'types/utils.types';
 import { CustomerEntity, ICustomerReqDta } from '../types/customers.types';
+import { ApiAxiosResponse, ApiQueryParams } from './api.types';
 import { ClientApi } from './client.api';
 
 export class CounterpartiesConnectionsApi {

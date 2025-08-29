@@ -1,11 +1,10 @@
 import { ModalFormProps } from '../ModalForm';
 import { AppFormProvider } from '../../hooks/useAppForm.hook';
-import { OfferTypeEnum } from '../../types/offers/offers.types';
+import { OfferTypeEnum, PropertyBaseEntity, PropertyFormData, PropertyLevelIsType } from '../../types/offers';
 import FlexBox from '../atoms/FlexBox';
 import { t } from '../../i18e';
 import { useAppForm } from '../../hooks';
-import { PropertyBaseEntity, PropertyFormData, PropertyLevelIsType } from '../../types/offers/properties.types';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { getIdRef } from '../../utils';
 import ModalBase from '../atoms/Modal';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
@@ -33,22 +32,18 @@ const CreatePropertyModal: React.FC<OfferPropertyModalProps> = ({
   onClose,
   // ...props
 }) => {
-  const dataMap = useOffersSelector().propertiesDataMap;
-  const parentLevelIs: PropertyLevelIsType = { [parent?.levelType ?? 'group']: true };
-  const currentLevelIs: PropertyLevelIsType = { [parent?.levelType ?? 'group']: true };
+  const { dataMap: _dataMap } = useOffersSelector().properties;
+  const dataMap = useMemo(() => new Map(Object.entries(_dataMap)), [_dataMap]);
 
-  const loaders = useLoaders<
-    FormCreatePropertyLoaderKey,
-    { current?: Partial<PropertyBaseEntity>; currentId?: string }
-  >(
-    {
-      create: { content: 'Creating...' },
-      update: { content: 'Updating...' },
-      current: { content: 'Fetching...' },
-    },
-    { current: updateId ? dataMap?.[updateId] : undefined, currentId: updateId }
-  );
-  const currentProp = loaders.state?.currentId ? dataMap?.[loaders.state?.currentId] : undefined;
+  const loaders = useLoaders<FormCreatePropertyLoaderKey>({
+    create: { content: 'Creating...' },
+    update: { content: 'Updating...' },
+    current: { content: 'Fetching...' },
+  });
+
+  const currentProp = updateId ? dataMap.get(updateId) : undefined;
+  const parentLevelIs: PropertyLevelIsType = { [parent?.levelType ?? 'group']: true };
+  const currentLevelIs: PropertyLevelIsType = { [(currentProp ?? defaultState)?.levelType ?? 'group']: true };
 
   const form = useAppForm<PropertyFormData>({
     defaultValues: !defaultState

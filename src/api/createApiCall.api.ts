@@ -1,13 +1,11 @@
-import { ApiAxiosResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse, ApiRequestConfig } from './api.types';
 
 export type GetResponseCallback<SD = any, PR = any, RD = any, MD = any> = (
-  arg?: SD,
+  data?: SD,
   params?: PR
 ) => Promise<ApiAxiosResponse<RD, MD> | undefined>;
 
-export interface ApiCallerPayload<SD = any, PR = any, RD = any, E = any | unknown> {
-  data?: SD;
-  params?: PR;
+export type ApiCallerPayload<SD = any, PR = any, RD = any, E = any | unknown> = ApiRequestConfig<SD, PR> & {
   onSuccess?: (data: RD) => void;
   onError?: (error: E) => void;
   onLoading?: (loading: boolean) => void;
@@ -15,7 +13,7 @@ export interface ApiCallerPayload<SD = any, PR = any, RD = any, E = any | unknow
   logRes?: boolean;
   logResData?: boolean;
   throwError?: boolean;
-}
+};
 
 // export type ApiCaller<SD = any, PR = any, RD = any, E = any, MD = any, CTX = any> = (
 //   payload: ApiCallerPayload<SD, PR, RD, E>,
@@ -24,7 +22,16 @@ export interface ApiCallerPayload<SD = any, PR = any, RD = any, E = any | unknow
 // ) => Promise<AppResponse<RD, MD> | undefined>;
 
 const createApiCall = async <SD = any, PR = any, RD = any, E = any, MD = any, CTX = any>(
-  { onLoading, onError, onSuccess, data, logError, logRes, logResData, throwError }: ApiCallerPayload<SD, PR, RD, E>,
+  {
+    onLoading,
+    onError,
+    onSuccess,
+    logError,
+    logRes,
+    logResData,
+    throwError,
+    ...config
+  }: ApiCallerPayload<SD, PR, RD, E>,
   getResponseCallback: GetResponseCallback<SD, PR, RD, MD>,
   context?: CTX
 ): Promise<ApiAxiosResponse<RD, MD> | undefined> => {
@@ -33,7 +40,7 @@ const createApiCall = async <SD = any, PR = any, RD = any, E = any, MD = any, CT
   const getResponse = context ? getResponseCallback.bind(context) : getResponseCallback;
 
   try {
-    const res = await getResponse(data);
+    const res = await getResponse(config.data, config.params);
     if (res && res.data.data && onSuccess) {
       onSuccess(res.data.data);
     }
@@ -58,18 +65,20 @@ const createApiCall = async <SD = any, PR = any, RD = any, E = any, MD = any, CT
   }
 };
 
+export type GetResponseCallback2<SD = any, PR = any, RD = any, MD = any> = (
+  arg: ApiRequestConfig<SD, PR>
+) => Promise<ApiAxiosResponse<RD, MD> | undefined>;
 export const apiCall = async <SD = any, PR = any, RD = any, E = any, MD = any, CTX = any>(
-  getResponseCallback: GetResponseCallback<SD, PR, RD, MD>,
+  getResponseCallback: GetResponseCallback2<SD, PR, RD, MD>,
   {
     onLoading,
     onError,
     onSuccess,
-    data,
-    params,
     logError,
     logRes,
     logResData,
     throwError,
+    ...config
   }: ApiCallerPayload<SD, PR, RD, E>,
   context?: CTX
 ): Promise<ApiAxiosResponse<RD, MD> | undefined> => {
@@ -78,7 +87,7 @@ export const apiCall = async <SD = any, PR = any, RD = any, E = any, MD = any, C
   const getResponse = context ? getResponseCallback.bind(context) : getResponseCallback;
 
   try {
-    const res = await getResponse(data, params);
+    const res = await getResponse(config);
     if (res && res.data.data && onSuccess) {
       onSuccess(res.data.data);
     }

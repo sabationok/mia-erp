@@ -1,6 +1,5 @@
-import { ApiAxiosResponse, DataView } from './api.types';
+import { ApiAxiosResponse, ApiQueryParams, DataView } from './api.types';
 import { IBaseDirItem } from '../types/dir.types';
-import { ApiQueryParams } from './index';
 import { ClientApi } from './client.api';
 
 export type GetAllByDirTypeOptions = Required<Pick<ApiQueryParams, 'dirType'>> & {
@@ -97,6 +96,6 @@ export default class DirectoriesApi {
   };
 
   public static getAllDirectoriesGroupedData = () => {
-    return this.api.get(this.endpoints.getAllGrouped(''));
+    return this.api.get(this.endpoints.getAllGrouped());
   };
 }

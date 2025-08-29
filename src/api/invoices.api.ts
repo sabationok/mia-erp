@@ -1,32 +1,43 @@
-import { ApiQueryParams } from './index';
-import { ApiAxiosResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse, ApiQueryParams, ApiRequestConfig } from './api.types';
 import { IInvoicingMethod, IInvoicingMethodReqData } from '../types/integrations.types';
 import { CreateInvoiceReqData, InvoiceEntity } from '../types/invoices.types';
 import { ClientApi } from './client.api';
 
-export default class InvoicesApi {
-  private static api = ClientApi.clientRef;
+class InvoicesMethodsApi {
+  private static _client = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.invoices;
 
+  public static getAll = (): Promise<ApiAxiosResponse<IInvoicingMethod[]>> => {
+    return this._client.get(this.endpoints.methods.getAll());
+  };
+
+  public static update = (
+    config: ApiRequestConfig<IInvoicingMethodReqData>
+  ): Promise<ApiAxiosResponse<IInvoicingMethod>> => {
+    return this._client.patch(this.endpoints.methods.update(), config?.data, config);
+  };
+}
+
+export default class InvoicesApi {
+  private static _client = ClientApi.clientRef;
+  private static endpoints = ClientApi._endpoints.invoices;
+  static methods = InvoicesMethodsApi;
   public static createForOrder(req?: CreateInvoiceReqData): Promise<ApiAxiosResponse<InvoiceEntity>> {
-    return this.api.post(this.endpoints.createForOrder(), req?.data, { params: req?.params });
+    return this._client.post(this.endpoints.createForOrder(), req?.data, { params: req?.params });
   }
 
   public static createForDelivery(req?: CreateInvoiceReqData): Promise<ApiAxiosResponse<InvoiceEntity>> {
-    return this.api.post(this.endpoints.createForDelivery(), req?.data, { params: req?.params });
+    return this._client.post(this.endpoints.createForDelivery(), req?.data, { params: req?.params });
   }
 
   public static getAll = (
-    _?: undefined,
-    params?: Partial<Pick<ApiQueryParams, 'orderId' | 'deliveryId' | 'groupId' | 'customerId' | 'withDeleted'>>
+    config: ApiRequestConfig<
+      unknown,
+      Partial<
+        Pick<ApiQueryParams, 'orderId' | 'deliveryId' | 'groupId' | 'customerId' | 'withDeleted' | 'limit' | 'offset'>
+      >
+    >
   ): Promise<ApiAxiosResponse<InvoiceEntity[]>> => {
-    return this.api.get(this.endpoints.getAll(), { params });
-  };
-  public static getAllMethods = (): Promise<ApiAxiosResponse<IInvoicingMethod[]>> => {
-    return this.api.get(this.endpoints.methods.getAll());
-  };
-
-  public static updateMethod = (data?: IInvoicingMethodReqData): Promise<ApiAxiosResponse<IInvoicingMethod>> => {
-    return this.api.patch(this.endpoints.methods.update(data?._id), data?.data, { params: data?.params });
+    return this._client.get(this.endpoints.getAll(), config);
   };
 }

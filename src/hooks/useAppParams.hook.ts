@@ -11,8 +11,12 @@ export enum AppUrlParamKeys {
   offerId = 'offerId',
   orderId = 'orderId',
   cartId = 'cartId',
+  chatId = 'chatId',
   refundId = 'refundId',
   customerId = 'customerId',
+
+  leftSide = 'leftSide',
+  rightSide = 'rightSide',
 }
 
 export type AppUrlIdParams = PartialRecord<Extract<Keys<typeof AppUrlParamKeys>, `${string}Id`>, UUID>;

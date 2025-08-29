@@ -22,14 +22,14 @@ export interface ChatWsInitializerMethods {
 export const ChatWsInitializer = React.forwardRef(
   (
     {
-      permissionId,
+      // permissionId,
       onConnect,
       onConnectError,
       onJoin,
       onLeave,
       onTyping,
       chatId,
-      orderId,
+      // orderId,
       onSend,
     }: {
       chatId?: string;
@@ -42,7 +42,7 @@ export const ChatWsInitializer = React.forwardRef(
       onTyping?: WsChat.ListenersMap[WsChat.EventNames.messages_typing];
       onSend?: WsChat.ListenersMap[WsChat.EventNames.messages_send];
     },
-    ref?: React.ForwardedRef<ChatWsInitializerMethods>
+    _ref?: React.ForwardedRef<ChatWsInitializerMethods>
   ) => {
     const dispatch = useAppDispatch();
     const handleConnected = useCallback(() => {

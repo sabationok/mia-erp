@@ -1,7 +1,7 @@
-import { ApiQueryParams } from './index';
-import { ApiAxiosResponse, OnlyUUID } from '../redux/app-redux.types';
+import { OnlyUUID } from '../types/utils.types';
 import { CustomerEntity, ICustomerReqDta } from '../types/customers.types';
 import { ClientApi } from './client.api';
+import { ApiAxiosResponse, ApiQueryParams } from './api.types';
 
 export default class CustomersApi {
   private static _client = ClientApi.clientRef;

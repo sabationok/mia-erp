@@ -28,6 +28,7 @@ export interface CmsParamsBase<
   labels?: LabelCmsParams;
   name?: NameCmsParams;
   extra?: Extra;
+  description?: LangPack;
 }
 export interface CmsParamsEntity<
   Key extends string = string,

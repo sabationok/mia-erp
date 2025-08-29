@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { PropertyEntity } from '../types/offers/properties.types';
+import { PropertyBaseEntity, PropertyValueEntity } from '../types/offers/properties.types';
 import { t } from '../i18e';
 import { VariationEntity } from '../types/offers/variations.types';
 import { AmountAndPercentageFields, PriceAmountAndPercentageFields } from '../types/price-management';
@@ -49,7 +49,7 @@ export const transformVariationTableData = (variation: VariationEntity): Variati
 };
 
 export function createTableTitlesFromProperties(
-  properties?: PropertyEntity[]
+  properties?: (PropertyBaseEntity | PropertyValueEntity)[]
 ): CellTittleProps<VariationEntity>[] | undefined {
   let titles: CellTittleProps<VariationEntity>[] = [];
   if (properties?.length) {

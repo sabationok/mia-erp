@@ -1,4 +1,4 @@
-import { ApiAxiosResponse, ApiQueryParams, ClientApi } from './index';
+import { ApiAxiosResponse, ApiQueryParams, ApiRequestConfig, ClientApi } from './index';
 import {
   Connections,
   InputConnectionEntity,
@@ -34,11 +34,15 @@ export namespace ConnectionsApi {
     };
 
     public static integrations = {
-      remove: (data?: {
-        type: keyof typeof Connections.TypeEnum;
-        _id: string | undefined;
-      }): Promise<ApiAxiosResponse<{ result: boolean }>> => {
-        return this._client.delete(this.endpoints.delete(Connections.TypeEnum[data?.type || 'input'], data?._id));
+      remove: (
+        config: ApiRequestConfig<{
+          type: keyof typeof Connections.TypeEnum;
+          _id: string | undefined;
+        }>
+      ): Promise<ApiAxiosResponse<{ result: boolean }>> => {
+        return this._client.delete(
+          this.endpoints.delete(Connections.TypeEnum[config.data?.type || 'input'], config.data?._id)
+        );
       },
     };
 

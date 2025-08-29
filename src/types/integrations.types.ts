@@ -290,7 +290,7 @@ export interface ServiceMethodBase<
 export interface IMethodReqData<DtoLike = any> {
   _id?: string;
   data?: Partial<OnlyUUID> & Omit<DtoLike, IBaseKeys | 'isDefault' | 'service' | 'extService'>;
-  params?: Pick<ApiQueryParams, 'disabled' | 'withDeleted' | 'withDefault'>;
+  params?: Pick<ApiQueryParams, 'disabled' | 'withDeleted' | 'withDefault' | 'serviceId'>;
 }
 
 export enum PaymentInternalTypeEnum {

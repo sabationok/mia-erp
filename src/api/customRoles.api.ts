@@ -1,12 +1,17 @@
-import { ApiAxiosResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse } from './api.types';
 import { ModuleWithActions } from '../redux/customRoles/customRoles.types';
 import { ClientApi } from './client.api';
 
-export default class CustomRolesApi {
-  private static api = ClientApi.clientRef;
+class ActionsApi {
+  private static _client = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.customRoles;
 
-  public static getAllActions(): Promise<ApiAxiosResponse<ModuleWithActions[]>> {
-    return this.api.get(this.endpoints.getAllActions());
-  }
+  public static getAll = (): Promise<ApiAxiosResponse<ModuleWithActions[]>> => {
+    return this._client.get(this.endpoints.actions.getAll());
+  };
+}
+export default class CustomRolesApi {
+  static actions = ActionsApi;
+  // private static _client = ClientApi.clientRef;
+  // private static endpoints = ClientApi._endpoints.customRoles;
 }

@@ -115,13 +115,14 @@ export default class ConfigService {
     const stage = this.getStage();
 
     const urls = this._api_urls[provider];
-    const url = stage ? urls[stage] ?? urls.development : urls.development;
-    console.log({
-      provider,
-      stage,
-      urls,
-      url,
-    });
+
+    return stage ? urls[stage] ?? urls.development : urls.development;
+  }
+
+  static getWsUrl() {
+    const stage = this.getStage();
+    const urls = this._api_urls.railway;
+
     return stage ? urls[stage] ?? urls.development : urls.development;
   }
 }

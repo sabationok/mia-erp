@@ -4,17 +4,18 @@ import { Keys } from '../types/utils.types';
 export enum API_BASE_ROUTES {
   APP = 'APP',
   AUTH = '/auth',
-  AUTH_DEVICES = '/auth/devices',
-  AUTH_O_AUTH = '/auth/o-auth',
-  AUTH_O_AUTH_CONFIGS = '/auth/o-auth/configs',
+  AUTH_DEVICES = `${AUTH}/devices`,
+  AUTH_O_AUTH = `${AUTH}/o-auth`,
+  AUTH_O_AUTH_CONFIGS = `${AUTH}/o-auth/configs`,
 
   PERMISSIONS = '/permissions',
   COMPANIES = '/companies',
   DIRECTORIES = '/directories',
   TRANSACTIONS = `/transactions`,
-  FINANCES_TRANSACTIONS = '/finances/transactions',
-  FINANCES_BANK_ACCOUNTS = '/finances/bank-accounts',
-  FINANCES_FIN_ACCOUNTS = '/finances/fin-counts',
+  FINANCES = '/finances',
+  FINANCES_TRANSACTIONS = `${FINANCES}/transactions`,
+  FINANCES_BANK_ACCOUNTS = `${FINANCES}/bank-accounts`,
+  FINANCES_FIN_ACCOUNTS = `${FINANCES}/fin-counts`,
   CUSTOM_ROLES = '/roles',
   CUSTOM_ROLES_ACTIONS = '/roles/actions',
   FILES = '/files',
@@ -22,23 +23,23 @@ export enum API_BASE_ROUTES {
   OFFERS_PROPERTIES = '/products/properties',
   OFFERS_VARIATIONS = '/products/variations',
   ORDERS = '/orders',
-  ORDERS_SLOTS = '/orders/slots',
-  ORDERS_SALES = '/orders/sales',
-  ORDERS_SALES_SLOTS = '/orders/slots', // ! /orders/sales/slots
-  ORDERS_PURCHASE = '/orders/purchases',
-  ORDERS_PURCHASE_SLOTS = '/orders/purchases/slots',
+  ORDERS_SLOTS = `${ORDERS}/slots`,
+  ORDERS_SALES = `${ORDERS}/sales`,
+  ORDERS_SALES_SLOTS = `${ORDERS}/slots`, // ! /orders/sales/slots
+  ORDERS_PURCHASE = `${ORDERS}/purchases`,
+  ORDERS_PURCHASE_SLOTS = `${ORDERS}/purchases/slots`,
   REFUNDS = '/refunds',
-  REFUNDS_SLOTS = '/refunds/slots',
-  REFUNDS_REQUESTS = '/refunds/requests',
-  REFUNDS_RETURNS = '/refunds/returns',
-  REFUNDS_EXCHANGES = '/refunds/exchanges',
+  REFUNDS_SLOTS = `${REFUNDS}/slots`,
+  REFUNDS_REQUESTS = `${REFUNDS}/requests`,
+  REFUNDS_RETURNS = `${REFUNDS}/returns`,
+  REFUNDS_EXCHANGES = `${REFUNDS}/exchanges`,
   PRICE_MANAGEMENT = '/priceManagement',
-  PRICE_MANAGEMENT_PRICES = '/priceManagement/prices',
-  PRICE_MANAGEMENT_PRICES_LISTS = '/priceManagement/prices-lists',
-  PRICE_MANAGEMENT_DISCOUNTS = '/priceManagement/discounts',
+  PRICE_MANAGEMENT_PRICES = `${PRICE_MANAGEMENT}/prices`,
+  PRICE_MANAGEMENT_PRICES_LISTS = `${PRICE_MANAGEMENT}/prices-lists`,
+  PRICE_MANAGEMENT_DISCOUNTS = `${PRICE_MANAGEMENT}/discounts`,
   WAREHOUSES = '/warehouses',
-  WAREHOUSES_INVENTORIES = '/warehouses/inventories',
-  WAREHOUSES_DOCUMENTS = '/warehouses/documents',
+  WAREHOUSES_INVENTORIES = `${WAREHOUSES}/inventories`,
+  WAREHOUSES_DOCUMENTS = `${WAREHOUSES}/documents`,
 
   PAYMENTS = '/payments',
   TAGS = '/tags',
@@ -52,7 +53,7 @@ export enum API_BASE_ROUTES {
   CONNECTIONS = '/connections',
   TRACK_LINKS = 'tracking-links',
   CHAT = '/chat',
-  CHAT_MESSAGES = '/chat/messages',
+  CHAT_MESSAGES = `${CHAT}/messages`,
 }
 
 export enum Endpoints {
@@ -267,7 +268,6 @@ const directories = {
 
 const customRoles = {
   ...createEndpoints('CUSTOM_ROLES', EndpointsCRUD),
-  getAllActions: () => `${API_BASE_ROUTES.CUSTOM_ROLES}/v2/getAllActions`,
   actions: createEndpoints('CUSTOM_ROLES_ACTIONS', { getAll: 'getAll' }),
 };
 
@@ -362,19 +362,12 @@ const invoices = {
   methods: createMethodsEndpoints(API_BASE_ROUTES.INVOICES),
 };
 
-const shipments = createEndpoints2('SHIPMENTS', {
-  create: () => `/create`,
-  getAll: () => `/getAll`,
-  getById: (id?: string) => `/getById/${id}`,
-  getAllMethods: () => `/${Endpoints.methods}/getAll`,
-  updateMethod: (id?: string) => `/${Endpoints.methods}/update/${id}`,
-});
+const shipments = {
+  ...createEndpoints('SHIPMENTS', EndpointsCRUD),
+  methods: createMethodsEndpoints(API_BASE_ROUTES.SHIPMENTS),
+};
 const deliveries = {
-  ...createEndpoints2('DELIVERY', {
-    create: () => `/create`,
-    getAll: () => `/getAll`,
-    getById: (id?: string) => `/getById/${id}`,
-  }),
+  ...createEndpoints('DELIVERY', EndpointsCRUD),
   methods: createMethodsEndpoints(API_BASE_ROUTES.DELIVERY),
 };
 const customers = {
@@ -457,7 +450,7 @@ const APP_CONFIGS = {
     } as const),
     directories,
     customRoles,
-    finTransactions: finances,
+    finances,
     offers,
     warehousing,
     priceManagement,

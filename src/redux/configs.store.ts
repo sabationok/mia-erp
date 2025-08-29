@@ -76,9 +76,9 @@ export const persistorConfigs: AppPersistConfigs = {
     storage: storageSession,
     whitelist: [
       'dataMap',
-      'skuKeysMap',
+      'keysMap',
       'list',
-      'properties',
+      'propertiesList',
       // 'variationsKeysMap',
       // 'variationsMap',
       'propertiesKeysMap',

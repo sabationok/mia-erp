@@ -14,7 +14,7 @@ import {
 import { useMemo } from 'react';
 import { defaultApiCallPayload } from 'utils/fabrics';
 import { createApiCall } from 'api';
-import OffersApi from '../api/offers.api';
+import OffersApi from '../api/offers/offers.api';
 import {
   createPropertyThunk,
   deletePropertyThunk,
@@ -31,7 +31,7 @@ export interface OffersService {
   deleteById: ServiceApiCaller<string, OfferEntity>; // !!!!! ===>>> ServiceDispatcher
   getFullInfo: __ServiceDispatcherAsync<typeof getOfferFullInfoThunk>;
 
-  properties?: {
+  properties: {
     getAll: __ServiceDispatcherAsync<typeof getAllPropertiesThunk>;
     create: __ServiceDispatcherAsync<typeof createPropertyThunk>;
     update: __ServiceDispatcherAsync<typeof updatePropertyThunk>;

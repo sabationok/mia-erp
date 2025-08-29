@@ -4,14 +4,13 @@ import {
   ITransactionReqData,
   ITransactionRes,
 } from 'types/finances/transactions.types';
-import { ApiQueryParams } from './index';
-import { ApiAxiosResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse, ApiQueryParams } from './api.types';
 import { BankAccountEntity, BankAccountReqData } from '../types/finances/bank-accounts.types';
 import { ClientApi } from './client.api';
 
 export default class TransactionsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = ClientApi._endpoints.finTransactions;
+  private static endpoints = ClientApi._endpoints.finances;
 
   public static getAll = (params?: ApiQueryParams): Promise<IAllTransactionsRes> => {
     return this.api.get(this.endpoints.getAll(), {
@@ -37,16 +36,16 @@ export default class TransactionsApi {
 }
 export class BankAccountsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = ClientApi._endpoints.finTransactions.bankAccounts;
-  public static create = (reqData?: BankAccountReqData): Promise<ApiAxiosResponse<BankAccountEntity>> => {
-    return this.api.post(this.endpoints.create(), reqData?.data, { params: reqData?.params });
+  private static endpoints = ClientApi._endpoints.finances.bankAccounts;
+  public static create = (config?: BankAccountReqData): Promise<ApiAxiosResponse<BankAccountEntity>> => {
+    return this.api.post(this.endpoints.create(), config?.data, config);
   };
 
-  public static update = (reqData?: BankAccountReqData): Promise<ApiAxiosResponse<BankAccountEntity>> => {
-    return this.api.patch(this.endpoints.update(reqData?.data?._id), reqData?.data);
+  public static update = (config?: BankAccountReqData): Promise<ApiAxiosResponse<BankAccountEntity>> => {
+    return this.api.patch(this.endpoints.update(), config?.data);
   };
-  public static getAll = (reqData?: { params?: ApiQueryParams }): Promise<ApiAxiosResponse<BankAccountEntity[]>> => {
-    return this.api.get(this.endpoints.getAll(), { params: reqData?.params });
+  public static getAll = (config?: { params?: ApiQueryParams }): Promise<ApiAxiosResponse<BankAccountEntity[]>> => {
+    return this.api.get(this.endpoints.getAll(), config);
   };
 }
 

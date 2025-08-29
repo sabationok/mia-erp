@@ -1,10 +1,8 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { Provider } from 'react-redux';
 import { persistor, store } from 'redux/store.store';
 import { PersistGate } from 'redux-persist/integration/react';
-import { BrowserRouter } from 'react-router-dom';
 import ThemeProvider from 'Providers/AppThemeProvider/ThemeProvider';
 import ModalProvider from 'Providers/ModalProvider/ModalProvider';
 import './index.scss';
@@ -19,19 +17,19 @@ root.render(
   //<React.StrictMode>
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <BrowserRouter basename="/mia-erp">
-        <AppServiceProvider>
-          <ThemeProvider>
-            <CartProvider>
-              <ModalProvider>
-                <SideBarProvider>
-                  <App />
-                </SideBarProvider>
-              </ModalProvider>
-            </CartProvider>
-          </ThemeProvider>
-        </AppServiceProvider>
-      </BrowserRouter>
+      {/*<BrowserRouter basename="/mia-erp">*/}
+      <AppServiceProvider>
+        <ThemeProvider>
+          <CartProvider>
+            <ModalProvider>
+              <SideBarProvider>
+                <App />
+              </SideBarProvider>
+            </ModalProvider>
+          </CartProvider>
+        </ThemeProvider>
+      </AppServiceProvider>
+      {/*</BrowserRouter>*/}
     </PersistGate>
   </Provider>
   //</React.StrictMode>

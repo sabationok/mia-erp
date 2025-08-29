@@ -20,7 +20,7 @@ import { orderInfoBaseSchema } from '../validation';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import * as fns from 'date-fns';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { apiCall, OrdersApi } from '../../../api';
+import { createApiCall, OrdersApi } from '../../../api';
 import { IOrderTempSlot } from '../../../types/orders/order-slot.types';
 
 export interface FormCreateOrdersGroupProps
@@ -109,7 +109,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
       return;
     }
 
-    apiCall(OrdersApi.groups.createByWarehouse, {
+    createApiCall(OrdersApi.groups.createByWarehouse, {
       data: {
         info: service.toOrderInfoReqData(orderInfoFormValues, {
           omitPathArr: [],

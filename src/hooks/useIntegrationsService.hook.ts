@@ -2,7 +2,7 @@ import { useAppDispatch } from '../redux/store.store';
 import { useMemo } from 'react';
 import { __ServiceDispatcherAsync, _ServiceApiCaller } from '../redux/app-redux.types';
 import { getAllExternalServicesThunk, getAllIntegrationsByTypeThunk } from '../redux/integrations/integrations.thunk';
-import { apiCall, ConnectionsApi } from '../api';
+import { ConnectionsApi, createApiCall } from '../api';
 
 export interface UseConnectionsService {
   getAllExtServices: __ServiceDispatcherAsync<typeof getAllExternalServicesThunk>;
@@ -17,8 +17,8 @@ const useConnectionsService = () => {
     return {
       getAllExtServices: args => dispatch(getAllExternalServicesThunk(args)),
       getAll: args => dispatch(getAllIntegrationsByTypeThunk(args)),
-      createInput: args => apiCall(input.create, { data: args, params: args?.params }),
-      createOutput: args => apiCall(output.create, { data: args, params: args?.params }),
+      createInput: args => createApiCall(input.create, { data: args, params: args?.params }),
+      createOutput: args => createApiCall(output.create, { data: args, params: args?.params }),
     };
   }, [dispatch]);
 };

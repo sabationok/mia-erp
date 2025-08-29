@@ -1,5 +1,4 @@
-import { ApiQueryParams } from './index';
-import { ApiAxiosResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse, ApiQueryParams, ApiRequestConfig } from './api.types';
 import { IDeliveryMethod } from '../types/integrations.types';
 import { ClientApi } from './client.api';
 
@@ -7,22 +6,22 @@ export default class ShipmentsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.shipments;
 
-  public static createOne(args?: any, params?: ApiQueryParams) {
-    return this.api.post(this.endpoints.create());
-  }
-  public static getAllByQueries(params?: ApiQueryParams) {
-    return this.api.get(this.endpoints.getAll(), { params });
-  }
-  public static getById(id?: string, params?: ApiQueryParams) {
-    return this.api.get(this.endpoints.getAll(), { params });
-  }
+  public static create = (config: ApiRequestConfig) => {
+    return this.api.post(this.endpoints.create(), config.data);
+  };
+  public static getAll = (config: ApiRequestConfig<unknown, ApiQueryParams>) => {
+    return this.api.get(this.endpoints.getAll(), config);
+  };
+  public static getOne = (config: ApiRequestConfig<unknown, ApiQueryParams>) => {
+    return this.api.get(this.endpoints.getOne(), config);
+  };
 
-  public static getAllMethods(
-    params?: Pick<ApiQueryParams, 'disabled' | 'isDefault'>
-  ): Promise<ApiAxiosResponse<IDeliveryMethod[]>> {
-    return this.api.get(this.endpoints.getAllMethods(), { params });
-  }
-  public static updateMethod(args: any): Promise<ApiAxiosResponse<IDeliveryMethod>> {
-    return this.api.patch(this.endpoints.updateMethod(args._id), args.data, { params: args?.params });
-  }
+  public static getAllMethods = (
+    config: ApiRequestConfig<unknown, Pick<ApiQueryParams, 'disabled' | 'isDefault'>>
+  ): Promise<ApiAxiosResponse<IDeliveryMethod[]>> => {
+    return this.api.get(this.endpoints.methods.getAll(), config);
+  };
+  public static updateMethod = (config: ApiRequestConfig): Promise<ApiAxiosResponse<IDeliveryMethod>> => {
+    return this.api.patch(this.endpoints.methods.update(), config.data, config);
+  };
 }

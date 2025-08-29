@@ -27,6 +27,12 @@ export enum RouteActionsEnum {
   deleteSoft = 'deleteSoft',
   deleteSoftOwn = 'deleteSoftOwn',
 }
+
+export enum RouteActionScopeEnum {
+  own = 'own',
+  all = 'all',
+  shared = 'shared',
+}
 export interface ModuleWithActions {
   label: ModuleName | string;
   labels: LangPack;
@@ -39,9 +45,9 @@ export interface RoleActionType {
 
   labels: LangPack;
 
-  value?: RouteActionsEnum;
-
   type?: RouteActionsEnum;
+
+  scope?: RouteActionScopeEnum;
 }
 
 export type RoleAccessKeyType = string;

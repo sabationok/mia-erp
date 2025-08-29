@@ -15,7 +15,7 @@ import { ModalHeader } from '../../../atoms';
 import FlexBox from '../../../atoms/FlexBox';
 import StepsController from '../../../atoms/StepsController';
 import { useAppForm } from '../../../../hooks';
-import VariationsApi from '../../../../api/variations.api';
+import VariationsApi from '../../../../api/offers/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
 import { WarehouseEntity, WarehouseInventoryEntity } from '../../../../types/warehousing';
 import { warehouseBatchColumns } from '../../../../data/warehauses.data';
@@ -190,8 +190,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
           onSuccess: setProducts,
           onLoading: setIsLoading,
         },
-        OffersApi.getAll,
-        OffersApi
+        OffersApi.getAll as never
       );
     }
     if (stepCheck(FormCreateOrderSlotSteps.variation) && product) {
@@ -203,8 +202,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
           },
           onLoading: setIsLoading,
         },
-        VariationsApi.getAllByOfferId,
-        VariationsApi
+        VariationsApi.getAllByOfferId as never
       );
     }
     if (stepCheck(FormCreateOrderSlotSteps.batch) && product) {
@@ -218,8 +216,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
           onSuccess: setInventories,
           onLoading: setIsLoading,
         },
-        WarehousesApi.getAllInventories,
-        WarehousesApi
+        WarehousesApi.inventories.getAll()
       );
     }
   }, [formData, params?.warehouse, search, searchBy, stepCheck]);

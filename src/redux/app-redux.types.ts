@@ -5,8 +5,6 @@ import { AppDate, MaybeNull, OnlyUUID } from '../types/utils.types';
 
 export * from '../types/global.types';
 
-export type { ApiAxiosResponse } from '../api/api.types';
-
 export interface IFormDataValueWithID<DirType extends ApiDirType = any> extends OnlyUUID {
   label?: MaybeNull<string>;
   name?: string;

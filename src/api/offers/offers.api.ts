@@ -1,9 +1,15 @@
-import { ApiQueryParams, ApiQuerySearchParams, ApiQuerySortParams, DatePeriodQuery } from './index';
-import { OfferEntity, OfferReqData, OfferStatusEnum, OfferTypeEnum } from '../types/offers/offers.types';
-import { ApiAxiosResponse } from '../redux/app-redux.types';
-import { ClientApi } from './client.api';
-import { UUID } from '../types/utils.types';
-import { OfferSearchParam, OfferSortParam } from '../data';
+import { OfferEntity, OfferReqData, OfferStatusEnum, OfferTypeEnum } from '../../types/offers';
+import {
+  ApiAxiosResponse,
+  ApiQueryParams,
+  ApiQuerySearchParams,
+  ApiQuerySortParams,
+  DatePeriodQuery,
+} from '../api.types';
+import { ClientApi } from '../client.api';
+import { UUID } from '../../types/utils.types';
+import { OfferSearchParam, OfferSortParam } from '../../data';
+import PropertiesApi from './properties.api';
 
 export interface GetOneOfferQuery {
   _id?: UUID;
@@ -11,13 +17,15 @@ export interface GetOneOfferQuery {
   getVariations?: boolean;
   getDiscounts?: boolean;
 }
+
+type DataPath = Extract<Required<OfferSearchParam>['dataPath'], string>;
 export interface GetAllOffersQuery
   extends Pick<
       ApiQueryParams,
       'sku' | 'label' | 'barCode' | 'limit' | 'offset' | 'tagsIds' | 'categoriesIds' | 'brandsIds' | 'propertiesIds'
     >,
     ApiQuerySortParams<OfferSortParam['dataPath']>,
-    ApiQuerySearchParams<OfferSearchParam['dataPath']> {
+    ApiQuerySearchParams<DataPath> {
   warehouse?: {
     ids?: string[];
     code?: string;
@@ -34,6 +42,7 @@ export interface GetAllOffersQuery
 export default class OffersApi {
   private static api = ClientApi.clientRef;
   private static endpoints = ClientApi._endpoints.offers;
+  static properties = PropertiesApi;
 
   public static getAll = async (
     _?: undefined,

@@ -27,25 +27,25 @@ const DirTreeComp = ({
   ...props
 }: DirTreeComponentProps) => {
   const { directory } = useDirectorySelector(dirType);
-  const service = useDirService();
-  const modalService = useModalProvider();
+  const dirSrv = useDirService();
+  const modalS = useModalProvider();
   const [current, setCurrent] = useState(filterDefaultValue);
 
   const actions = useMemo(
     () =>
       actionsCreator &&
       actionsCreator({
-        modalService,
+        modalService: modalS,
         type: current,
-        service,
+        service: dirSrv,
         dirType,
       }),
-    [actionsCreator, current, service, dirType, modalService]
+    [actionsCreator, current, dirSrv, dirType, modalS]
   );
 
   useEffect(() => {
     if (!directory.length) {
-      service.getAll({ data: { dirType } });
+      dirSrv.getAll({ data: { dirType } });
     }
     // eslint-disable-next-line
   }, []);

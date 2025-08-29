@@ -1,11 +1,10 @@
-import { ApiQueryParams } from './index';
-import { ApiAxiosResponse } from '../redux/app-redux.types';
+import { ApiAxiosResponse, ApiQueryParams } from '../api.types';
 import { IVariationReqData, VariationEntity } from 'types/offers/variations.types';
-import { ClientApi } from './client.api';
+import { ClientApi } from '../client.api';
 
 export default class VariationsApi {
   private static api = ClientApi.clientRef;
-  private static endpoints = ClientApi._endpoints.variationsApiEndpoints;
+  private static endpoints = ClientApi._endpoints.offers;
 
   public static getAll = (
     _?: undefined,
@@ -20,7 +19,7 @@ export default class VariationsApi {
       offerId: string;
     }
   ): Promise<ApiAxiosResponse<VariationEntity[]>> => {
-    return this.api.get(this.endpoints.getAllByProductId(params?.offerId), { params: params });
+    return this.api.get(this.endpoints.getAll(), { params: params });
   };
 
   public static create = (data?: IVariationReqData): Promise<ApiAxiosResponse<VariationEntity>> => {

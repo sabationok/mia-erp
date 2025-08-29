@@ -1,4 +1,4 @@
-import VariationsApi from '../../../api/variations.api';
+import VariationsApi from '../../../api/offers/variations.api';
 import { createAppAsyncThunk } from '../../createAppAsynkThunk';
 
 export enum VariationsThunkType {

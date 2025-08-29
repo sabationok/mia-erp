@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { OfferEntity } from '../../types/offers/offers.types';
 import ProductCardSimpleOverview from '../Overviews/offer/ProductCardSimpleOverview';
 import { apiCall, ApiQueryParams } from '../../api';
-import OffersApi from '../../api/offers.api';
+import OffersApi from '../../api/offers/offers.api';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
